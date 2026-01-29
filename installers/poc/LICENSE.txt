@@ -1,0 +1,20 @@
+NetworkScanScada Proof of Concept License Agreement
+
+EVALUATION LICENSE - 30 DAY TRIAL
+
+This software is provided for evaluation purposes only. By installing this
+software, you agree to the following terms:
+
+1. TRIAL PERIOD: This evaluation license is valid for 30 days from the date
+   of installation. After the trial period expires, the software will be
+   automatically uninstalled.
+
+2. RESTRICTIONS: This evaluation version:
+   - Is limited to 100 assets
+   - Is limited to 5 users
+   - May not be used in production environments
+   - May not be redistributed
+
+3. NO WARRANTY: This software is provided "as is" without warranty of any kind.
+
+Copyright 2024 HoL SIEM Security. All rights reserved.
