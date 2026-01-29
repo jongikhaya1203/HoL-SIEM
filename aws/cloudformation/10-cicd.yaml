@@ -1,0 +1,510 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'NetworkScanScada - Phase 4: CI/CD Pipeline with CodePipeline and CodeBuild'
+
+Parameters:
+  EnvironmentName:
+    Description: Environment name
+    Type: String
+    Default: production
+
+  GitHubOwner:
+    Description: GitHub repository owner
+    Type: String
+
+  GitHubRepo:
+    Description: GitHub repository name
+    Type: String
+    Default: networkscanscada
+
+  GitHubBranch:
+    Description: GitHub branch to deploy
+    Type: String
+    Default: main
+
+  CodeStarConnectionArn:
+    Description: ARN of the CodeStar connection to GitHub
+    Type: String
+
+Resources:
+  # ==================== S3 Bucket for Pipeline Artifacts ====================
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub ${EnvironmentName}-networkscan-artifacts-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldArtifacts
+            Status: Enabled
+            ExpirationInDays: 30
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-artifacts-bucket
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== CodeBuild Role ====================
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${EnvironmentName}-codebuild-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodeBuildPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                Resource:
+                  - !Sub arn:aws:s3:::${ArtifactBucket}/*
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource:
+                  - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:networkscan/*
+
+  # ==================== CodePipeline Role ====================
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${EnvironmentName}-codepipeline-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodePipelinePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+                  - s3:PutObject
+                Resource:
+                  - !Sub arn:aws:s3:::${ArtifactBucket}
+                  - !Sub arn:aws:s3:::${ArtifactBucket}/*
+              - Effect: Allow
+                Action:
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StartBuild
+                Resource:
+                  - !GetAtt BuildProject.Arn
+                  - !GetAtt TestProject.Arn
+              - Effect: Allow
+                Action:
+                  - codedeploy:CreateDeployment
+                  - codedeploy:GetApplication
+                  - codedeploy:GetApplicationRevision
+                  - codedeploy:GetDeployment
+                  - codedeploy:GetDeploymentConfig
+                  - codedeploy:RegisterApplicationRevision
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+                Resource: !Ref CodeStarConnectionArn
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource:
+                  - !ImportValue
+                    Fn::Sub: ${EnvironmentName}-AlertsTopicArn
+
+  # ==================== CodeDeploy Role ====================
+  CodeDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${EnvironmentName}-codedeploy-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codedeploy.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole
+      Policies:
+        - PolicyName: CodeDeployEC2Policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:DescribeInstances
+                  - ec2:DescribeInstanceStatus
+                  - autoscaling:*
+                Resource: '*'
+
+  # ==================== CodeBuild Project - Build ====================
+  BuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub ${EnvironmentName}-networkscan-build
+      Description: Build NetworkScan application
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_MEDIUM
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:5.0
+        PrivilegedMode: true
+        EnvironmentVariables:
+          - Name: ENVIRONMENT
+            Value: !Ref EnvironmentName
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            install:
+              runtime-versions:
+                php: 8.2
+                nodejs: 18
+              commands:
+                - echo Installing dependencies...
+                - composer install --no-dev --optimize-autoloader
+                - npm ci --production
+            pre_build:
+              commands:
+                - echo Running pre-build checks...
+                - php artisan config:clear
+                - php artisan route:clear
+                - php artisan view:clear
+            build:
+              commands:
+                - echo Building application...
+                - php artisan config:cache
+                - php artisan route:cache
+                - php artisan view:cache
+                - npm run build
+            post_build:
+              commands:
+                - echo Build completed on `date`
+                - echo Creating deployment package...
+          artifacts:
+            files:
+              - '**/*'
+            exclude-paths:
+              - node_modules/**/*
+              - tests/**/*
+              - .git/**/*
+              - .env.example
+              - phpunit.xml
+          cache:
+            paths:
+              - vendor/**/*
+              - node_modules/**/*
+      Cache:
+        Type: S3
+        Location: !Sub ${ArtifactBucket}/build-cache
+      TimeoutInMinutes: 15
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-build-project
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== CodeBuild Project - Test ====================
+  TestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub ${EnvironmentName}-networkscan-test
+      Description: Test NetworkScan application
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_MEDIUM
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:5.0
+        EnvironmentVariables:
+          - Name: ENVIRONMENT
+            Value: !Ref EnvironmentName
+          - Name: DB_CONNECTION
+            Value: sqlite
+          - Name: DB_DATABASE
+            Value: ':memory:'
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            install:
+              runtime-versions:
+                php: 8.2
+              commands:
+                - composer install
+            pre_build:
+              commands:
+                - echo Running static analysis...
+                - vendor/bin/phpstan analyse --memory-limit=512M || true
+            build:
+              commands:
+                - echo Running tests...
+                - vendor/bin/phpunit --coverage-text --colors=never
+            post_build:
+              commands:
+                - echo Tests completed on `date`
+          reports:
+            phpunit:
+              files:
+                - 'tests/reports/junit.xml'
+              file-format: JUNITXML
+          cache:
+            paths:
+              - vendor/**/*
+      TimeoutInMinutes: 20
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-test-project
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== CodeDeploy Application ====================
+  CodeDeployApplication:
+    Type: AWS::CodeDeploy::Application
+    Properties:
+      ApplicationName: !Sub ${EnvironmentName}-networkscan
+      ComputePlatform: Server
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-codedeploy-app
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== CodeDeploy Deployment Group ====================
+  DeploymentGroup:
+    Type: AWS::CodeDeploy::DeploymentGroup
+    Properties:
+      ApplicationName: !Ref CodeDeployApplication
+      DeploymentGroupName: !Sub ${EnvironmentName}-networkscan-deploy
+      ServiceRoleArn: !GetAtt CodeDeployRole.Arn
+      DeploymentConfigName: CodeDeployDefault.OneAtATime
+      AutoScalingGroups:
+        - !ImportValue
+          Fn::Sub: ${EnvironmentName}-ASGName
+      DeploymentStyle:
+        DeploymentOption: WITH_TRAFFIC_CONTROL
+        DeploymentType: IN_PLACE
+      LoadBalancerInfo:
+        TargetGroupInfoList:
+          - Name: !ImportValue
+              Fn::Sub: ${EnvironmentName}-TargetGroupName
+      AutoRollbackConfiguration:
+        Enabled: true
+        Events:
+          - DEPLOYMENT_FAILURE
+          - DEPLOYMENT_STOP_ON_REQUEST
+      AlarmConfiguration:
+        Enabled: true
+        Alarms:
+          - Name: !Sub ${EnvironmentName}-alb-5xx-errors
+          - Name: !Sub ${EnvironmentName}-alb-unhealthy-hosts
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-deployment-group
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== CodePipeline ====================
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: !Sub ${EnvironmentName}-networkscan-pipeline
+      RoleArn: !GetAtt CodePipelineRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactBucket
+      Stages:
+        # Source Stage
+        - Name: Source
+          Actions:
+            - Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: CodeStarSourceConnection
+                Version: '1'
+              Configuration:
+                ConnectionArn: !Ref CodeStarConnectionArn
+                FullRepositoryId: !Sub ${GitHubOwner}/${GitHubRepo}
+                BranchName: !Ref GitHubBranch
+                OutputArtifactFormat: CODE_ZIP
+              OutputArtifacts:
+                - Name: SourceOutput
+              RunOrder: 1
+
+        # Test Stage
+        - Name: Test
+          Actions:
+            - Name: UnitTests
+              ActionTypeId:
+                Category: Test
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              Configuration:
+                ProjectName: !Ref TestProject
+              InputArtifacts:
+                - Name: SourceOutput
+              RunOrder: 1
+
+        # Build Stage
+        - Name: Build
+          Actions:
+            - Name: BuildAction
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              Configuration:
+                ProjectName: !Ref BuildProject
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+              RunOrder: 1
+
+        # Deploy Stage
+        - Name: Deploy
+          Actions:
+            - Name: DeployAction
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CodeDeploy
+                Version: '1'
+              Configuration:
+                ApplicationName: !Ref CodeDeployApplication
+                DeploymentGroupName: !Ref DeploymentGroup
+              InputArtifacts:
+                - Name: BuildOutput
+              RunOrder: 1
+
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-pipeline
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== Pipeline Notification Rule ====================
+  PipelineNotificationRule:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: !Sub ${EnvironmentName}-pipeline-notifications
+      Resource: !Sub arn:aws:codepipeline:${AWS::Region}:${AWS::AccountId}:${Pipeline}
+      DetailType: FULL
+      EventTypeIds:
+        - codepipeline-pipeline-pipeline-execution-failed
+        - codepipeline-pipeline-pipeline-execution-succeeded
+        - codepipeline-pipeline-stage-execution-failed
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !ImportValue
+            Fn::Sub: ${EnvironmentName}-AlertsTopicArn
+      Tags:
+        Environment: !Ref EnvironmentName
+
+  # ==================== Build Notification Rule ====================
+  BuildNotificationRule:
+    Type: AWS::CodeStarNotifications::NotificationRule
+    Properties:
+      Name: !Sub ${EnvironmentName}-build-notifications
+      Resource: !GetAtt BuildProject.Arn
+      DetailType: FULL
+      EventTypeIds:
+        - codebuild-project-build-state-failed
+        - codebuild-project-build-state-succeeded
+      Targets:
+        - TargetType: SNS
+          TargetAddress: !ImportValue
+            Fn::Sub: ${EnvironmentName}-AlertsTopicArn
+      Tags:
+        Environment: !Ref EnvironmentName
+
+Outputs:
+  PipelineName:
+    Description: CodePipeline name
+    Value: !Ref Pipeline
+    Export:
+      Name: !Sub ${EnvironmentName}-PipelineName
+
+  PipelineUrl:
+    Description: CodePipeline URL
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/codesuite/codepipeline/pipelines/${Pipeline}/view
+    Export:
+      Name: !Sub ${EnvironmentName}-PipelineUrl
+
+  BuildProjectName:
+    Description: CodeBuild build project name
+    Value: !Ref BuildProject
+    Export:
+      Name: !Sub ${EnvironmentName}-BuildProjectName
+
+  TestProjectName:
+    Description: CodeBuild test project name
+    Value: !Ref TestProject
+    Export:
+      Name: !Sub ${EnvironmentName}-TestProjectName
+
+  CodeDeployApplicationName:
+    Description: CodeDeploy application name
+    Value: !Ref CodeDeployApplication
+    Export:
+      Name: !Sub ${EnvironmentName}-CodeDeployAppName
+
+  ArtifactBucketName:
+    Description: Artifact bucket name
+    Value: !Ref ArtifactBucket
+    Export:
+      Name: !Sub ${EnvironmentName}-ArtifactBucketName

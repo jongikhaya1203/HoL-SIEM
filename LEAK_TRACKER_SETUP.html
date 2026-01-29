@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Leak Tracker - Setup Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            padding: 40px 20px;
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #e91e63;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+        .subtitle {
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #e91e63;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+        }
+        .step-number {
+            background: #e91e63;
+            color: white;
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .step-content {
+            margin-left: 50px;
+            line-height: 1.8;
+        }
+        code {
+            background: #2c3e50;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .button {
+            display: inline-block;
+            background: #e91e63;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #c2185b;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .scenario-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .scenario-title {
+            font-weight: 600;
+            color: #e91e63;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .scenario-path {
+            font-size: 12px;
+            color: #6c757d;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 8px;
+        }
+        .scenario-risk {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .risk-critical { background: #dc3545; color: white; }
+        .risk-high { background: #fd7e14; color: white; }
+        .risk-medium { background: #ffc107; color: #333; }
+        .risk-low { background: #28a745; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 Email Leak Tracker</h1>
+        <div class="subtitle">Track email forwarding chains and detect data leaks</div>
+
+        <div class="info">
+            <strong>ℹ️ What is Email Leak Tracking?</strong><br>
+            This advanced DLP feature tracks how emails are forwarded from the original sender through multiple recipients, identifying when sensitive information reaches unauthorized destinations like competitors, personal emails, or public media.
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">1</span>
+                Install Leak Tracking Tables
+            </div>
+            <div class="step-content">
+                <p>First, install the database tables for leak tracking:</p>
+                <ol style="margin: 15px 0 15px 20px;">
+                    <li>Open Command Prompt in: <code>C:\xampp\htdocs\networkscan</code></li>
+                    <li>Run: <code>php install_leak_tracking.php</code></li>
+                    <li>Wait for success message</li>
+                </ol>
+                <p>This creates 4 new tables: email_forwarding_chains, email_recipients, leak_incidents, and domain_classifications.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">2</span>
+                Generate Sample Leak Chains
+            </div>
+            <div class="step-content">
+                <p>Create realistic sample data showing various leak scenarios:</p>
+                <ol style="margin: 15px 0 15px 20px;">
+                    <li>In the same command prompt, run: <code>php generate_leak_chains.php</code></li>
+                    <li>This creates 10 email forwarding chains</li>
+                    <li>Includes scenarios: employee leaks, competitor leaks, media leaks, etc.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">3</span>
+                Access the Leak Tracker
+            </div>
+            <div class="step-content">
+                <p>View and analyze leak incidents:</p>
+                <a href="mailscan_leak_tracker.php" class="button">Open Leak Tracker Dashboard</a>
+                <p style="margin-top: 15px;">Or navigate to: <code>http://localhost/networkscan/mailscan_leak_tracker.php</code></p>
+            </div>
+        </div>
+
+        <div class="success">
+            <strong>✅ Quick Access</strong><br>
+            The Leak Tracker is now available in the navigation menu of all Email DLP pages.
+        </div>
+
+        <div style="margin-top: 40px;">
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">📋 Sample Leak Scenarios</h2>
+            <p style="margin-bottom: 20px;">The system includes these realistic leak patterns:</p>
+
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-title">1. Personal Email Leak</div>
+                    <div class="scenario-path">CFO → Employee → Gmail</div>
+                    <span class="scenario-risk risk-medium">Medium Risk</span>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-title">2. Competitor Leak Chain</div>
+                    <div class="scenario-path">CEO → Team → Yahoo → Competitor</div>
+                    <span class="scenario-risk risk-critical">Critical Risk</span>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-title">3. Media Leak</div>
+                    <div class="scenario-path">Legal → Manager → News Reporter</div>
+                    <span class="scenario-risk risk-high">High Risk</span>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-title">4. Customer Data Breach</div>
+                    <div class="scenario-path">Sales → Employee → Gmail → Friend</div>
+                    <span class="scenario-risk risk-high">High Risk</span>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-title">5. BCC Secret Leak</div>
+                    <div class="scenario-path">HR → Employee [BCC: Competitor]</div>
+                    <span class="scenario-risk risk-critical">Critical Risk</span>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-title">6. Safe Internal Chain</div>
+                    <div class="scenario-path">Manager → Team → Employee</div>
+                    <span class="scenario-risk risk-low">Low Risk</span>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-title">7. Partner Leak</div>
+                    <div class="scenario-path">Product → Partner → Competitor</div>
+                    <span class="scenario-risk risk-critical">Critical Risk</span>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-title">8. Multi-Hop External</div>
+                    <div class="scenario-path">Research → Gmail → Yahoo → Hotmail → Competitor</div>
+                    <span class="scenario-risk risk-critical">Critical Risk</span>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-title">9. CC Unauthorized</div>
+                    <div class="scenario-path">Strategy Team [CC: Competitor]</div>
+                    <span class="scenario-risk risk-critical">Critical Risk</span>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-title">10. Long Internal to Media</div>
+                    <div class="scenario-path">Board → CEO → CFO → Team → Reporter</div>
+                    <span class="scenario-risk risk-critical">Critical Risk</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e9ecef;">
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">🎯 Key Features</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h3 style="color: #e91e63; font-size: 16px; margin-bottom: 10px;">Chain Visualization</h3>
+                    <ul style="line-height: 1.8; margin-left: 20px;">
+                        <li>Visual flow diagram of email path</li>
+                        <li>Risk score for each hop</li>
+                        <li>Classification indicators</li>
+                        <li>Leak alerts</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: #e91e63; font-size: 16px; margin-bottom: 10px;">Leak Detection</h3>
+                    <ul style="line-height: 1.8; margin-left: 20px;">
+                        <li>Automatic unauthorized detection</li>
+                        <li>Domain classification</li>
+                        <li>Incident creation</li>
+                        <li>Severity assessment</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: #e91e63; font-size: 16px; margin-bottom: 10px;">Analytics</h3>
+                    <ul style="line-height: 1.8; margin-left: 20px;">
+                        <li>Top leakers identification</li>
+                        <li>Incident statistics</li>
+                        <li>Leak type distribution</li>
+                        <li>Trend analysis</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: #e91e63; font-size: 16px; margin-bottom: 10px;">Domain Management</h3>
+                    <ul style="line-height: 1.8; margin-left: 20px;">
+                        <li>Trusted partner whitelist</li>
+                        <li>Competitor blacklist</li>
+                        <li>Risk scoring</li>
+                        <li>Classification system</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; background: linear-gradient(135deg, #e91e63, #c2185b); color: white; padding: 30px; border-radius: 10px;">
+            <h2 style="color: white; margin-bottom: 15px;">📚 Documentation</h2>
+            <p style="margin-bottom: 15px;">For complete documentation, see:</p>
+            <ul style="line-height: 2; margin-left: 20px;">
+                <li><strong>LEAK_TRACKER_README.md</strong> - Complete feature documentation</li>
+                <li><strong>MAILSCAN_README.md</strong> - General DLP system guide</li>
+                <li><strong>QUICKSTART.md</strong> - Quick start guide</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e9ecef; text-align: center; color: #6c757d;">
+            Email Leak Tracker v1.0 - Part of Email DLP System
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email DLP - Setup Instructions</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            padding: 40px 20px;
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+        .subtitle {
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+        }
+        .step-number {
+            background: #667eea;
+            color: white;
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .step-content {
+            margin-left: 50px;
+            line-height: 1.8;
+        }
+        code {
+            background: #2c3e50;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #5568d3;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .method {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .method-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Email DLP System</h1>
+        <div class="subtitle">Setup Instructions - Get started in 3 minutes</div>
+
+        <div class="warning">
+            <strong>⚠️ Before You Start:</strong> Make sure XAMPP is running with Apache and MySQL enabled!
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">1</span>
+                Setup Database
+            </div>
+            <div class="step-content">
+                <p>Choose one of these methods:</p>
+
+                <div class="method">
+                    <div class="method-title">Method A: Using phpMyAdmin (Recommended)</div>
+                    <ol>
+                        <li>Open <a href="http://localhost/phpmyadmin" target="_blank">http://localhost/phpmyadmin</a></li>
+                        <li>Click on "Import" tab in the top menu</li>
+                        <li>Click "Choose File" and select: <code>mailscan_install.sql</code></li>
+                        <li>Scroll down and click "Import" button</li>
+                        <li>Wait for success message!</li>
+                    </ol>
+                    <a href="http://localhost/phpmyadmin" target="_blank" class="button">Open phpMyAdmin</a>
+                </div>
+
+                <div class="method">
+                    <div class="method-title">Method B: Using Command Line</div>
+                    <ol>
+                        <li>Open Command Prompt in the networkscan folder</li>
+                        <li>Run: <code>php install_database.php</code></li>
+                        <li>Wait for completion message</li>
+                    </ol>
+                </div>
+
+                <div class="method">
+                    <div class="method-title">Method C: Using MySQL Command</div>
+                    <ol>
+                        <li>Open Command Prompt</li>
+                        <li>Navigate to: <code>cd C:\xampp\mysql\bin</code></li>
+                        <li>Run: <code>mysql -u root -e "source C:/xampp/htdocs/networkscan/mailscan_install.sql"</code></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">2</span>
+                Generate Sample Data
+            </div>
+            <div class="step-content">
+                <p>Create 10 sample emails with various types of sensitive information:</p>
+                <ol>
+                    <li>Open Command Prompt in: <code>C:\xampp\htdocs\networkscan</code></li>
+                    <li>Run: <code>php generate_sample_data.php</code></li>
+                    <li>This will insert emails and scan them automatically</li>
+                </ol>
+                <p style="margin-top: 10px;"><strong>Tip:</strong> You can skip this step if you want to start with a clean system.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">3</span>
+                Access the System
+            </div>
+            <div class="step-content">
+                <p>Open these pages in your browser:</p>
+                <ul>
+                    <li><a href="mailscan_index.php" target="_blank">Home Page</a> - <code>mailscan_index.php</code></li>
+                    <li><a href="mailscan_dashboard.php" target="_blank">Dashboard</a> - View flagged emails</li>
+                    <li><a href="mailscan_rules.php" target="_blank">Detection Rules</a> - Manage scanning rules</li>
+                    <li><a href="mailscan_scan.php" target="_blank">Scan Email</a> - Test the scanner</li>
+                </ul>
+                <a href="mailscan_index.php" class="button">Open Email DLP System</a>
+            </div>
+        </div>
+
+        <div class="success">
+            <strong>✅ That's it!</strong> Your Email DLP system is ready. Start by viewing the dashboard or scanning a test email.
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e9ecef;">
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">📚 Additional Resources</h2>
+            <ul>
+                <li><strong>Full Documentation:</strong> See <code>MAILSCAN_README.md</code> for complete guide</li>
+                <li><strong>Quick Start:</strong> See <code>QUICKSTART.md</code> for examples</li>
+                <li><strong>Sample Data:</strong> Includes 10 emails with various sensitive data patterns</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <h3 style="color: #2c3e50; margin-bottom: 15px;">🔍 What This System Detects</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <strong>Critical:</strong>
+                    <ul style="font-size: 14px;">
+                        <li>Credit Card Numbers</li>
+                        <li>Social Security Numbers</li>
+                        <li>API Keys & AWS Keys</li>
+                        <li>Passwords</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>High/Medium:</strong>
+                    <ul style="font-size: 14px;">
+                        <li>Bank Account Numbers</li>
+                        <li>Medical Records</li>
+                        <li>Confidential Keywords</li>
+                        <li>Insider Information</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e9ecef; text-align: center; color: #6c757d;">
+            Email Data Loss Prevention System v1.0
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,467 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'NetworkScanScada - Phase 2: S3 Buckets and Policies'
+
+Parameters:
+  EnvironmentName:
+    Description: Environment name
+    Type: String
+    Default: production
+
+  ReportRetentionDays:
+    Description: Days to retain reports in Standard storage
+    Type: Number
+    Default: 30
+
+  ArchiveRetentionDays:
+    Description: Days to retain reports in Glacier
+    Type: Number
+    Default: 365
+
+Resources:
+  # ==================== Reports Bucket ====================
+  ReportsBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub ${EnvironmentName}-networkscan-reports
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: TransitionToIA
+            Status: Enabled
+            Transitions:
+              - StorageClass: STANDARD_IA
+                TransitionInDays: !Ref ReportRetentionDays
+              - StorageClass: GLACIER
+                TransitionInDays: 90
+            ExpirationInDays: !Ref ArchiveRetentionDays
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 30
+          - Id: DeleteIncompleteUploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 7
+      LoggingConfiguration:
+        DestinationBucketName: !Ref LogsBucket
+        LogFilePrefix: s3-reports/
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-networkscan-reports
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ReportsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ReportsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: EnforceSSL
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !Sub arn:aws:s3:::${ReportsBucket}
+              - !Sub arn:aws:s3:::${ReportsBucket}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+          - Sid: AllowCloudFrontAccess
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub arn:aws:s3:::${ReportsBucket}/*
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/*
+
+  # ==================== Uploads Bucket ====================
+  UploadsBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub ${EnvironmentName}-networkscan-uploads
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+            AllowedOrigins:
+              - '*'
+            MaxAge: 3600
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteTempFiles
+            Status: Enabled
+            Prefix: temp/
+            ExpirationInDays: 1
+          - Id: DeleteOldUploads
+            Status: Enabled
+            ExpirationInDays: 90
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-networkscan-uploads
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  UploadsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref UploadsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: EnforceSSL
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !Sub arn:aws:s3:::${UploadsBucket}
+              - !Sub arn:aws:s3:::${UploadsBucket}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
+  # ==================== Logs Bucket ====================
+  LogsBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub ${EnvironmentName}-networkscan-logs
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      LifecycleConfiguration:
+        Rules:
+          - Id: TransitionToIA
+            Status: Enabled
+            Transitions:
+              - StorageClass: STANDARD_IA
+                TransitionInDays: 30
+              - StorageClass: GLACIER
+                TransitionInDays: 90
+            ExpirationInDays: 365
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-networkscan-logs
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  LogsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref LogsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowALBLogging
+            Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action: s3:PutObject
+            Resource: !Sub arn:aws:s3:::${LogsBucket}/alb/*
+          - Sid: AllowELBLogDelivery
+            Effect: Allow
+            Principal:
+              Service: logdelivery.elasticloadbalancing.amazonaws.com
+            Action: s3:PutObject
+            Resource: !Sub arn:aws:s3:::${LogsBucket}/alb/*
+          - Sid: AllowS3ServerAccessLogs
+            Effect: Allow
+            Principal:
+              Service: logging.s3.amazonaws.com
+            Action: s3:PutObject
+            Resource: !Sub arn:aws:s3:::${LogsBucket}/*
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+
+  # ==================== Backups Bucket ====================
+  BackupsBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub ${EnvironmentName}-networkscan-backups
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: alias/aws/s3
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      ObjectLockEnabled: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: TransitionToGlacier
+            Status: Enabled
+            Transitions:
+              - StorageClass: GLACIER
+                TransitionInDays: 30
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 90
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-networkscan-backups
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  BackupsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref BackupsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: EnforceSSL
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !Sub arn:aws:s3:::${BackupsBucket}
+              - !Sub arn:aws:s3:::${BackupsBucket}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
+  # ==================== CloudFront Distribution ====================
+  CloudFrontOriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub ${EnvironmentName}-networkscan-oac
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub NetworkScan ${EnvironmentName} Reports Distribution
+        DefaultRootObject: index.html
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt ReportsBucket.RegionalDomainName
+            OriginAccessControlId: !Ref CloudFrontOriginAccessControl
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6  # Managed-CachingOptimized
+          ResponseHeadersPolicyId: 5cc3b908-e619-4b99-88e5-2cf7f45965bd  # Managed-CORS-With-Preflight
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+        Logging:
+          Bucket: !GetAtt LogsBucket.DomainName
+          Prefix: cloudfront/
+          IncludeCookies: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-networkscan-cdn
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== SQS Queues ====================
+  ScanJobsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${EnvironmentName}-networkscan-scan-jobs
+      VisibilityTimeout: 900
+      MessageRetentionPeriod: 1209600
+      ReceiveMessageWaitTimeSeconds: 20
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt ScanJobsDLQ.Arn
+        maxReceiveCount: 3
+      SqsManagedSseEnabled: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-scan-jobs-queue
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ScanJobsDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${EnvironmentName}-networkscan-scan-jobs-dlq
+      MessageRetentionPeriod: 1209600
+      SqsManagedSseEnabled: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-scan-jobs-dlq
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ReportJobsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${EnvironmentName}-networkscan-report-jobs
+      VisibilityTimeout: 600
+      MessageRetentionPeriod: 1209600
+      ReceiveMessageWaitTimeSeconds: 20
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt ReportJobsDLQ.Arn
+        maxReceiveCount: 3
+      SqsManagedSseEnabled: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-report-jobs-queue
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ReportJobsDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${EnvironmentName}-networkscan-report-jobs-dlq
+      MessageRetentionPeriod: 1209600
+      SqsManagedSseEnabled: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-report-jobs-dlq
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== SNS Topics ====================
+  AlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${EnvironmentName}-networkscan-alerts
+      DisplayName: NetworkScan Alerts
+      KmsMasterKeyId: alias/aws/sns
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-alerts-topic
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  AlertsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref AlertsTopic
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudWatchAlarms
+            Effect: Allow
+            Principal:
+              Service: cloudwatch.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref AlertsTopic
+          - Sid: AllowEventBridge
+            Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref AlertsTopic
+
+Outputs:
+  ReportsBucketName:
+    Description: Reports bucket name
+    Value: !Ref ReportsBucket
+    Export:
+      Name: !Sub ${EnvironmentName}-ReportsBucketName
+
+  ReportsBucketArn:
+    Description: Reports bucket ARN
+    Value: !GetAtt ReportsBucket.Arn
+    Export:
+      Name: !Sub ${EnvironmentName}-ReportsBucketArn
+
+  UploadsBucketName:
+    Description: Uploads bucket name
+    Value: !Ref UploadsBucket
+    Export:
+      Name: !Sub ${EnvironmentName}-UploadsBucketName
+
+  LogsBucketName:
+    Description: Logs bucket name
+    Value: !Ref LogsBucket
+    Export:
+      Name: !Sub ${EnvironmentName}-LogsBucketName
+
+  BackupsBucketName:
+    Description: Backups bucket name
+    Value: !Ref BackupsBucket
+    Export:
+      Name: !Sub ${EnvironmentName}-BackupsBucketName
+
+  CloudFrontDistributionDomain:
+    Description: CloudFront distribution domain
+    Value: !GetAtt CloudFrontDistribution.DomainName
+    Export:
+      Name: !Sub ${EnvironmentName}-CloudFrontDomain
+
+  ScanJobsQueueUrl:
+    Description: Scan jobs queue URL
+    Value: !Ref ScanJobsQueue
+    Export:
+      Name: !Sub ${EnvironmentName}-ScanJobsQueueUrl
+
+  ReportJobsQueueUrl:
+    Description: Report jobs queue URL
+    Value: !Ref ReportJobsQueue
+    Export:
+      Name: !Sub ${EnvironmentName}-ReportJobsQueueUrl
+
+  AlertsTopicArn:
+    Description: Alerts SNS topic ARN
+    Value: !Ref AlertsTopic
+    Export:
+      Name: !Sub ${EnvironmentName}-AlertsTopicArn

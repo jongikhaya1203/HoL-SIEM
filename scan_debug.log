@@ -1,0 +1,135 @@
+2025-11-06 13:11:23: ========== Starting Optimized Scan ==========
+2025-11-06 13:11:23: Script started
+2025-11-06 13:11:23: Database.php loaded
+2025-11-06 13:11:23: ParallelScanner.php loaded
+2025-11-06 13:11:23: ServiceDetector.php loaded
+2025-11-06 13:11:23: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 13:11:23: Arguments: scanId=22, target=127.0.0.1, type=quick
+2025-11-06 13:11:23: Database instance created
+2025-11-06 13:11:23: Starting optimized scan ID: 22 for target: 127.0.0.1
+2025-11-06 13:13:28: ========== Starting Optimized Scan ==========
+2025-11-06 13:13:28: Script started
+2025-11-06 13:13:28: Database.php loaded
+2025-11-06 13:13:28: ParallelScanner.php loaded
+2025-11-06 13:13:28: ServiceDetector.php loaded
+2025-11-06 13:13:28: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 13:13:28: Arguments: scanId=23, target=127.0.0.1, type=quick
+2025-11-06 13:13:28: Database instance created
+2025-11-06 13:13:28: Starting optimized scan ID: 23 for target: 127.0.0.1
+2025-11-06 13:17:32: ========== Starting Optimized Scan ==========
+2025-11-06 13:17:32: Script started
+2025-11-06 13:17:32: Database.php loaded
+2025-11-06 13:17:32: ParallelScanner.php loaded
+2025-11-06 13:17:32: ServiceDetector.php loaded
+2025-11-06 13:17:32: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 13:17:32: Arguments: scanId=24, target=10.0.0.0/16, type=quick
+2025-11-06 13:17:32: Database instance created
+2025-11-06 13:17:32: Starting optimized scan ID: 24 for target: 10.0.0.0/16
+2025-11-06 13:28:25: ========== Starting Optimized Scan ==========
+2025-11-06 13:28:25: Script started
+2025-11-06 13:28:25: Database.php loaded
+2025-11-06 13:28:25: ParallelScanner.php loaded
+2025-11-06 13:28:25: ServiceDetector.php loaded
+2025-11-06 13:28:25: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 13:28:25: Arguments: scanId=25, target=127.0.0.1, type=quick
+2025-11-06 13:28:25: Database instance created
+2025-11-06 13:28:25: Starting optimized scan ID: 25 for target: 127.0.0.1
+2025-11-06 13:49:29: ========== Starting Optimized Scan ==========
+2025-11-06 13:49:29: Script started
+2025-11-06 13:49:29: Database.php loaded
+2025-11-06 13:49:29: ParallelScanner.php loaded
+2025-11-06 13:49:29: ServiceDetector.php loaded
+2025-11-06 13:49:29: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 13:49:29: Arguments: scanId=26, target=127.0.0.1, type=quick
+2025-11-06 13:49:29: Database instance created
+2025-11-06 13:49:29: Starting optimized scan ID: 26 for target: 127.0.0.1
+2025-11-06 13:49:29: About to call updateProgress() - Testing DB connection first
+2025-11-06 13:49:29: DB test successful - scan ID: 
+2025-11-06 13:49:29: Now calling updateProgress with scanId=26, progress=5
+2025-11-06 13:49:29: updateProgress called: scanId=26, progress=5, message=Initializing scan
+2025-11-06 13:49:29: updateProgress completed successfully
+2025-11-06 13:49:29: Progress updated to 5%
+2025-11-06 13:49:29: updateProgress called: scanId=26, progress=10, message=Checking 1 hosts for availability
+2025-11-06 13:49:29: updateProgress completed successfully
+2025-11-06 13:49:31: updateProgress called: scanId=26, progress=20, message=Found 1 alive hosts, scanning ports
+2025-11-06 13:49:31: updateProgress completed successfully
+2025-11-06 13:49:31: updateProgress called: scanId=26, progress=80, message=Scanning 127.0.0.1 (1/1)
+2025-11-06 13:49:31: updateProgress completed successfully
+2025-11-06 13:49:38: EXCEPTION CAUGHT: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`network_security_scanner`.`hosts`, CONSTRAINT `hosts_ibfk_1` FOREIGN KEY (`scan_id`) REFERENCES `scans` (`id`) ON DELETE CASCADE)
+2025-11-06 13:49:38: Stack trace: #0 C:\xampp\htdocs\NetworkScan\classes\Database.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\NetworkScan\run_scan_optimized.php(153): Database->query('INSERT INTO hos...', Array)
+#2 {main}
+2025-11-06 13:49:38: updateProgress called: scanId=26, progress=0, message=Scan failed: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`network_security_scanner`.`hosts`, CONSTRAINT `hosts_ibfk_1` FOREIGN KEY (`scan_id`) REFERENCES `scans` (`id`) ON DELETE CASCADE)
+2025-11-06 13:49:38: updateProgress completed successfully
+2025-11-06 13:53:37: ========== Starting Optimized Scan ==========
+2025-11-06 13:53:37: Script started
+2025-11-06 13:53:37: Database.php loaded
+2025-11-06 13:53:37: ParallelScanner.php loaded
+2025-11-06 13:53:37: ServiceDetector.php loaded
+2025-11-06 13:53:37: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 13:53:37: Arguments: scanId=26, target=127.0.0.1, type=quick
+2025-11-06 13:53:37: Database instance created
+2025-11-06 13:53:37: Starting optimized scan ID: 26 for target: 127.0.0.1
+2025-11-06 14:16:56: ========== Starting Optimized Scan ==========
+2025-11-06 14:16:56: Script started
+2025-11-06 14:16:56: Database.php loaded
+2025-11-06 14:16:56: ParallelScanner.php loaded
+2025-11-06 14:16:56: ServiceDetector.php loaded
+2025-11-06 14:16:56: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 14:16:56: Arguments: scanId=27, target=10.0.0.0/16, type=quick
+2025-11-06 14:16:56: Database instance created
+2025-11-06 14:16:56: Starting optimized scan ID: 27 for target: 10.0.0.0/16
+2025-11-06 14:43:31: ========== Starting Optimized Scan ==========
+2025-11-06 14:43:31: Script started
+2025-11-06 14:43:31: Database.php loaded
+2025-11-06 14:43:31: ParallelScanner.php loaded
+2025-11-06 14:43:31: ServiceDetector.php loaded
+2025-11-06 14:43:31: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 14:43:31: Arguments: scanId=28, target=10.5.0.0/24, type=quick
+2025-11-06 14:43:31: Database instance created
+2025-11-06 14:43:31: Starting optimized scan ID: 28 for target: 10.5.0.0/24
+2025-11-06 14:54:48: ========== Starting Optimized Scan ==========
+2025-11-06 14:54:48: Script started
+2025-11-06 14:54:48: Database.php loaded
+2025-11-06 14:54:48: ParallelScanner.php loaded
+2025-11-06 14:54:48: ServiceDetector.php loaded
+2025-11-06 14:54:48: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 14:54:48: Arguments: scanId=29, target=127.0.0.1, type=quick
+2025-11-06 14:54:48: Database instance created
+2025-11-06 14:54:48: Starting optimized scan ID: 29 for target: 127.0.0.1
+2025-11-06 18:07:12: ========== Starting Optimized Scan ==========
+2025-11-06 18:07:12: Script started
+2025-11-06 18:07:12: Database.php loaded
+2025-11-06 18:07:12: ParallelScanner.php loaded
+2025-11-06 18:07:12: ServiceDetector.php loaded
+2025-11-06 18:07:12: OptimizedVulnerabilityScanner.php loaded
+2025-11-06 18:07:12: Arguments: scanId=30, target=127.0.0.1, type=quick
+2025-11-06 18:07:12: Database instance created
+2025-11-06 18:07:12: Starting optimized scan ID: 30 for target: 127.0.0.1
+2025-11-06 18:07:12: Calling updateProgress with scanId=30, progress=5
+2025-11-06 18:07:12: updateProgress called: scanId=30, progress=5, message=Initializing scan
+2025-11-06 18:07:12: updateProgress completed successfully
+2025-11-06 18:07:12: Progress updated to 5%
+2025-11-06 18:07:12: updateProgress called: scanId=30, progress=10, message=Checking 1 hosts for availability
+2025-11-06 18:07:12: updateProgress completed successfully
+2025-11-06 18:07:14: updateProgress called: scanId=30, progress=20, message=Found 1 alive hosts, scanning ports
+2025-11-06 18:07:14: updateProgress completed successfully
+2025-11-06 18:07:14: updateProgress called: scanId=30, progress=80, message=Scanning 127.0.0.1 (1/1)
+2025-11-06 18:07:14: updateProgress completed successfully
+2025-11-06 18:07:28: EXCEPTION CAUGHT: SQLSTATE[HY093]: Invalid parameter number
+2025-11-06 18:07:28: Stack trace: #0 C:\xampp\htdocs\NetworkScan\classes\Database.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\NetworkScan\classes\Database.php(79): Database->query('SELECT id, titl...', Array)
+#2 C:\xampp\htdocs\NetworkScan\classes\OptimizedVulnerabilityScanner.php(57): Database->fetchAll('SELECT id, titl...', Array)
+#3 C:\xampp\htdocs\NetworkScan\run_scan_optimized.php(187): OptimizedVulnerabilityScanner->flushBatch()
+#4 {main}
+2025-11-06 18:07:28: updateProgress called: scanId=30, progress=0, message=Scan failed: SQLSTATE[HY093]: Invalid parameter number
+2025-11-06 18:07:28: updateProgress completed successfully
+2025-11-08 09:41:25: ========== Starting Optimized Scan ==========
+2025-11-08 09:41:25: Script started
+2025-11-08 09:41:25: Database.php loaded
+2025-11-08 09:41:25: ParallelScanner.php loaded
+2025-11-08 09:41:25: ServiceDetector.php loaded
+2025-11-08 09:41:25: OptimizedVulnerabilityScanner.php loaded
+2025-11-08 09:41:25: Arguments: scanId=31, target=10.0.0.0/16, type=vulnerability
+2025-11-08 09:41:25: Database instance created
+2025-11-08 09:41:25: Starting optimized scan ID: 31 for target: 10.0.0.0/16

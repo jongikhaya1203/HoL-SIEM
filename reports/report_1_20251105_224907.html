@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PETRO SA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+        }
+
+        .header {
+            border-bottom: 4px solid #d32f2f;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #d32f2f;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #1976d2;
+            font-size: 24px;
+            margin: 30px 0 15px 0;
+            border-bottom: 2px solid #1976d2;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #424242;
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+        }
+
+        .meta-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .meta-info p {
+            margin: 5px 0;
+        }
+
+        .severity-critical {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .severity-high {
+            color: #ff6f00;
+            font-weight: bold;
+        }
+
+        .severity-medium {
+            color: #f9a825;
+            font-weight: bold;
+        }
+
+        .severity-low {
+            color: #388e3c;
+        }
+
+        .severity-info {
+            color: #1976d2;
+        }
+
+        .risk-score {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .risk-critical {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .risk-high {
+            background: #fff3e0;
+            color: #ff6f00;
+        }
+
+        .risk-medium {
+            background: #fffde7;
+            color: #f9a825;
+        }
+
+        .risk-low {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #1976d2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .vulnerability-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .vulnerability-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .badge-critical {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .badge-high {
+            background: #ff6f00;
+            color: white;
+        }
+
+        .badge-medium {
+            background: #f9a825;
+            color: white;
+        }
+
+        .badge-low {
+            background: #388e3c;
+            color: white;
+        }
+
+        .recommendation {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .chart-box {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+            flex: 1;
+            min-width: 250px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            color: #757575;
+            font-size: 14px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                padding: 20px;
+            }
+            .vulnerability-card {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Network Security Assessment Report</h1>
+            <div class="meta-info">
+                <p><strong>Scan Name:</strong> PETRO SA</p>
+                <p><strong>Target Range:</strong> 10.0.0.0/8</p>
+                <p><strong>Scan Date:</strong> 2025-11-05 23:44:02</p>
+                <p><strong>Completion:</strong> 2025-11-05 23:49:06</p>
+                <p><strong>Scan Type:</strong> FULL</p>
+            </div>
+        </div>
+
+        <!-- Executive Summary -->
+                <h2>Executive Summary</h2>
+        <div class="chart-container">
+            <div class="chart-box">
+                <h3>Total Hosts Scanned</h3>
+                <div class="stat-number">5</div>
+            </div>
+            <div class="chart-box">
+                <h3>Vulnerabilities Found</h3>
+                <div class="stat-number severity-critical">6</div>
+            </div>
+            <div class="chart-box">
+                <h3>Overall Risk Score</h3>
+                <div class="stat-number">0.0/10</div>
+            </div>
+        </div>
+
+        <h3>Severity Distribution</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Severity</th>
+                    <th>Count</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="severity-critical">Critical</span></td>
+                    <td>0</td>
+                    <td>0%</td>
+                </tr>
+                <tr>
+                    <td><span class="severity-high">High</span></td>
+                    <td>5</td>
+                    <td>83.3%</td>
+                </tr>
+                <tr>
+                    <td><span class="severity-medium">Medium</span></td>
+                    <td>1</td>
+                    <td>16.7%</td>
+                </tr>
+                <tr>
+                    <td><span class="severity-low">Low</span></td>
+                    <td>0</td>
+                    <td>0%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Executive Summary</h3>
+        <p style="white-space: pre-line; margin: 15px 0;">This security assessment scanned 5 hosts on the network and identified 6 security vulnerabilities.
+
+Overall Risk Level: Medium
+
+HIGH PRIORITY: 5 high-severity vulnerabilities were identified. These should be addressed within 1-2 weeks.
+
+Key Findings:
+</p>
+
+        <h3>Top Vulnerabilities</h3>
+                <div class="vulnerability-card">
+            <div class="vulnerability-title">
+                <span class="badge badge-high">HIGH</span>
+                Potential Default Credentials - SSH                            </div>
+            <p><strong>CVSS Score:</strong> 7.5/10.0</p>
+            <p><strong>Affected Hosts:</strong> 5</p>
+            <p>Service SSH detected on port 22. Default credentials may be in use.</p>
+        </div>
+                <div class="vulnerability-card">
+            <div class="vulnerability-title">
+                <span class="badge badge-medium">MEDIUM</span>
+                Insecure Protocol: HTTP                            </div>
+            <p><strong>CVSS Score:</strong> 5.3/10.0</p>
+            <p><strong>Affected Hosts:</strong> 1</p>
+            <p>Port 80 is running HTTP. Unencrypted web traffic.</p>
+        </div>
+        
+        <h3>Immediate Actions Required</h3>
+                <div class="recommendation">
+            <h4>Remediate High-Severity Issues</h4>
+            <p><strong>Priority:</strong> HIGH</p>
+            <p>Schedule patching and remediation for high-severity vulnerabilities within 1-2 weeks.</p>
+            <p><strong>Effort:</strong> Medium | <strong>Impact:</strong> High</p>
+        </div>
+                
+        <!-- Technical Details -->
+                <h2>Technical Details</h2>
+
+        <h3>Network Topology</h3>
+        <p><strong>Total Assets:</strong> 5</p>
+
+        <h3>Services Detected</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Instances</th>
+                </tr>
+            </thead>
+            <tbody>
+                            </tbody>
+        </table>
+
+        <h3>Host Details</h3>
+                <div class="vulnerability-card">
+            <h4>Host: 10.0.0.2</h4>
+                        <p><strong>Risk Score:</strong> 0.00/10</p>
+            <p><strong>Open Ports:</strong> 2</p>
+            <p><strong>Vulnerabilities:</strong> 1</p>
+
+                    </div>
+                <div class="vulnerability-card">
+            <h4>Host: 10.0.0.3</h4>
+                        <p><strong>Risk Score:</strong> 0.00/10</p>
+            <p><strong>Open Ports:</strong> 2</p>
+            <p><strong>Vulnerabilities:</strong> 1</p>
+
+                    </div>
+                <div class="vulnerability-card">
+            <h4>Host: 10.0.0.5</h4>
+                        <p><strong>Risk Score:</strong> 0.00/10</p>
+            <p><strong>Open Ports:</strong> 2</p>
+            <p><strong>Vulnerabilities:</strong> 1</p>
+
+                    </div>
+                <div class="vulnerability-card">
+            <h4>Host: 10.0.0.6</h4>
+                        <p><strong>Risk Score:</strong> 0.00/10</p>
+            <p><strong>Open Ports:</strong> 1</p>
+            <p><strong>Vulnerabilities:</strong> 1</p>
+
+                    </div>
+                <div class="vulnerability-card">
+            <h4>Host: 10.0.0.10</h4>
+                        <p><strong>Risk Score:</strong> 0.00/10</p>
+            <p><strong>Open Ports:</strong> 3</p>
+            <p><strong>Vulnerabilities:</strong> 2</p>
+
+                    </div>
+                
+        <!-- Compliance Report -->
+                <h2>Compliance Assessment</h2>
+
+                <div class="chart-box">
+            <h3>NIST CSF 1.1</h3>
+            <p>NIST Cybersecurity Framework</p>
+                    </div>
+                <div class="chart-box">
+            <h3>ISO 27001 2013</h3>
+            <p>Information Security Management</p>
+                    </div>
+                <div class="chart-box">
+            <h3>CIS Controls v8</h3>
+            <p>Center for Internet Security Controls</p>
+                    </div>
+                <div class="chart-box">
+            <h3>PCI DSS v4.0</h3>
+            <p>Payment Card Industry Data Security Standard</p>
+                    </div>
+                <div class="chart-box">
+            <h3>HIPAA 2013</h3>
+            <p>Health Insurance Portability and Accountability Act</p>
+                    </div>
+                <div class="chart-box">
+            <h3>SOC 2 Type II</h3>
+            <p>Service Organization Control 2</p>
+                    </div>
+                
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>IOC Intelligent Operating Centre</strong></p>
+            <p>Report generated on 2025-11-05 22:49:07</p>
+            <p>This report contains confidential information and should be handled securely.</p>
+            <p>AI-Powered Network Operations & Performance Management Platform</p>
+        </div>
+    </div>
+</body>
+</html>

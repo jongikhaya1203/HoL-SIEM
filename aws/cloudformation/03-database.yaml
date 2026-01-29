@@ -1,0 +1,265 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'NetworkScanScada - Phase 1: Aurora MySQL Cluster'
+
+Parameters:
+  EnvironmentName:
+    Description: Environment name
+    Type: String
+    Default: production
+
+  DatabaseName:
+    Description: Database name
+    Type: String
+    Default: network_security_scanner
+
+  MasterUsername:
+    Description: Database master username
+    Type: String
+    Default: admin
+    NoEcho: true
+
+  DBInstanceClass:
+    Description: Database instance class
+    Type: String
+    Default: db.r6g.large
+    AllowedValues:
+      - db.t3.medium
+      - db.r6g.large
+      - db.r6g.xlarge
+      - db.r6g.2xlarge
+
+  BackupRetentionPeriod:
+    Description: Backup retention period in days
+    Type: Number
+    Default: 35
+    MinValue: 7
+    MaxValue: 35
+
+  EnablePerformanceInsights:
+    Description: Enable Performance Insights
+    Type: String
+    Default: 'true'
+    AllowedValues:
+      - 'true'
+      - 'false'
+
+Resources:
+  # ==================== DB Subnet Group ====================
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for Aurora MySQL
+      SubnetIds:
+        - !ImportValue
+          Fn::Sub: ${EnvironmentName}-DataSubnet1Id
+        - !ImportValue
+          Fn::Sub: ${EnvironmentName}-DataSubnet2Id
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-db-subnet-group
+
+  # ==================== DB Cluster Parameter Group ====================
+  DBClusterParameterGroup:
+    Type: AWS::RDS::DBClusterParameterGroup
+    Properties:
+      Description: Aurora MySQL cluster parameter group
+      Family: aurora-mysql8.0
+      Parameters:
+        character_set_server: utf8mb4
+        collation_server: utf8mb4_unicode_ci
+        time_zone: UTC
+        slow_query_log: '1'
+        long_query_time: '2'
+        log_output: FILE
+        general_log: '0'
+        server_audit_logging: '1'
+        server_audit_events: 'CONNECT,QUERY,QUERY_DCL,QUERY_DDL,QUERY_DML'
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-aurora-cluster-params
+
+  # ==================== DB Parameter Group ====================
+  DBParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Description: Aurora MySQL instance parameter group
+      Family: aurora-mysql8.0
+      Parameters:
+        max_connections: '1000'
+        innodb_lock_wait_timeout: '120'
+        performance_schema: '1'
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-aurora-instance-params
+
+  # ==================== Aurora Cluster ====================
+  AuroraCluster:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot
+    Properties:
+      DBClusterIdentifier: !Sub ${EnvironmentName}-networkscan-cluster
+      Engine: aurora-mysql
+      EngineVersion: '8.0.mysql_aurora.3.04.0'
+      EngineMode: provisioned
+      DatabaseName: !Ref DatabaseName
+      MasterUsername: !Ref MasterUsername
+      ManageMasterUserPassword: true
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      DBClusterParameterGroupName: !Ref DBClusterParameterGroup
+      VpcSecurityGroupIds:
+        - !ImportValue
+          Fn::Sub: ${EnvironmentName}-DatabaseSecurityGroupId
+      BackupRetentionPeriod: !Ref BackupRetentionPeriod
+      PreferredBackupWindow: '03:00-04:00'
+      PreferredMaintenanceWindow: 'sun:04:00-sun:05:00'
+      StorageEncrypted: true
+      DeletionProtection: true
+      EnableCloudwatchLogsExports:
+        - audit
+        - error
+        - general
+        - slowquery
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-aurora-cluster
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== Aurora Primary Instance ====================
+  AuroraPrimaryInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: !Sub ${EnvironmentName}-networkscan-primary
+      DBClusterIdentifier: !Ref AuroraCluster
+      DBInstanceClass: !Ref DBInstanceClass
+      Engine: aurora-mysql
+      DBParameterGroupName: !Ref DBParameterGroup
+      PubliclyAccessible: false
+      EnablePerformanceInsights: !Ref EnablePerformanceInsights
+      PerformanceInsightsRetentionPeriod: 7
+      MonitoringInterval: 60
+      MonitoringRoleArn: !GetAtt RDSMonitoringRole.Arn
+      AutoMinorVersionUpgrade: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-aurora-primary
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== Aurora Replica Instance ====================
+  AuroraReplicaInstance:
+    Type: AWS::RDS::DBInstance
+    DependsOn: AuroraPrimaryInstance
+    Properties:
+      DBInstanceIdentifier: !Sub ${EnvironmentName}-networkscan-replica
+      DBClusterIdentifier: !Ref AuroraCluster
+      DBInstanceClass: !Ref DBInstanceClass
+      Engine: aurora-mysql
+      DBParameterGroupName: !Ref DBParameterGroup
+      PubliclyAccessible: false
+      EnablePerformanceInsights: !Ref EnablePerformanceInsights
+      PerformanceInsightsRetentionPeriod: 7
+      MonitoringInterval: 60
+      MonitoringRoleArn: !GetAtt RDSMonitoringRole.Arn
+      AutoMinorVersionUpgrade: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-aurora-replica
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== RDS Enhanced Monitoring Role ====================
+  RDSMonitoringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${EnvironmentName}-rds-monitoring-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: monitoring.rds.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
+
+  # ==================== CloudWatch Alarms ====================
+  DatabaseCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-aurora-cpu-high
+      AlarmDescription: Aurora cluster CPU utilization is high
+      MetricName: CPUUtilization
+      Namespace: AWS/RDS
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 80
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: DBClusterIdentifier
+          Value: !Ref AuroraCluster
+
+  DatabaseConnectionsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-aurora-connections-high
+      AlarmDescription: Aurora cluster connections are high
+      MetricName: DatabaseConnections
+      Namespace: AWS/RDS
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 800
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: DBClusterIdentifier
+          Value: !Ref AuroraCluster
+
+  DatabaseFreeableMemoryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-aurora-memory-low
+      AlarmDescription: Aurora freeable memory is low
+      MetricName: FreeableMemory
+      Namespace: AWS/RDS
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 1073741824  # 1 GB in bytes
+      ComparisonOperator: LessThanThreshold
+      Dimensions:
+        - Name: DBClusterIdentifier
+          Value: !Ref AuroraCluster
+
+Outputs:
+  ClusterEndpoint:
+    Description: Aurora cluster endpoint
+    Value: !GetAtt AuroraCluster.Endpoint.Address
+    Export:
+      Name: !Sub ${EnvironmentName}-AuroraClusterEndpoint
+
+  ClusterReadEndpoint:
+    Description: Aurora cluster read endpoint
+    Value: !GetAtt AuroraCluster.ReadEndpoint.Address
+    Export:
+      Name: !Sub ${EnvironmentName}-AuroraReadEndpoint
+
+  ClusterPort:
+    Description: Aurora cluster port
+    Value: !GetAtt AuroraCluster.Endpoint.Port
+    Export:
+      Name: !Sub ${EnvironmentName}-AuroraClusterPort
+
+  DatabaseName:
+    Description: Database name
+    Value: !Ref DatabaseName
+    Export:
+      Name: !Sub ${EnvironmentName}-DatabaseName
+
+  MasterUserSecretArn:
+    Description: Secret ARN for master user credentials
+    Value: !GetAtt AuroraCluster.MasterUserSecret.SecretArn
+    Export:
+      Name: !Sub ${EnvironmentName}-DBMasterSecretArn

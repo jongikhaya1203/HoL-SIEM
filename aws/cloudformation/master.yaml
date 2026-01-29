@@ -1,0 +1,415 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'NetworkScanScada - Master Stack for Complete Infrastructure Deployment'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Environment Configuration
+        Parameters:
+          - EnvironmentName
+          - TemplatesBucketName
+
+      - Label:
+          default: Network Configuration
+        Parameters:
+          - VPCCidr
+          - AvailabilityZone1
+          - AvailabilityZone2
+
+      - Label:
+          default: Database Configuration
+        Parameters:
+          - DBInstanceClass
+          - DatabaseName
+          - MasterUsername
+          - BackupRetentionPeriod
+
+      - Label:
+          default: Cache Configuration
+        Parameters:
+          - CacheNodeType
+          - NumCacheNodes
+
+      - Label:
+          default: Compute Configuration
+        Parameters:
+          - InstanceType
+          - MinSize
+          - MaxSize
+          - DesiredCapacity
+          - KeyPairName
+
+      - Label:
+          default: CI/CD Configuration
+        Parameters:
+          - GitHubOwner
+          - GitHubRepo
+          - GitHubBranch
+          - CodeStarConnectionArn
+
+      - Label:
+          default: Monitoring Configuration
+        Parameters:
+          - AlertEmail
+          - CriticalAlertEmail
+
+Parameters:
+  EnvironmentName:
+    Description: Environment name (e.g., production, staging, development)
+    Type: String
+    Default: production
+    AllowedValues:
+      - production
+      - staging
+      - development
+
+  TemplatesBucketName:
+    Description: S3 bucket containing CloudFormation templates
+    Type: String
+
+  # Network Parameters
+  VPCCidr:
+    Description: CIDR block for VPC
+    Type: String
+    Default: 10.0.0.0/16
+
+  AvailabilityZone1:
+    Description: First availability zone
+    Type: AWS::EC2::AvailabilityZone::Name
+
+  AvailabilityZone2:
+    Description: Second availability zone
+    Type: AWS::EC2::AvailabilityZone::Name
+
+  # Database Parameters
+  DBInstanceClass:
+    Description: Database instance class
+    Type: String
+    Default: db.r6g.large
+    AllowedValues:
+      - db.t3.medium
+      - db.r6g.large
+      - db.r6g.xlarge
+      - db.r6g.2xlarge
+
+  DatabaseName:
+    Description: Database name
+    Type: String
+    Default: network_security_scanner
+
+  MasterUsername:
+    Description: Database master username
+    Type: String
+    Default: admin
+    NoEcho: true
+
+  BackupRetentionPeriod:
+    Description: Database backup retention period in days
+    Type: Number
+    Default: 35
+    MinValue: 7
+    MaxValue: 35
+
+  # Cache Parameters
+  CacheNodeType:
+    Description: ElastiCache node type
+    Type: String
+    Default: cache.r6g.large
+    AllowedValues:
+      - cache.t3.micro
+      - cache.t3.small
+      - cache.t3.medium
+      - cache.r6g.large
+      - cache.r6g.xlarge
+
+  NumCacheNodes:
+    Description: Number of cache nodes
+    Type: Number
+    Default: 2
+    MinValue: 1
+    MaxValue: 6
+
+  # Compute Parameters
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t3.large
+    AllowedValues:
+      - t3.medium
+      - t3.large
+      - t3.xlarge
+      - m5.large
+      - m5.xlarge
+
+  MinSize:
+    Description: Minimum number of EC2 instances
+    Type: Number
+    Default: 2
+
+  MaxSize:
+    Description: Maximum number of EC2 instances
+    Type: Number
+    Default: 10
+
+  DesiredCapacity:
+    Description: Desired number of EC2 instances
+    Type: Number
+    Default: 2
+
+  KeyPairName:
+    Description: EC2 Key Pair for SSH access
+    Type: AWS::EC2::KeyPair::KeyName
+
+  # CI/CD Parameters
+  GitHubOwner:
+    Description: GitHub repository owner
+    Type: String
+
+  GitHubRepo:
+    Description: GitHub repository name
+    Type: String
+    Default: networkscanscada
+
+  GitHubBranch:
+    Description: GitHub branch to deploy
+    Type: String
+    Default: main
+
+  CodeStarConnectionArn:
+    Description: ARN of the CodeStar connection to GitHub
+    Type: String
+
+  # Monitoring Parameters
+  AlertEmail:
+    Description: Email address for alerts
+    Type: String
+
+  CriticalAlertEmail:
+    Description: Email address for critical alerts
+    Type: String
+
+Resources:
+  # ==================== Phase 1: Foundation ====================
+
+  # VPC and Networking
+  VPCStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/01-vpc.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        VPCCidr: !Ref VPCCidr
+        AvailabilityZone1: !Ref AvailabilityZone1
+        AvailabilityZone2: !Ref AvailabilityZone2
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-vpc-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # Security Groups and NACLs
+  SecurityStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: VPCStack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/02-security.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-security-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # Aurora MySQL Database
+  DatabaseStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: SecurityStack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/03-database.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        DatabaseName: !Ref DatabaseName
+        MasterUsername: !Ref MasterUsername
+        DBInstanceClass: !Ref DBInstanceClass
+        BackupRetentionPeriod: !Ref BackupRetentionPeriod
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-database-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ElastiCache Redis
+  CacheStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: SecurityStack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/04-cache.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        CacheNodeType: !Ref CacheNodeType
+        NumCacheNodes: !Ref NumCacheNodes
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-cache-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # Secrets Manager
+  SecretsStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - DatabaseStack
+      - CacheStack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/05-secrets.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-secrets-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== Phase 2: Application ====================
+
+  # EC2 Auto Scaling and ALB
+  ComputeStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: SecretsStack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/06-compute.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        InstanceType: !Ref InstanceType
+        MinSize: !Ref MinSize
+        MaxSize: !Ref MaxSize
+        DesiredCapacity: !Ref DesiredCapacity
+        KeyPairName: !Ref KeyPairName
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-compute-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # S3, CloudFront, SQS, SNS
+  StorageStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: SecurityStack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/07-storage.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-storage-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== Phase 3: Security ====================
+
+  # WAF, CloudTrail, GuardDuty
+  WAFStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: ComputeStack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/08-waf.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-waf-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== Phase 4: Operations ====================
+
+  # CloudWatch Dashboards and Alarms
+  MonitoringStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - ComputeStack
+      - StorageStack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/09-monitoring.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        AlertEmail: !Ref AlertEmail
+        CriticalAlertEmail: !Ref CriticalAlertEmail
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-monitoring-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # CI/CD Pipeline
+  CICDStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: ComputeStack
+    Properties:
+      TemplateURL: !Sub https://${TemplatesBucketName}.s3.amazonaws.com/10-cicd.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        GitHubOwner: !Ref GitHubOwner
+        GitHubRepo: !Ref GitHubRepo
+        GitHubBranch: !Ref GitHubBranch
+        CodeStarConnectionArn: !Ref CodeStarConnectionArn
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-cicd-stack
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  # VPC Outputs
+  VPCId:
+    Description: VPC ID
+    Value: !GetAtt VPCStack.Outputs.VPCId
+
+  # Database Outputs
+  DatabaseEndpoint:
+    Description: Aurora cluster endpoint
+    Value: !GetAtt DatabaseStack.Outputs.ClusterEndpoint
+
+  DatabaseReadEndpoint:
+    Description: Aurora read endpoint
+    Value: !GetAtt DatabaseStack.Outputs.ClusterReadEndpoint
+
+  # Cache Outputs
+  RedisEndpoint:
+    Description: Redis primary endpoint
+    Value: !GetAtt CacheStack.Outputs.RedisEndpoint
+
+  # Compute Outputs
+  ALBDNSName:
+    Description: Application Load Balancer DNS name
+    Value: !GetAtt ComputeStack.Outputs.ALBDNSName
+
+  # Storage Outputs
+  CloudFrontDomain:
+    Description: CloudFront distribution domain
+    Value: !GetAtt StorageStack.Outputs.CloudFrontDistributionDomain
+
+  ReportsBucketName:
+    Description: Reports S3 bucket name
+    Value: !GetAtt StorageStack.Outputs.ReportsBucketName
+
+  # CI/CD Outputs
+  PipelineUrl:
+    Description: CodePipeline URL
+    Value: !GetAtt CICDStack.Outputs.PipelineUrl
+
+  # Monitoring Outputs
+  OperationalDashboard:
+    Description: CloudWatch operational dashboard
+    Value: !GetAtt MonitoringStack.Outputs.OperationalDashboardName
+
+  SecurityDashboard:
+    Description: CloudWatch security dashboard
+    Value: !GetAtt MonitoringStack.Outputs.SecurityDashboardName
+
+  # Security Outputs
+  WAFWebACLArn:
+    Description: WAF Web ACL ARN
+    Value: !GetAtt WAFStack.Outputs.WebACLArn

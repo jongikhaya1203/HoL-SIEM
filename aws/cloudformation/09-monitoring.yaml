@@ -1,0 +1,780 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'NetworkScanScada - Phase 4: CloudWatch Monitoring, Dashboards, and Alarms'
+
+Parameters:
+  EnvironmentName:
+    Description: Environment name
+    Type: String
+    Default: production
+
+  AlertEmail:
+    Description: Email address for alerts
+    Type: String
+    Default: ops@example.com
+
+  CriticalAlertEmail:
+    Description: Email address for critical alerts
+    Type: String
+    Default: oncall@example.com
+
+Resources:
+  # ==================== SNS Topics for Alerts ====================
+  WarningAlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${EnvironmentName}-networkscan-warnings
+      DisplayName: NetworkScan Warning Alerts
+      KmsMasterKeyId: alias/aws/sns
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-warning-alerts
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  CriticalAlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${EnvironmentName}-networkscan-critical
+      DisplayName: NetworkScan Critical Alerts
+      KmsMasterKeyId: alias/aws/sns
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-critical-alerts
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  WarningEmailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref WarningAlertsTopic
+      Protocol: email
+      Endpoint: !Ref AlertEmail
+
+  CriticalEmailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref CriticalAlertsTopic
+      Protocol: email
+      Endpoint: !Ref CriticalAlertEmail
+
+  # ==================== Application Log Groups ====================
+  ApplicationLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /networkscan/${EnvironmentName}/application
+      RetentionInDays: 30
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-app-logs
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  NginxAccessLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /networkscan/${EnvironmentName}/nginx/access
+      RetentionInDays: 14
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-nginx-access-logs
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  NginxErrorLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /networkscan/${EnvironmentName}/nginx/error
+      RetentionInDays: 30
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-nginx-error-logs
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  PHPFPMLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /networkscan/${EnvironmentName}/php-fpm
+      RetentionInDays: 30
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-php-fpm-logs
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== Metric Filters ====================
+  ErrorLogMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      LogGroupName: !Ref ApplicationLogGroup
+      FilterPattern: '[timestamp, level="ERROR", ...]'
+      MetricTransformations:
+        - MetricName: ApplicationErrors
+          MetricNamespace: !Sub NetworkScan/${EnvironmentName}
+          MetricValue: '1'
+          DefaultValue: 0
+
+  FatalLogMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      LogGroupName: !Ref ApplicationLogGroup
+      FilterPattern: '[timestamp, level="FATAL", ...]'
+      MetricTransformations:
+        - MetricName: ApplicationFatalErrors
+          MetricNamespace: !Sub NetworkScan/${EnvironmentName}
+          MetricValue: '1'
+          DefaultValue: 0
+
+  PHP500ErrorFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      LogGroupName: !Ref NginxAccessLogGroup
+      FilterPattern: '[ip, identity, user, timestamp, request, status=5*, size, ...]'
+      MetricTransformations:
+        - MetricName: HTTP5xxErrors
+          MetricNamespace: !Sub NetworkScan/${EnvironmentName}
+          MetricValue: '1'
+          DefaultValue: 0
+
+  SlowRequestFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      LogGroupName: !Ref NginxAccessLogGroup
+      FilterPattern: '[ip, identity, user, timestamp, request, status, size, referrer, agent, response_time>5]'
+      MetricTransformations:
+        - MetricName: SlowRequests
+          MetricNamespace: !Sub NetworkScan/${EnvironmentName}
+          MetricValue: '1'
+          DefaultValue: 0
+
+  # ==================== CloudWatch Alarms - EC2/ASG ====================
+  HighCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-ec2-cpu-high
+      AlarmDescription: EC2 CPU utilization exceeds 80%
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 3
+      Threshold: 80
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref WarningAlertsTopic
+      OKActions:
+        - !Ref WarningAlertsTopic
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value: !ImportValue
+            Fn::Sub: ${EnvironmentName}-ASGName
+
+  CriticalCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-ec2-cpu-critical
+      AlarmDescription: EC2 CPU utilization exceeds 95%
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 95
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref CriticalAlertsTopic
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value: !ImportValue
+            Fn::Sub: ${EnvironmentName}-ASGName
+
+  LowDiskSpaceAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-ec2-disk-low
+      AlarmDescription: EC2 disk space below 20%
+      MetricName: disk_used_percent
+      Namespace: CWAgent
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 80
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref WarningAlertsTopic
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value: !ImportValue
+            Fn::Sub: ${EnvironmentName}-ASGName
+        - Name: path
+          Value: /
+        - Name: fstype
+          Value: xfs
+
+  HighMemoryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-ec2-memory-high
+      AlarmDescription: EC2 memory utilization exceeds 85%
+      MetricName: mem_used_percent
+      Namespace: CWAgent
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 85
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref WarningAlertsTopic
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value: !ImportValue
+            Fn::Sub: ${EnvironmentName}-ASGName
+
+  # ==================== CloudWatch Alarms - ALB ====================
+  ALBUnhealthyHostsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-alb-unhealthy-hosts
+      AlarmDescription: ALB has unhealthy targets
+      MetricName: UnHealthyHostCount
+      Namespace: AWS/ApplicationELB
+      Statistic: Average
+      Period: 60
+      EvaluationPeriods: 2
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref CriticalAlertsTopic
+      OKActions:
+        - !Ref WarningAlertsTopic
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !ImportValue
+            Fn::Sub: ${EnvironmentName}-ALBFullName
+        - Name: TargetGroup
+          Value: !ImportValue
+            Fn::Sub: ${EnvironmentName}-TargetGroupFullName
+
+  ALBHighLatencyAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-alb-high-latency
+      AlarmDescription: ALB target response time exceeds 2 seconds
+      MetricName: TargetResponseTime
+      Namespace: AWS/ApplicationELB
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 2
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref WarningAlertsTopic
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !ImportValue
+            Fn::Sub: ${EnvironmentName}-ALBFullName
+
+  ALB5xxErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-alb-5xx-errors
+      AlarmDescription: ALB 5xx errors exceed threshold
+      MetricName: HTTPCode_Target_5XX_Count
+      Namespace: AWS/ApplicationELB
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 50
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref CriticalAlertsTopic
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !ImportValue
+            Fn::Sub: ${EnvironmentName}-ALBFullName
+
+  ALB4xxErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-alb-4xx-errors
+      AlarmDescription: ALB 4xx errors exceed threshold
+      MetricName: HTTPCode_Target_4XX_Count
+      Namespace: AWS/ApplicationELB
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 200
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref WarningAlertsTopic
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !ImportValue
+            Fn::Sub: ${EnvironmentName}-ALBFullName
+
+  # ==================== CloudWatch Alarms - Application ====================
+  ApplicationErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-app-errors-high
+      AlarmDescription: Application error rate is high
+      MetricName: ApplicationErrors
+      Namespace: !Sub NetworkScan/${EnvironmentName}
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 10
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref WarningAlertsTopic
+
+  ApplicationFatalAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-app-fatal-errors
+      AlarmDescription: Application fatal errors detected
+      MetricName: ApplicationFatalErrors
+      Namespace: !Sub NetworkScan/${EnvironmentName}
+      Statistic: Sum
+      Period: 60
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref CriticalAlertsTopic
+
+  # ==================== CloudWatch Alarms - SQS ====================
+  SQSQueueDepthAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-sqs-scan-queue-depth
+      AlarmDescription: Scan jobs queue depth is high
+      MetricName: ApproximateNumberOfMessagesVisible
+      Namespace: AWS/SQS
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 100
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref WarningAlertsTopic
+      Dimensions:
+        - Name: QueueName
+          Value: !Sub ${EnvironmentName}-networkscan-scan-jobs
+
+  SQSDLQAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-sqs-dlq-messages
+      AlarmDescription: Messages in dead letter queue
+      MetricName: ApproximateNumberOfMessagesVisible
+      Namespace: AWS/SQS
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref CriticalAlertsTopic
+      Dimensions:
+        - Name: QueueName
+          Value: !Sub ${EnvironmentName}-networkscan-scan-jobs-dlq
+
+  # ==================== CloudWatch Dashboard ====================
+  OperationalDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub ${EnvironmentName}-NetworkScan-Operations
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "text",
+              "x": 0,
+              "y": 0,
+              "width": 24,
+              "height": 1,
+              "properties": {
+                "markdown": "# NetworkScan SCADA - ${EnvironmentName} Environment Dashboard"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 1,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "EC2 CPU Utilization",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/EC2", "CPUUtilization", "AutoScalingGroupName", "${EnvironmentName}-networkscan-asg"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60
+              }
+            },
+            {
+              "type": "metric",
+              "x": 8,
+              "y": 1,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "EC2 Memory Utilization",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["CWAgent", "mem_used_percent", "AutoScalingGroupName", "${EnvironmentName}-networkscan-asg"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60
+              }
+            },
+            {
+              "type": "metric",
+              "x": 16,
+              "y": 1,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "ASG Instance Count",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/AutoScaling", "GroupInServiceInstances", "AutoScalingGroupName", "${EnvironmentName}-networkscan-asg"],
+                  ["AWS/AutoScaling", "GroupDesiredCapacity", "AutoScalingGroupName", "${EnvironmentName}-networkscan-asg"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 7,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "ALB Request Count",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${EnvironmentName}-networkscan-alb"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60,
+                "stat": "Sum"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 8,
+              "y": 7,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "ALB Response Time",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "${EnvironmentName}-networkscan-alb"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60,
+                "stat": "Average"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 16,
+              "y": 7,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "ALB HTTP Errors",
+                "view": "timeSeries",
+                "stacked": true,
+                "metrics": [
+                  ["AWS/ApplicationELB", "HTTPCode_Target_4XX_Count", "LoadBalancer", "${EnvironmentName}-networkscan-alb"],
+                  ["AWS/ApplicationELB", "HTTPCode_Target_5XX_Count", "LoadBalancer", "${EnvironmentName}-networkscan-alb"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60,
+                "stat": "Sum"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 13,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "Aurora CPU Utilization",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/RDS", "CPUUtilization", "DBClusterIdentifier", "${EnvironmentName}-networkscan-cluster"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60
+              }
+            },
+            {
+              "type": "metric",
+              "x": 8,
+              "y": 13,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "Aurora Connections",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/RDS", "DatabaseConnections", "DBClusterIdentifier", "${EnvironmentName}-networkscan-cluster"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60
+              }
+            },
+            {
+              "type": "metric",
+              "x": 16,
+              "y": 13,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "Aurora Freeable Memory",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/RDS", "FreeableMemory", "DBClusterIdentifier", "${EnvironmentName}-networkscan-cluster"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 19,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "Redis CPU Utilization",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/ElastiCache", "CPUUtilization", "ReplicationGroupId", "${EnvironmentName}-networkscan-redis"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60
+              }
+            },
+            {
+              "type": "metric",
+              "x": 8,
+              "y": 19,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "Redis Memory Usage",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/ElastiCache", "DatabaseMemoryUsagePercentage", "ReplicationGroupId", "${EnvironmentName}-networkscan-redis"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60
+              }
+            },
+            {
+              "type": "metric",
+              "x": 16,
+              "y": 19,
+              "width": 8,
+              "height": 6,
+              "properties": {
+                "title": "Redis Cache Hits/Misses",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/ElastiCache", "CacheHits", "ReplicationGroupId", "${EnvironmentName}-networkscan-redis"],
+                  ["AWS/ElastiCache", "CacheMisses", "ReplicationGroupId", "${EnvironmentName}-networkscan-redis"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60,
+                "stat": "Sum"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 25,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "title": "SQS Queue Depth",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", "${EnvironmentName}-networkscan-scan-jobs"],
+                  ["AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", "${EnvironmentName}-networkscan-report-jobs"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60
+              }
+            },
+            {
+              "type": "metric",
+              "x": 12,
+              "y": 25,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "title": "WAF Requests",
+                "view": "timeSeries",
+                "stacked": true,
+                "metrics": [
+                  ["AWS/WAFV2", "AllowedRequests", "WebACL", "${EnvironmentName}-networkscan-waf", "Rule", "ALL"],
+                  ["AWS/WAFV2", "BlockedRequests", "WebACL", "${EnvironmentName}-networkscan-waf", "Rule", "ALL"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60,
+                "stat": "Sum"
+              }
+            }
+          ]
+        }
+
+  # ==================== Security Dashboard ====================
+  SecurityDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub ${EnvironmentName}-NetworkScan-Security
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "text",
+              "x": 0,
+              "y": 0,
+              "width": 24,
+              "height": 1,
+              "properties": {
+                "markdown": "# NetworkScan SCADA - Security Dashboard"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 1,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "title": "WAF Blocked Requests by Rule",
+                "view": "timeSeries",
+                "stacked": true,
+                "metrics": [
+                  ["AWS/WAFV2", "BlockedRequests", "WebACL", "${EnvironmentName}-networkscan-waf", "Rule", "AWSManagedRulesCommonRuleSet"],
+                  ["AWS/WAFV2", "BlockedRequests", "WebACL", "${EnvironmentName}-networkscan-waf", "Rule", "AWSManagedRulesSQLiRuleSet"],
+                  ["AWS/WAFV2", "BlockedRequests", "WebACL", "${EnvironmentName}-networkscan-waf", "Rule", "RateLimitRule"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 300,
+                "stat": "Sum"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 12,
+              "y": 1,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "title": "WAF Request Rate",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                  ["AWS/WAFV2", "AllowedRequests", "WebACL", "${EnvironmentName}-networkscan-waf", "Rule", "ALL"],
+                  ["AWS/WAFV2", "BlockedRequests", "WebACL", "${EnvironmentName}-networkscan-waf", "Rule", "ALL"]
+                ],
+                "region": "${AWS::Region}",
+                "period": 60,
+                "stat": "Sum"
+              }
+            },
+            {
+              "type": "log",
+              "x": 0,
+              "y": 7,
+              "width": 24,
+              "height": 6,
+              "properties": {
+                "title": "Recent WAF Blocked Requests",
+                "query": "SOURCE 'aws-waf-logs-${EnvironmentName}-networkscan' | fields @timestamp, httpRequest.clientIp, httpRequest.uri, terminatingRuleId | filter action = 'BLOCK' | sort @timestamp desc | limit 20",
+                "region": "${AWS::Region}"
+              }
+            },
+            {
+              "type": "log",
+              "x": 0,
+              "y": 13,
+              "width": 24,
+              "height": 6,
+              "properties": {
+                "title": "Recent CloudTrail Events",
+                "query": "SOURCE '/aws/cloudtrail/${EnvironmentName}-networkscan' | fields @timestamp, eventName, userIdentity.arn, sourceIPAddress | filter eventName like /Delete|Create|Update|Put|Modify/ | sort @timestamp desc | limit 20",
+                "region": "${AWS::Region}"
+              }
+            }
+          ]
+        }
+
+  # ==================== Composite Alarms ====================
+  ApplicationHealthCompositeAlarm:
+    Type: AWS::CloudWatch::CompositeAlarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-app-health-composite
+      AlarmDescription: Composite alarm for overall application health
+      AlarmRule: !Sub |
+        ALARM(${ALBUnhealthyHostsAlarm}) OR
+        ALARM(${CriticalCPUAlarm}) OR
+        ALARM(${ApplicationFatalAlarm})
+      AlarmActions:
+        - !Ref CriticalAlertsTopic
+      OKActions:
+        - !Ref WarningAlertsTopic
+
+Outputs:
+  WarningAlertsTopicArn:
+    Description: Warning alerts SNS topic ARN
+    Value: !Ref WarningAlertsTopic
+    Export:
+      Name: !Sub ${EnvironmentName}-WarningAlertsTopicArn
+
+  CriticalAlertsTopicArn:
+    Description: Critical alerts SNS topic ARN
+    Value: !Ref CriticalAlertsTopic
+    Export:
+      Name: !Sub ${EnvironmentName}-CriticalAlertsTopicArn
+
+  OperationalDashboardName:
+    Description: Operational dashboard name
+    Value: !Ref OperationalDashboard
+    Export:
+      Name: !Sub ${EnvironmentName}-OperationalDashboard
+
+  SecurityDashboardName:
+    Description: Security dashboard name
+    Value: !Ref SecurityDashboard
+    Export:
+      Name: !Sub ${EnvironmentName}-SecurityDashboard
+
+  ApplicationLogGroupName:
+    Description: Application log group name
+    Value: !Ref ApplicationLogGroup
+    Export:
+      Name: !Sub ${EnvironmentName}-ApplicationLogGroup

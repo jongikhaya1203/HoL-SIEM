@@ -1,0 +1,175 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'NetworkScanScada - Phase 1: ElastiCache Redis for Sessions'
+
+Parameters:
+  EnvironmentName:
+    Description: Environment name
+    Type: String
+    Default: production
+
+  CacheNodeType:
+    Description: ElastiCache node type
+    Type: String
+    Default: cache.r6g.large
+    AllowedValues:
+      - cache.t3.micro
+      - cache.t3.small
+      - cache.t3.medium
+      - cache.r6g.large
+      - cache.r6g.xlarge
+
+  NumCacheNodes:
+    Description: Number of cache nodes (1 for non-HA, 2+ for HA)
+    Type: Number
+    Default: 2
+    MinValue: 1
+    MaxValue: 6
+
+  EngineVersion:
+    Description: Redis engine version
+    Type: String
+    Default: '7.0'
+
+Resources:
+  # ==================== Subnet Group ====================
+  CacheSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      CacheSubnetGroupName: !Sub ${EnvironmentName}-cache-subnet-group
+      Description: Subnet group for ElastiCache Redis
+      SubnetIds:
+        - !ImportValue
+          Fn::Sub: ${EnvironmentName}-DataSubnet1Id
+        - !ImportValue
+          Fn::Sub: ${EnvironmentName}-DataSubnet2Id
+
+  # ==================== Parameter Group ====================
+  CacheParameterGroup:
+    Type: AWS::ElastiCache::ParameterGroup
+    Properties:
+      CacheParameterGroupFamily: redis7
+      Description: Parameter group for NetworkScan Redis
+      Properties:
+        maxmemory-policy: volatile-lru
+        timeout: '300'
+        tcp-keepalive: '300'
+        notify-keyspace-events: 'Ex'
+
+  # ==================== Replication Group (HA Redis) ====================
+  RedisReplicationGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupId: !Sub ${EnvironmentName}-networkscan-redis
+      ReplicationGroupDescription: Redis cluster for NetworkScan sessions
+      Engine: redis
+      EngineVersion: !Ref EngineVersion
+      CacheNodeType: !Ref CacheNodeType
+      NumCacheClusters: !Ref NumCacheNodes
+      CacheSubnetGroupName: !Ref CacheSubnetGroup
+      CacheParameterGroupName: !Ref CacheParameterGroup
+      SecurityGroupIds:
+        - !ImportValue
+          Fn::Sub: ${EnvironmentName}-CacheSecurityGroupId
+      AutomaticFailoverEnabled: true
+      MultiAZEnabled: true
+      AtRestEncryptionEnabled: true
+      TransitEncryptionEnabled: true
+      AuthToken: '{{resolve:secretsmanager:networkscan/redis-auth:SecretString:password}}'
+      Port: 6379
+      PreferredMaintenanceWindow: 'sun:05:00-sun:06:00'
+      SnapshotRetentionLimit: 7
+      SnapshotWindow: '04:00-05:00'
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-redis-cluster
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ==================== Redis Auth Secret ====================
+  RedisAuthSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: networkscan/redis-auth
+      Description: Redis AUTH token for NetworkScan
+      GenerateSecretString:
+        SecretStringTemplate: '{}'
+        GenerateStringKey: password
+        PasswordLength: 32
+        ExcludeCharacters: '"@/\'
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-redis-auth-secret
+
+  # ==================== CloudWatch Alarms ====================
+  CacheCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-redis-cpu-high
+      AlarmDescription: Redis CPU utilization is high
+      MetricName: CPUUtilization
+      Namespace: AWS/ElastiCache
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 80
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: ReplicationGroupId
+          Value: !Ref RedisReplicationGroup
+
+  CacheMemoryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-redis-memory-high
+      AlarmDescription: Redis memory usage is high
+      MetricName: DatabaseMemoryUsagePercentage
+      Namespace: AWS/ElastiCache
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 80
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: ReplicationGroupId
+          Value: !Ref RedisReplicationGroup
+
+  CacheEvictionsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${EnvironmentName}-redis-evictions-high
+      AlarmDescription: Redis evictions are high
+      MetricName: Evictions
+      Namespace: AWS/ElastiCache
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 1000
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: ReplicationGroupId
+          Value: !Ref RedisReplicationGroup
+
+Outputs:
+  RedisEndpoint:
+    Description: Redis primary endpoint
+    Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Address
+    Export:
+      Name: !Sub ${EnvironmentName}-RedisEndpoint
+
+  RedisReaderEndpoint:
+    Description: Redis reader endpoint
+    Value: !GetAtt RedisReplicationGroup.ReaderEndPoint.Address
+    Export:
+      Name: !Sub ${EnvironmentName}-RedisReaderEndpoint
+
+  RedisPort:
+    Description: Redis port
+    Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Port
+    Export:
+      Name: !Sub ${EnvironmentName}-RedisPort
+
+  RedisAuthSecretArn:
+    Description: Redis auth secret ARN
+    Value: !Ref RedisAuthSecret
+    Export:
+      Name: !Sub ${EnvironmentName}-RedisAuthSecretArn
