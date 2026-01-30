@@ -3,7 +3,7 @@ session_start();
 
 // Log the logout action if database is available
 try {
-    require_once __DIR__ . '/../config/database.php';
+    require_once __DIR__ . '/includes/Database.php';
     $db = Database::getInstance()->getConnection();
 
     if (isset($_SESSION['cpanel_user_id'])) {
