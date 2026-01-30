@@ -134,6 +134,16 @@ try {
             font-size: 11px;
         }
 
+        .nav-item .badge.new {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            animation: pulse-badge 2s infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
         .sidebar-footer {
             padding: 20px;
             border-top: 1px solid var(--border);
@@ -845,6 +855,23 @@ try {
                 <div class="nav-item" onclick="showModule('integrations')">
                     <span class="icon">🔗</span>
                     <span class="label">Integrations</span>
+                </div>
+
+                <div class="nav-section">Cloud & Deployment</div>
+                <div class="nav-item" onclick="showModule('cloud-setup')">
+                    <span class="icon">☁️</span>
+                    <span class="label">Cloud Setup</span>
+                    <span class="badge new">NEW</span>
+                </div>
+                <div class="nav-item" onclick="showModule('cloud-hybrid')">
+                    <span class="icon">🔄</span>
+                    <span class="label">Cloud Hybrid</span>
+                    <span class="badge new">NEW</span>
+                </div>
+                <div class="nav-item" onclick="showModule('poc-setup')">
+                    <span class="icon">🧪</span>
+                    <span class="label">POC Setup</span>
+                    <span class="badge new">NEW</span>
                 </div>
 
                 <div class="nav-section">Resources</div>
@@ -1910,6 +1937,817 @@ server.example.com
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cloud Setup Module -->
+            <div id="cloud-setup" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>Cloud & Deployment</span>
+                        <span>/</span>
+                        <span>Cloud Setup</span>
+                    </div>
+                    <h2>☁️ Cloud Setup Guide</h2>
+                    <p>Learn how to deploy IOC Intelligent Operating Centre in cloud environments.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Supported Cloud Platforms</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="doc-table">
+                            <thead>
+                                <tr>
+                                    <th>Platform</th>
+                                    <th>Service Type</th>
+                                    <th>Recommended Tier</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Amazon Web Services (AWS)</strong></td>
+                                    <td>EC2, RDS, S3</td>
+                                    <td>t3.medium or higher</td>
+                                    <td><span style="color: var(--success);">✓ Certified</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Microsoft Azure</strong></td>
+                                    <td>VMs, Azure SQL, Blob Storage</td>
+                                    <td>Standard_B2s or higher</td>
+                                    <td><span style="color: var(--success);">✓ Certified</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Google Cloud Platform</strong></td>
+                                    <td>Compute Engine, Cloud SQL</td>
+                                    <td>e2-medium or higher</td>
+                                    <td><span style="color: var(--success);">✓ Certified</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>DigitalOcean</strong></td>
+                                    <td>Droplets, Managed MySQL</td>
+                                    <td>Basic 2GB RAM</td>
+                                    <td><span style="color: var(--info);">✓ Compatible</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>AWS Deployment Steps</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Launch EC2 Instance</h4>
+                                    <p>Create a new EC2 instance with the following specifications:</p>
+                                    <div class="code-block">
+                                        <code>
+<span class="comment"># Recommended AMI: Amazon Linux 2 or Ubuntu 22.04 LTS</span>
+Instance Type: t3.medium (minimum)
+Storage: 50GB SSD (gp3)
+Security Group: Allow ports 80, 443, 22
+
+<span class="comment"># Install dependencies</span>
+sudo yum update -y
+sudo amazon-linux-extras install php8.0 -y
+sudo yum install httpd mariadb-server -y
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Configure RDS Database</h4>
+                                    <p>Set up a managed MySQL/MariaDB database:</p>
+                                    <ul style="padding-left: 25px; line-height: 1.8;">
+                                        <li>Engine: MySQL 8.0 or MariaDB 10.6</li>
+                                        <li>Instance Class: db.t3.small (minimum)</li>
+                                        <li>Storage: 20GB with auto-scaling</li>
+                                        <li>Enable automated backups</li>
+                                        <li>Configure VPC security group to allow EC2 access</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Deploy Application</h4>
+                                    <p>Upload and configure the IOC application:</p>
+                                    <div class="code-block">
+                                        <code>
+<span class="comment"># Clone or upload application files</span>
+cd /var/www/html
+sudo unzip ioc-application.zip
+
+<span class="comment"># Set permissions</span>
+sudo chown -R apache:apache /var/www/html
+sudo chmod -R 755 /var/www/html
+
+<span class="comment"># Configure database connection</span>
+sudo nano config/database.php
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Configure SSL/HTTPS</h4>
+                                    <p>Secure your installation with SSL:</p>
+                                    <div class="code-block">
+                                        <code>
+<span class="comment"># Install Certbot for Let's Encrypt</span>
+sudo yum install certbot python3-certbot-apache -y
+sudo certbot --apache -d yourdomain.com
+
+<span class="comment"># Auto-renewal setup</span>
+echo "0 12 * * * /usr/bin/certbot renew --quiet" | sudo crontab -
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Azure Deployment Steps</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Create Azure VM</h4>
+                                    <p>Launch a virtual machine in Azure Portal:</p>
+                                    <ul style="padding-left: 25px; line-height: 1.8;">
+                                        <li>Image: Ubuntu Server 22.04 LTS</li>
+                                        <li>Size: Standard_B2s or higher</li>
+                                        <li>Authentication: SSH public key</li>
+                                        <li>Inbound ports: 80, 443, 22</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Setup Azure SQL Database</h4>
+                                    <p>Create managed database service:</p>
+                                    <ul style="padding-left: 25px; line-height: 1.8;">
+                                        <li>Service: Azure Database for MySQL</li>
+                                        <li>Compute tier: Burstable (B1ms minimum)</li>
+                                        <li>Storage: 20 GiB with auto-grow</li>
+                                        <li>Backup retention: 7 days (adjustable)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Configure Networking</h4>
+                                    <p>Set up Virtual Network and firewall rules:</p>
+                                    <div class="code-block">
+                                        <code>
+<span class="comment"># Azure CLI commands</span>
+az network vnet create --name IOC-VNet --resource-group IOC-RG
+az network nsg rule create --name AllowHTTPS --nsg-name IOC-NSG \
+    --priority 100 --access Allow --protocol Tcp --destination-port-ranges 443
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box tip">
+                    <div class="info-box-icon">💡</div>
+                    <div class="info-box-content">
+                        <strong>Cloud Best Practices</strong>
+                        <p>Always use IAM roles instead of access keys, enable multi-AZ for production databases, and implement auto-scaling for variable workloads.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cloud Hybrid Module -->
+            <div id="cloud-hybrid" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>Cloud & Deployment</span>
+                        <span>/</span>
+                        <span>Cloud Hybrid</span>
+                    </div>
+                    <h2>🔄 Cloud Hybrid Architecture</h2>
+                    <p>Deploy IOC in a hybrid environment combining on-premises and cloud infrastructure.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Hybrid Architecture Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="screenshot">
+                            <div class="screenshot-header">
+                                <span class="screenshot-dot red"></span>
+                                <span class="screenshot-dot yellow"></span>
+                                <span class="screenshot-dot green"></span>
+                                <span style="margin-left: 10px; color: var(--text-muted); font-size: 12px;">Hybrid Architecture Diagram</span>
+                            </div>
+                            <div class="screenshot-body" style="padding: 30px; text-align: left;">
+                                <svg viewBox="0 0 800 400" style="width: 100%; max-width: 750px; margin: 0 auto; display: block;">
+                                    <!-- On-Premises Box -->
+                                    <rect x="20" y="50" width="250" height="300" fill="none" stroke="#00b894" stroke-width="2" stroke-dasharray="5,5" rx="10"/>
+                                    <text x="145" y="80" fill="#00b894" font-size="14" text-anchor="middle" font-weight="bold">ON-PREMISES</text>
+
+                                    <!-- SCADA Systems -->
+                                    <rect x="40" y="100" width="90" height="60" fill="#1f2b47" stroke="#3b82f6" stroke-width="2" rx="5"/>
+                                    <text x="85" y="135" fill="#e2e8f0" font-size="11" text-anchor="middle">SCADA</text>
+
+                                    <!-- Local DB -->
+                                    <rect x="150" y="100" width="90" height="60" fill="#1f2b47" stroke="#f59e0b" stroke-width="2" rx="5"/>
+                                    <text x="195" y="135" fill="#e2e8f0" font-size="11" text-anchor="middle">Local DB</text>
+
+                                    <!-- IOC Agent -->
+                                    <rect x="40" y="200" width="200" height="60" fill="#1f2b47" stroke="#00b894" stroke-width="2" rx="5"/>
+                                    <text x="140" y="235" fill="#e2e8f0" font-size="12" text-anchor="middle">IOC Sync Agent</text>
+
+                                    <!-- Firewall -->
+                                    <rect x="40" y="290" width="200" height="40" fill="#ef4444" stroke="#ef4444" stroke-width="2" rx="5" fill-opacity="0.3"/>
+                                    <text x="140" y="315" fill="#ef4444" font-size="11" text-anchor="middle">🔥 Firewall</text>
+
+                                    <!-- Cloud Box -->
+                                    <rect x="530" y="50" width="250" height="300" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5" rx="10"/>
+                                    <text x="655" y="80" fill="#3b82f6" font-size="14" text-anchor="middle" font-weight="bold">CLOUD (AWS/Azure)</text>
+
+                                    <!-- Cloud IOC -->
+                                    <rect x="550" y="100" width="210" height="60" fill="#1f2b47" stroke="#00b894" stroke-width="2" rx="5"/>
+                                    <text x="655" y="135" fill="#e2e8f0" font-size="12" text-anchor="middle">IOC Main Server</text>
+
+                                    <!-- Cloud DB -->
+                                    <rect x="550" y="180" width="100" height="50" fill="#1f2b47" stroke="#f59e0b" stroke-width="2" rx="5"/>
+                                    <text x="600" y="210" fill="#e2e8f0" font-size="11" text-anchor="middle">Cloud DB</text>
+
+                                    <!-- Storage -->
+                                    <rect x="660" y="180" width="100" height="50" fill="#1f2b47" stroke="#10b981" stroke-width="2" rx="5"/>
+                                    <text x="710" y="210" fill="#e2e8f0" font-size="11" text-anchor="middle">S3/Blob</text>
+
+                                    <!-- Dashboard -->
+                                    <rect x="550" y="250" width="210" height="60" fill="#1f2b47" stroke="#00cec9" stroke-width="2" rx="5"/>
+                                    <text x="655" y="285" fill="#e2e8f0" font-size="12" text-anchor="middle">Web Dashboard</text>
+
+                                    <!-- Connection Lines -->
+                                    <line x1="270" y1="230" x2="530" y2="130" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                    <text x="400" y="170" fill="#00b894" font-size="10" text-anchor="middle">VPN / Direct Connect</text>
+
+                                    <!-- Arrow marker -->
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#00b894"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Hybrid Deployment Components</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="doc-table">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Location</th>
+                                    <th>Purpose</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>IOC Sync Agent</strong></td>
+                                    <td>On-Premises</td>
+                                    <td>Collects data from SCADA, PLCs, and local systems; syncs to cloud</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Local Database</strong></td>
+                                    <td>On-Premises</td>
+                                    <td>Stores operational data locally for low-latency access and offline operation</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IOC Main Server</strong></td>
+                                    <td>Cloud</td>
+                                    <td>Central processing, analytics, and reporting engine</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cloud Database</strong></td>
+                                    <td>Cloud</td>
+                                    <td>Long-term storage, aggregated data, and historical analysis</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Web Dashboard</strong></td>
+                                    <td>Cloud</td>
+                                    <td>User interface accessible from anywhere with authentication</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Setting Up VPN Connection</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>AWS Site-to-Site VPN</h4>
+                                    <div class="code-block">
+                                        <code>
+<span class="comment"># Create Virtual Private Gateway</span>
+aws ec2 create-vpn-gateway --type ipsec.1
+
+<span class="comment"># Create Customer Gateway (your on-premises router)</span>
+aws ec2 create-customer-gateway --type ipsec.1 \
+    --public-ip YOUR_ONPREM_IP --bgp-asn 65000
+
+<span class="comment"># Create VPN Connection</span>
+aws ec2 create-vpn-connection --type ipsec.1 \
+    --customer-gateway-id cgw-xxxxx \
+    --vpn-gateway-id vgw-xxxxx
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Azure VPN Gateway</h4>
+                                    <div class="code-block">
+                                        <code>
+<span class="comment"># Create VPN Gateway</span>
+az network vnet-gateway create --name IOC-VPN-Gateway \
+    --resource-group IOC-RG --vnet IOC-VNet \
+    --gateway-type Vpn --vpn-type RouteBased --sku VpnGw1
+
+<span class="comment"># Create Local Network Gateway (on-premises)</span>
+az network local-gateway create --name OnPrem-Gateway \
+    --resource-group IOC-RG \
+    --gateway-ip-address YOUR_ONPREM_IP \
+    --local-address-prefixes 10.0.0.0/24
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>IOC Sync Agent Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Install and configure the sync agent on your on-premises server:</p>
+                        <div class="code-block">
+                            <code>
+<span class="comment"># config/sync-agent.php</span>
+&lt;?php
+return [
+    <span class="string">'cloud_endpoint'</span> => <span class="string">'https://your-cloud-ioc.example.com/api/sync'</span>,
+    <span class="string">'api_key'</span> => <span class="string">'YOUR_SECURE_API_KEY'</span>,
+    <span class="string">'sync_interval'</span> => 60, <span class="comment">// seconds</span>
+    <span class="string">'data_sources'</span> => [
+        <span class="string">'scada'</span> => [
+            <span class="string">'enabled'</span> => true,
+            <span class="string">'protocol'</span> => <span class="string">'modbus'</span>,
+            <span class="string">'host'</span> => <span class="string">'192.168.1.100'</span>,
+            <span class="string">'port'</span> => 502
+        ],
+        <span class="string">'local_db'</span> => [
+            <span class="string">'enabled'</span> => true,
+            <span class="string">'tables'</span> => [<span class="string">'scan_results'</span>, <span class="string">'alerts'</span>, <span class="string">'sensor_data'</span>]
+        ]
+    ],
+    <span class="string">'offline_mode'</span> => [
+        <span class="string">'enabled'</span> => true,
+        <span class="string">'queue_max_size'</span> => 10000
+    ]
+];
+                            </code>
+                        </div>
+
+                        <div class="info-box warning">
+                            <div class="info-box-icon">⚠️</div>
+                            <div class="info-box-content">
+                                <strong>Security Note</strong>
+                                <p>Always use encrypted connections (TLS 1.3) and rotate API keys regularly. Store sensitive credentials in environment variables, not config files.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Data Synchronization Modes</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion">
+                            <div class="accordion-item">
+                                <div class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>Real-Time Sync</span>
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <p><strong>Use Case:</strong> Critical alerts and live monitoring data</p>
+                                    <p>Data is pushed to cloud immediately as it's collected. Requires stable, low-latency connection.</p>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <div class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>Batch Sync</span>
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <p><strong>Use Case:</strong> Historical data, logs, and reports</p>
+                                    <p>Data is aggregated locally and synced at intervals (e.g., every 5 minutes). More bandwidth-efficient.</p>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <div class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>Offline Queue</span>
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <p><strong>Use Case:</strong> Unreliable connections or temporary outages</p>
+                                    <p>Data is queued locally when cloud is unreachable and synced when connection is restored.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POC Setup Module -->
+            <div id="poc-setup" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>Cloud & Deployment</span>
+                        <span>/</span>
+                        <span>POC Setup</span>
+                    </div>
+                    <h2>🧪 Proof of Concept (POC) Setup</h2>
+                    <p>Quick setup guide for evaluating IOC in a test environment.</p>
+                </div>
+
+                <div class="info-box info">
+                    <div class="info-box-icon">ℹ️</div>
+                    <div class="info-box-content">
+                        <strong>POC Overview</strong>
+                        <p>A POC deployment allows you to evaluate IOC capabilities in a controlled environment before full production deployment. This typically involves minimal hardware and can be completed in a few hours.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>POC Requirements (Minimal)</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="doc-table">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Minimum Spec</th>
+                                    <th>Recommended</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Server/VM</strong></td>
+                                    <td>2 CPU, 4GB RAM, 20GB Storage</td>
+                                    <td>4 CPU, 8GB RAM, 50GB SSD</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Operating System</strong></td>
+                                    <td>Windows 10/11 or Ubuntu 20.04+</td>
+                                    <td>Ubuntu 22.04 LTS</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Web Server</strong></td>
+                                    <td>Apache 2.4+ or Nginx</td>
+                                    <td>Apache 2.4 with mod_rewrite</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>PHP</strong></td>
+                                    <td>PHP 7.4+</td>
+                                    <td>PHP 8.1+</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Database</strong></td>
+                                    <td>MySQL 5.7 or MariaDB 10.3</td>
+                                    <td>MySQL 8.0 or MariaDB 10.6</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Quick Start with XAMPP (Windows/Mac)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Download and Install XAMPP</h4>
+                                    <p>Download XAMPP from <a href="https://www.apachefriends.org/" target="_blank" style="color: var(--primary);">apachefriends.org</a></p>
+                                    <ul style="padding-left: 25px; line-height: 1.8;">
+                                        <li>Choose version with PHP 8.0 or higher</li>
+                                        <li>Install to default location (C:\xampp or /Applications/XAMPP)</li>
+                                        <li>Select Apache, MySQL, PHP, and phpMyAdmin components</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Start Services</h4>
+                                    <p>Open XAMPP Control Panel and start:</p>
+                                    <ul style="padding-left: 25px; line-height: 1.8;">
+                                        <li>Apache (Web Server)</li>
+                                        <li>MySQL (Database)</li>
+                                    </ul>
+                                    <div class="info-box tip">
+                                        <div class="info-box-icon">💡</div>
+                                        <div class="info-box-content">
+                                            <strong>Port Conflicts</strong>
+                                            <p>If Apache fails to start, check if port 80 is used by another application (Skype, IIS). Change port in httpd.conf if needed.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Deploy IOC Application</h4>
+                                    <div class="code-block">
+                                        <code>
+<span class="comment"># Extract IOC files to htdocs</span>
+Windows: C:\xampp\htdocs\ioc\
+Mac/Linux: /opt/lampp/htdocs/ioc/
+
+<span class="comment"># Set file permissions (Linux/Mac)</span>
+chmod -R 755 /opt/lampp/htdocs/ioc/
+chmod -R 777 /opt/lampp/htdocs/ioc/storage/
+chmod -R 777 /opt/lampp/htdocs/ioc/logs/
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Create Database</h4>
+                                    <p>Open phpMyAdmin (http://localhost/phpmyadmin):</p>
+                                    <div class="code-block">
+                                        <code>
+<span class="comment">-- Create database</span>
+CREATE DATABASE ioc_poc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+<span class="comment">-- Create user (optional but recommended)</span>
+CREATE USER 'ioc_user'@'localhost' IDENTIFIED BY 'secure_password';
+GRANT ALL PRIVILEGES ON ioc_poc.* TO 'ioc_user'@'localhost';
+FLUSH PRIVILEGES;
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">
+                                    <h4>Configure Application</h4>
+                                    <p>Edit config/database.php:</p>
+                                    <div class="code-block">
+                                        <code>
+&lt;?php
+return [
+    <span class="string">'host'</span> => <span class="string">'localhost'</span>,
+    <span class="string">'database'</span> => <span class="string">'ioc_poc'</span>,
+    <span class="string">'username'</span> => <span class="string">'ioc_user'</span>,
+    <span class="string">'password'</span> => <span class="string">'secure_password'</span>,
+    <span class="string">'charset'</span> => <span class="string">'utf8mb4'</span>
+];
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">6</div>
+                                <div class="step-content">
+                                    <h4>Run Installation</h4>
+                                    <p>Open browser and navigate to:</p>
+                                    <div class="code-block">
+                                        <code>
+http://localhost/ioc/install.php
+
+<span class="comment"># Follow the installation wizard to:</span>
+- Verify system requirements
+- Import database schema
+- Create admin account
+- Configure initial settings
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Quick Start with Docker</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>For a faster POC setup, use Docker Compose:</p>
+                        <div class="code-block">
+                            <code>
+<span class="comment"># docker-compose.yml</span>
+version: '3.8'
+
+services:
+  ioc-web:
+    image: ioc/intelligent-operating-centre:latest
+    ports:
+      - "8080:80"
+    environment:
+      - DB_HOST=ioc-db
+      - DB_NAME=ioc_poc
+      - DB_USER=ioc
+      - DB_PASS=secure_password
+    depends_on:
+      - ioc-db
+    volumes:
+      - ./storage:/var/www/html/storage
+
+  ioc-db:
+    image: mariadb:10.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=ioc_poc
+      - MYSQL_USER=ioc
+      - MYSQL_PASSWORD=secure_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+                            </code>
+                        </div>
+                        <div class="code-block" style="margin-top: 15px;">
+                            <code>
+<span class="comment"># Start the POC environment</span>
+docker-compose up -d
+
+<span class="comment"># Access the application</span>
+http://localhost:8080
+
+<span class="comment"># View logs</span>
+docker-compose logs -f ioc-web
+
+<span class="comment"># Stop when done</span>
+docker-compose down
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>POC Demo Data</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Load sample data to demonstrate IOC capabilities:</p>
+                        <div class="code-block">
+                            <code>
+<span class="comment"># Import demo dataset</span>
+mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
+
+<span class="comment"># Demo data includes:</span>
+- 50 sample network scans
+- 200+ vulnerability records
+- 5 SCADA device simulations
+- 30 days of sensor data
+- Sample reports and alerts
+                            </code>
+                        </div>
+
+                        <div class="info-box tip">
+                            <div class="info-box-icon">💡</div>
+                            <div class="info-box-content">
+                                <strong>Demo Credentials</strong>
+                                <p>Default login after installing demo data: <strong>admin@demo.local</strong> / <strong>demo123</strong>. Change these immediately after evaluation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>POC Evaluation Checklist</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="steps">
+                            <div class="step" style="opacity: 0.9;">
+                                <div class="step-number" style="background: var(--success);">✓</div>
+                                <div class="step-content">
+                                    <h4>Network Scanning</h4>
+                                    <p>Run discovery and vulnerability scans on test network</p>
+                                </div>
+                            </div>
+                            <div class="step" style="opacity: 0.9;">
+                                <div class="step-number" style="background: var(--success);">✓</div>
+                                <div class="step-content">
+                                    <h4>SCADA Integration</h4>
+                                    <p>Connect to simulated or test SCADA devices</p>
+                                </div>
+                            </div>
+                            <div class="step" style="opacity: 0.9;">
+                                <div class="step-number" style="background: var(--success);">✓</div>
+                                <div class="step-content">
+                                    <h4>Report Generation</h4>
+                                    <p>Generate and export sample reports in various formats</p>
+                                </div>
+                            </div>
+                            <div class="step" style="opacity: 0.9;">
+                                <div class="step-number" style="background: var(--success);">✓</div>
+                                <div class="step-content">
+                                    <h4>Alert Configuration</h4>
+                                    <p>Set up and test alert thresholds and notifications</p>
+                                </div>
+                            </div>
+                            <div class="step" style="opacity: 0.9;">
+                                <div class="step-number" style="background: var(--success);">✓</div>
+                                <div class="step-content">
+                                    <h4>User Management</h4>
+                                    <p>Test role-based access control and permissions</p>
+                                </div>
+                            </div>
+                            <div class="step" style="opacity: 0.9;">
+                                <div class="step-number" style="background: var(--success);">✓</div>
+                                <div class="step-content">
+                                    <h4>Performance Testing</h4>
+                                    <p>Evaluate system responsiveness under simulated load</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-icon">⚠️</div>
+                    <div class="info-box-content">
+                        <strong>POC Limitations</strong>
+                        <p>POC installations are for evaluation only. Do not use for production data. Demo data and default credentials should never be used in production environments.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Next Steps After POC</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul style="padding-left: 25px; line-height: 2;">
+                            <li>Document findings and feature requirements</li>
+                            <li>Identify integration points with existing systems</li>
+                            <li>Plan production architecture (on-premises, cloud, or hybrid)</li>
+                            <li>Estimate storage and compute requirements based on POC data</li>
+                            <li>Schedule production deployment and training</li>
+                        </ul>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="showModule('cloud-setup')">☁️ View Cloud Setup Guide</button>
+                            <button class="btn btn-secondary" onclick="showModule('cloud-hybrid')" style="margin-left: 10px;">🔄 View Hybrid Architecture</button>
+                        </div>
                     </div>
                 </div>
             </div>

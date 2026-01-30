@@ -616,6 +616,8 @@ $theme_color = $settings['theme_color'] ?? '#667eea';
             <a href="compliance.php" class="nav-btn">Compliance</a>
             <a href="mail_dlp.php" class="nav-btn" style="background: #e91e63;">📧 Email DLP</a>
             <a href="api.php" class="nav-btn">API</a>
+            <a href="cpanel/scada.php" class="nav-btn" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);">🏭 SCADA</a>
+            <a href="cpanel/scada.php?tab=tanks" class="nav-btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); position: relative;">🛢️ Tank & Pipeline<span class="new-badge" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; font-size: 9px; padding: 2px 6px; border-radius: 8px;">LIVE</span></a>
             <a href="service_desk.php" class="nav-btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative;">🎫 Service Desk<span class="new-badge" style="position: absolute; top: -8px; right: -8px; background: #ff4757; color: white; font-size: 9px; padding: 2px 6px; border-radius: 8px;">NEW</span></a>
             <a href="admin/logo_settings.php" class="nav-btn" style="background: #FF9800;">🎨 Branding</a>
             <a href="training_center.php" class="nav-btn" style="background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); position: relative;">📚 Training Center<span class="new-badge" style="position: absolute; top: -8px; right: -8px; background: #ff4757; color: white; font-size: 9px; padding: 2px 6px; border-radius: 8px;">NEW</span></a>

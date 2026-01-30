@@ -462,6 +462,86 @@ $layout = $savedLayout ? json_decode($savedLayout['setting_value'], true) : [];
                             <tr><td>172.16.0.0/16</td><td>✓ Complete</td></tr>
                         </table>
                     </div>
+                `,
+                'vulnerability-trend': `
+                    <div class="widget-header">
+                        <h3>Vulnerability Trend</h3>
+                        <button class="widget-remove" onclick="removeWidget(this)">×</button>
+                    </div>
+                    <div class="widget-body">
+                        <canvas id="vuln-trend-${Date.now()}"></canvas>
+                    </div>
+                `,
+                'top-vulnerabilities': `
+                    <div class="widget-header">
+                        <h3>Top Vulnerabilities</h3>
+                        <button class="widget-remove" onclick="removeWidget(this)">×</button>
+                    </div>
+                    <div class="widget-body" style="padding: 0;">
+                        <table>
+                            <tr><th>Vulnerability</th><th>Severity</th></tr>
+                            <tr><td>CVE-2024-1234</td><td style="color:#f44336;">Critical</td></tr>
+                            <tr><td>CVE-2024-5678</td><td style="color:#ff9800;">High</td></tr>
+                            <tr><td>CVE-2024-9012</td><td style="color:#ffc107;">Medium</td></tr>
+                            <tr><td>CVE-2024-3456</td><td style="color:#4CAF50;">Low</td></tr>
+                        </table>
+                    </div>
+                `,
+                'device-list': `
+                    <div class="widget-header">
+                        <h3>Device List</h3>
+                        <button class="widget-remove" onclick="removeWidget(this)">×</button>
+                    </div>
+                    <div class="widget-body" style="padding: 0;">
+                        <table>
+                            <tr><th>Device</th><th>IP</th><th>Status</th></tr>
+                            <tr><td>Router-01</td><td>192.168.1.1</td><td style="color:#4CAF50;">●</td></tr>
+                            <tr><td>Switch-01</td><td>192.168.1.2</td><td style="color:#4CAF50;">●</td></tr>
+                            <tr><td>Server-01</td><td>192.168.1.10</td><td style="color:#4CAF50;">●</td></tr>
+                            <tr><td>Firewall-01</td><td>192.168.1.254</td><td style="color:#ff9800;">●</td></tr>
+                        </table>
+                    </div>
+                `,
+                'alert-summary': `
+                    <div class="widget-header">
+                        <h3>Alert Summary</h3>
+                        <button class="widget-remove" onclick="removeWidget(this)">×</button>
+                    </div>
+                    <div class="widget-body">
+                        <div style="display:flex;justify-content:space-around;text-align:center;">
+                            <div><div style="font-size:24px;color:#f44336;">${Math.floor(Math.random() * 5 + 1)}</div><div style="font-size:12px;color:#94a3b8;">Critical</div></div>
+                            <div><div style="font-size:24px;color:#ff9800;">${Math.floor(Math.random() * 10 + 3)}</div><div style="font-size:12px;color:#94a3b8;">Warning</div></div>
+                            <div><div style="font-size:24px;color:#3b82f6;">${Math.floor(Math.random() * 20 + 5)}</div><div style="font-size:12px;color:#94a3b8;">Info</div></div>
+                        </div>
+                    </div>
+                `,
+                'netflow-summary': `
+                    <div class="widget-header">
+                        <h3>NetFlow Summary</h3>
+                        <button class="widget-remove" onclick="removeWidget(this)">×</button>
+                    </div>
+                    <div class="widget-body">
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <div style="display:flex;justify-content:space-between;"><span>Inbound:</span><span style="color:#4CAF50;">${(Math.random() * 100 + 50).toFixed(1)} Mbps</span></div>
+                            <div style="display:flex;justify-content:space-between;"><span>Outbound:</span><span style="color:#3b82f6;">${(Math.random() * 80 + 30).toFixed(1)} Mbps</span></div>
+                            <div style="display:flex;justify-content:space-between;"><span>Total Flows:</span><span>${Math.floor(Math.random() * 5000 + 1000)}</span></div>
+                            <div style="display:flex;justify-content:space-between;"><span>Top Protocol:</span><span>HTTPS (443)</span></div>
+                        </div>
+                    </div>
+                `,
+                'snmp-status': `
+                    <div class="widget-header">
+                        <h3>SNMP Status</h3>
+                        <button class="widget-remove" onclick="removeWidget(this)">×</button>
+                    </div>
+                    <div class="widget-body" style="padding: 0;">
+                        <table>
+                            <tr><th>Device</th><th>CPU</th><th>Memory</th></tr>
+                            <tr><td>Core-Router</td><td style="color:#4CAF50;">${Math.floor(Math.random() * 30 + 10)}%</td><td>${Math.floor(Math.random() * 40 + 20)}%</td></tr>
+                            <tr><td>Core-Switch</td><td style="color:#4CAF50;">${Math.floor(Math.random() * 25 + 5)}%</td><td>${Math.floor(Math.random() * 35 + 15)}%</td></tr>
+                            <tr><td>Firewall</td><td style="color:#ff9800;">${Math.floor(Math.random() * 40 + 40)}%</td><td>${Math.floor(Math.random() * 50 + 30)}%</td></tr>
+                        </table>
+                    </div>
                 `
             };
 

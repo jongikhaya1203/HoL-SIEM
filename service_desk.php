@@ -848,8 +848,107 @@ $teamMembers = [
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100px); }
+        }
+
         .module.active {
             animation: fadeIn 0.3s ease;
+        }
+
+        /* File Upload Area */
+        .file-upload-area {
+            border: 2px dashed var(--card-border);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-dark);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .file-upload-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-text {
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .file-upload-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .attachment-list {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .attachment-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .attachment-icon {
+            font-size: 20px;
+        }
+
+        .attachment-name {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .attachment-size {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .attachment-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .attachment-remove:hover {
+            background: rgba(239, 68, 68, 0.1);
         }
 
         /* Ticket Action Buttons */
@@ -1320,7 +1419,7 @@ $teamMembers = [
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="changesTableBody">
                                     <?php foreach($changes as $change): ?>
                                     <tr>
                                         <td><code><?= $change['id'] ?></code></td>
@@ -1846,6 +1945,336 @@ $teamMembers = [
         </div>
     </div>
 
+    <!-- New Change Request Modal -->
+    <div class="modal-overlay" id="newChangeModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <div class="modal-title">📋 Submit Change Request</div>
+                <button class="modal-close" onclick="hideModal('newChangeModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newChangeForm" onsubmit="submitChangeRequest(event)">
+                    <div class="form-group">
+                        <label class="form-label">Change Title *</label>
+                        <input type="text" class="form-control" name="title" required placeholder="Brief description of the change">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Change Type *</label>
+                            <select class="form-control" name="type" required>
+                                <option value="">Select type</option>
+                                <option value="standard">Standard - Pre-approved</option>
+                                <option value="normal">Normal - Requires CAB approval</option>
+                                <option value="emergency">Emergency - Urgent fix</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priority *</label>
+                            <select class="form-control" name="priority" required>
+                                <option value="">Select priority</option>
+                                <option value="critical">Critical</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Select category</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Network">Network</option>
+                                <option value="Application">Application</option>
+                                <option value="Security">Security</option>
+                                <option value="Database">Database</option>
+                                <option value="Hardware">Hardware</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Scheduled Date/Time *</label>
+                            <input type="datetime-local" class="form-control" name="scheduled" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Impact Level *</label>
+                            <select class="form-control" name="impact" required>
+                                <option value="">Select impact</option>
+                                <option value="low">Low - Single user/system</option>
+                                <option value="medium">Medium - Department/group</option>
+                                <option value="high">High - Organization-wide</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Risk Level *</label>
+                            <select class="form-control" name="risk" required>
+                                <option value="">Select risk</option>
+                                <option value="low">Low - Minimal risk</option>
+                                <option value="medium">Medium - Some risk</option>
+                                <option value="high">High - Significant risk</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Requestor *</label>
+                            <input type="text" class="form-control" name="requestor" required placeholder="Your name or team">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Implementer *</label>
+                            <input type="text" class="form-control" name="implementer" required placeholder="Team responsible for implementation">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Change Description *</label>
+                        <textarea class="form-control" name="description" required placeholder="Detailed description of the change, including scope and objectives..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Rollback Plan *</label>
+                        <textarea class="form-control" name="rollback_plan" required placeholder="Steps to revert the change if issues occur..." style="min-height: 80px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Testing Plan</label>
+                        <textarea class="form-control" name="testing_plan" placeholder="How will you verify the change was successful?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Attachments</label>
+                        <div class="file-upload-area" id="changeFileUpload" onclick="document.getElementById('changeAttachments').click()">
+                            <input type="file" id="changeAttachments" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.png,.jpg,.jpeg,.zip" style="display: none;" onchange="handleChangeAttachments(this)">
+                            <div class="file-upload-icon">📎</div>
+                            <div class="file-upload-text">Click to upload or drag files here</div>
+                            <div class="file-upload-hint">PDF, DOC, XLS, TXT, Images, ZIP (Max 10MB each)</div>
+                        </div>
+                        <div id="changeAttachmentList" class="attachment-list"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideModal('newChangeModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="document.getElementById('newChangeForm').requestSubmit()" style="background: var(--gradient-primary); color: white;">Submit Change Request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Problem Modal -->
+    <div class="modal-overlay" id="newProblemModal">
+        <div class="modal" style="max-width: 650px;">
+            <div class="modal-header">
+                <div class="modal-title">🔴 Create New Problem</div>
+                <button class="modal-close" onclick="hideModal('newProblemModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newProblemForm" onsubmit="submitProblem(event)">
+                    <div class="form-group">
+                        <label class="form-label">Problem Title *</label>
+                        <input type="text" class="form-control" name="title" required placeholder="Brief description of the problem">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Priority *</label>
+                            <select class="form-control" name="priority" required>
+                                <option value="">Select priority</option>
+                                <option value="critical">Critical</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Select category</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Network">Network</option>
+                                <option value="Application">Application</option>
+                                <option value="Security">Security</option>
+                                <option value="Hardware">Hardware</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Affected Services</label>
+                            <input type="text" class="form-control" name="affected_services" placeholder="e.g., Email, VPN, ERP">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Related Incidents</label>
+                            <input type="text" class="form-control" name="related_incidents" placeholder="e.g., INC-001, INC-002">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Problem Description *</label>
+                        <textarea class="form-control" name="description" required placeholder="Detailed description of the problem and its symptoms..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Root Cause Analysis</label>
+                        <textarea class="form-control" name="root_cause" placeholder="Initial analysis of the root cause (if known)..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Workaround</label>
+                        <textarea class="form-control" name="workaround" placeholder="Temporary workaround if available..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideModal('newProblemModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="document.getElementById('newProblemForm').requestSubmit()" style="background: var(--gradient-primary); color: white;">Create Problem</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Asset Modal -->
+    <div class="modal-overlay" id="newAssetModal">
+        <div class="modal" style="max-width: 650px;">
+            <div class="modal-header">
+                <div class="modal-title">💻 Add New Asset</div>
+                <button class="modal-close" onclick="hideModal('newAssetModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newAssetForm" onsubmit="submitAsset(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Asset Name *</label>
+                            <input type="text" class="form-control" name="name" required placeholder="e.g., PROD-WEB-01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Asset Type *</label>
+                            <select class="form-control" name="type" required>
+                                <option value="">Select type</option>
+                                <option value="Server">Server</option>
+                                <option value="Laptop">Laptop</option>
+                                <option value="Desktop">Desktop</option>
+                                <option value="Network">Network Device</option>
+                                <option value="Firewall">Firewall</option>
+                                <option value="Storage">Storage</option>
+                                <option value="Software">Software License</option>
+                                <option value="Printer">Printer</option>
+                                <option value="Mobile">Mobile Device</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Status *</label>
+                            <select class="form-control" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="retired">Retired</option>
+                                <option value="storage">In Storage</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Location *</label>
+                            <input type="text" class="form-control" name="location" required placeholder="e.g., Data Center A, Floor 3">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Assigned To</label>
+                            <input type="text" class="form-control" name="assigned_to" placeholder="User or department">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">IP Address</label>
+                            <input type="text" class="form-control" name="ip_address" placeholder="e.g., 192.168.1.100">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Serial Number</label>
+                            <input type="text" class="form-control" name="serial" placeholder="Manufacturer serial number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Purchase Cost ($)</label>
+                            <input type="number" class="form-control" name="cost" placeholder="e.g., 1500">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Purchase Date</label>
+                            <input type="date" class="form-control" name="purchase_date">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Warranty Expiry</label>
+                            <input type="date" class="form-control" name="warranty_expiry">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" name="notes" placeholder="Additional notes about the asset..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideModal('newAssetModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="document.getElementById('newAssetForm').requestSubmit()" style="background: var(--gradient-primary); color: white;">Add Asset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New KB Article Modal -->
+    <div class="modal-overlay" id="newArticleModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <div class="modal-title">📚 Create Knowledge Article</div>
+                <button class="modal-close" onclick="hideModal('newArticleModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newArticleForm" onsubmit="submitArticle(event)">
+                    <div class="form-group">
+                        <label class="form-label">Article Title *</label>
+                        <input type="text" class="form-control" name="title" required placeholder="Clear, descriptive title">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Select category</option>
+                                <option value="Network">Network</option>
+                                <option value="Email">Email</option>
+                                <option value="Hardware">Hardware</option>
+                                <option value="Software">Software</option>
+                                <option value="Security">Security</option>
+                                <option value="Process">Process</option>
+                                <option value="How-To">How-To Guide</option>
+                                <option value="FAQ">FAQ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Visibility *</label>
+                            <select class="form-control" name="visibility" required>
+                                <option value="public">Public - All Users</option>
+                                <option value="internal">Internal - Staff Only</option>
+                                <option value="restricted">Restricted - IT Only</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Summary *</label>
+                        <input type="text" class="form-control" name="summary" required placeholder="Brief summary of the article content">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Article Content *</label>
+                        <textarea class="form-control" name="content" required placeholder="Full article content. You can use markdown formatting..." style="min-height: 200px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tags</label>
+                        <input type="text" class="form-control" name="tags" placeholder="Comma-separated tags, e.g., vpn, remote, access">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Related Articles</label>
+                        <input type="text" class="form-control" name="related" placeholder="IDs of related articles, e.g., KB001, KB002">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideModal('newArticleModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="document.getElementById('newArticleForm').requestSubmit()" style="background: var(--gradient-primary); color: white;">Publish Article</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Navigation
         function showModule(moduleId) {
@@ -2055,6 +2484,271 @@ $teamMembers = [
 
             alert('Incident created successfully!\n\nTitle: ' + formData.get('title') + '\nPriority: ' + formData.get('priority'));
             hideModal('newTicketModal');
+            form.reset();
+        }
+
+        // Submit Change Request
+        function submitChangeRequest(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+
+            // Generate change ID
+            const changeId = 'CHG-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 900) + 100);
+
+            // Get form values
+            const title = formData.get('title');
+            const type = formData.get('type');
+            const priority = formData.get('priority');
+            const category = formData.get('category');
+            const scheduled = formData.get('scheduled');
+            const impact = formData.get('impact');
+            const risk = formData.get('risk');
+            const requestor = formData.get('requestor');
+
+            // Format scheduled date for display
+            const scheduledDate = new Date(scheduled);
+            const formattedDate = scheduledDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }) + ', ' +
+                                  scheduledDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+            // Get type badge class
+            const typeBadgeClass = type === 'emergency' ? 'critical' : (type === 'normal' ? 'medium' : 'low');
+
+            // Create new table row
+            const newRow = document.createElement('tr');
+            newRow.style.animation = 'fadeIn 0.5s ease';
+            // Get attachment info
+            const attachmentCount = changeAttachmentsFiles.length;
+            const attachmentBadge = attachmentCount > 0
+                ? `<span style="margin-left: 5px; font-size: 11px; color: var(--primary);">📎 ${attachmentCount} file${attachmentCount > 1 ? 's' : ''}</span>`
+                : '';
+
+            newRow.innerHTML = `
+                <td><code>${changeId}</code></td>
+                <td>
+                    <strong>${title}</strong>${attachmentBadge}
+                    <div style="font-size: 12px; color: var(--text-muted);">By: ${requestor}</div>
+                </td>
+                <td><span class="badge badge-${typeBadgeClass}">${type}</span></td>
+                <td><span class="badge badge-${priority}">${priority}</span></td>
+                <td><span class="badge badge-pending_approval">pending approval</span></td>
+                <td>${formattedDate}</td>
+                <td><span class="badge badge-${impact}">${impact}</span></td>
+                <td><span class="badge badge-${risk}">${risk}</span></td>
+                <td>
+                    <button class="action-btn" data-tooltip="View" onclick="viewChange('${changeId}')">👁️</button>
+                    <button class="action-btn" data-tooltip="Approve" onclick="approveChange('${changeId}')">✅</button>
+                    <button class="action-btn" data-tooltip="Reject" onclick="rejectChange('${changeId}')">❌</button>
+                </td>
+            `;
+
+            // Add row to table at the beginning
+            const tableBody = document.getElementById('changesTableBody');
+            tableBody.insertBefore(newRow, tableBody.firstChild);
+
+            // Update the Pending Approval stat card
+            const pendingCard = document.querySelector('#changes .stat-card.warning .stat-value');
+            if (pendingCard) {
+                pendingCard.textContent = parseInt(pendingCard.textContent) + 1;
+            }
+
+            // Show success notification with attachment info
+            const attachmentMsg = attachmentCount > 0 ? ` with ${attachmentCount} attachment${attachmentCount > 1 ? 's' : ''}` : '';
+            showNotification('✅ Change Request ' + changeId + ' submitted successfully' + attachmentMsg + '!', 'success');
+
+            hideModal('newChangeModal');
+            form.reset();
+
+            // Clear attachments
+            changeAttachmentsFiles = [];
+            document.getElementById('changeAttachmentList').innerHTML = '';
+
+            // Switch to changes tab to show the new entry
+            showModule('changes');
+        }
+
+        // Show notification toast
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #3b82f6, #2563eb)'};
+                color: white;
+                border-radius: 10px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Change attachments storage
+        let changeAttachmentsFiles = [];
+
+        // Handle change attachments
+        function handleChangeAttachments(input) {
+            const files = Array.from(input.files);
+            const maxSize = 10 * 1024 * 1024; // 10MB
+
+            files.forEach(file => {
+                if (file.size > maxSize) {
+                    showNotification(`File "${file.name}" exceeds 10MB limit`, 'error');
+                    return;
+                }
+                if (!changeAttachmentsFiles.find(f => f.name === file.name)) {
+                    changeAttachmentsFiles.push(file);
+                }
+            });
+
+            renderChangeAttachments();
+        }
+
+        // Render attachment list
+        function renderChangeAttachments() {
+            const listContainer = document.getElementById('changeAttachmentList');
+            listContainer.innerHTML = '';
+
+            changeAttachmentsFiles.forEach((file, index) => {
+                const icon = getFileIcon(file.name);
+                const size = formatFileSize(file.size);
+
+                const item = document.createElement('div');
+                item.className = 'attachment-item';
+                item.innerHTML = `
+                    <div class="attachment-info">
+                        <span class="attachment-icon">${icon}</span>
+                        <div>
+                            <div class="attachment-name">${file.name}</div>
+                            <div class="attachment-size">${size}</div>
+                        </div>
+                    </div>
+                    <button type="button" class="attachment-remove" onclick="removeChangeAttachment(${index})">×</button>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        // Remove attachment
+        function removeChangeAttachment(index) {
+            changeAttachmentsFiles.splice(index, 1);
+            renderChangeAttachments();
+        }
+
+        // Get file icon based on extension
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const icons = {
+                'pdf': '📄',
+                'doc': '📝', 'docx': '📝',
+                'xls': '📊', 'xlsx': '📊',
+                'txt': '📃',
+                'png': '🖼️', 'jpg': '🖼️', 'jpeg': '🖼️', 'gif': '🖼️',
+                'zip': '📦', 'rar': '📦', '7z': '📦'
+            };
+            return icons[ext] || '📎';
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Setup drag and drop for file upload
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('changeFileUpload');
+            if (uploadArea) {
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    const files = e.dataTransfer.files;
+                    document.getElementById('changeAttachments').files = files;
+                    handleChangeAttachments(document.getElementById('changeAttachments'));
+                });
+            }
+        });
+
+        // Submit Problem
+        function submitProblem(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+
+            // Generate problem ID
+            const problemId = 'PRB-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 900) + 100);
+
+            alert('✅ Problem Record Created!\n\n' +
+                  'Problem ID: ' + problemId + '\n' +
+                  'Title: ' + formData.get('title') + '\n' +
+                  'Priority: ' + formData.get('priority').charAt(0).toUpperCase() + formData.get('priority').slice(1) + '\n' +
+                  'Category: ' + formData.get('category') + '\n\n' +
+                  'Status: Under Investigation\n' +
+                  'The problem has been logged and assigned for root cause analysis.');
+
+            hideModal('newProblemModal');
+            form.reset();
+        }
+
+        // Submit Asset
+        function submitAsset(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+
+            // Generate asset ID
+            const assetId = 'AST-' + String(Math.floor(Math.random() * 9000) + 1000);
+
+            alert('✅ Asset Added Successfully!\n\n' +
+                  'Asset ID: ' + assetId + '\n' +
+                  'Name: ' + formData.get('name') + '\n' +
+                  'Type: ' + formData.get('type') + '\n' +
+                  'Status: ' + formData.get('status').charAt(0).toUpperCase() + formData.get('status').slice(1) + '\n' +
+                  'Location: ' + formData.get('location') + '\n\n' +
+                  'The asset has been added to the inventory.');
+
+            hideModal('newAssetModal');
+            form.reset();
+        }
+
+        // Submit KB Article
+        function submitArticle(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+
+            // Generate article ID
+            const articleId = 'KB' + String(Math.floor(Math.random() * 900) + 100);
+
+            alert('✅ Knowledge Article Published!\n\n' +
+                  'Article ID: ' + articleId + '\n' +
+                  'Title: ' + formData.get('title') + '\n' +
+                  'Category: ' + formData.get('category') + '\n' +
+                  'Visibility: ' + formData.get('visibility') + '\n\n' +
+                  'The article is now available in the Knowledge Base.');
+
+            hideModal('newArticleModal');
             form.reset();
         }
 

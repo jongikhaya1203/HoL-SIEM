@@ -223,7 +223,7 @@ $currentPage = 'modules';
     </div>
 
     <!-- Configuration Modal -->
-    <div id="configModal" class="modal" style="display:none;">
+    <div id="configModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Module Configuration</h2>
@@ -231,6 +231,10 @@ $currentPage = 'modules';
             </div>
             <div class="modal-body" id="modalBody">
                 <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveModuleConfig()">Save Configuration</button>
             </div>
         </div>
     </div>
@@ -287,16 +291,19 @@ $currentPage = 'modules';
             gap: 10px;
         }
         .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
-            display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+        }
+        .modal.active {
+            display: flex;
         }
         .modal-content {
             background: white;
@@ -305,6 +312,11 @@ $currentPage = 'modules';
             max-width: 600px;
             max-height: 80vh;
             overflow: auto;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .modal-header {
             padding: 20px 25px;
@@ -324,13 +336,34 @@ $currentPage = 'modules';
             cursor: pointer;
             color: var(--text-secondary);
         }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
         .modal-body {
             padding: 25px;
+        }
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .config-section {
+            margin-bottom: 20px;
+        }
+        .config-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
         }
     </style>
 
     <script src="assets/js/cpanel.js"></script>
     <script>
+        let currentModuleId = null;
+
         function toggleModule(moduleId, enabled) {
             const form = document.createElement('form');
             form.method = 'POST';
@@ -344,47 +377,109 @@ $currentPage = 'modules';
         }
 
         function configureModule(moduleId, moduleName) {
+            currentModuleId = moduleId;
             document.getElementById('modalTitle').textContent = moduleName + ' Configuration';
             document.getElementById('modalBody').innerHTML = `
-                <form method="POST">
+                <form id="moduleConfigForm">
                     <input type="hidden" name="action" value="save_module_config">
                     <input type="hidden" name="module_id" value="${moduleId}">
-                    <div class="form-group">
-                        <label>Enable Logging</label>
-                        <select name="config[logging]" class="form-control">
-                            <option value="1">Enabled</option>
-                            <option value="0">Disabled</option>
-                        </select>
+
+                    <div class="config-section">
+                        <h4>General Settings</h4>
+                        <div class="form-group">
+                            <label>Enable Logging</label>
+                            <select name="config[logging]" class="form-control">
+                                <option value="1">Enabled</option>
+                                <option value="0">Disabled</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Log Level</label>
+                            <select name="config[log_level]" class="form-control">
+                                <option value="debug">Debug</option>
+                                <option value="info" selected>Info</option>
+                                <option value="warning">Warning</option>
+                                <option value="error">Error</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Log Level</label>
-                        <select name="config[log_level]" class="form-control">
-                            <option value="debug">Debug</option>
-                            <option value="info">Info</option>
-                            <option value="warning">Warning</option>
-                            <option value="error">Error</option>
-                        </select>
+
+                    <div class="config-section">
+                        <h4>Performance</h4>
+                        <div class="form-group">
+                            <label>Timeout (seconds)</label>
+                            <input type="number" name="config[timeout]" value="30" min="5" max="300" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Max Retries</label>
+                            <input type="number" name="config[max_retries]" value="3" min="0" max="10" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Polling Interval (seconds)</label>
+                            <input type="number" name="config[polling_interval]" value="60" min="10" max="3600" class="form-control">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Timeout (seconds)</label>
-                        <input type="number" name="config[timeout]" value="30" class="form-control">
+
+                    <div class="config-section">
+                        <h4>Notifications</h4>
+                        <div class="form-group">
+                            <label>Alert on Error</label>
+                            <select name="config[alert_on_error]" class="form-control">
+                                <option value="1" selected>Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Alert Recipients</label>
+                            <input type="text" name="config[alert_recipients]" placeholder="email@example.com" class="form-control">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Max Retries</label>
-                        <input type="number" name="config[max_retries]" value="3" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Configuration</button>
                 </form>
             `;
-            document.getElementById('configModal').style.display = 'flex';
+            document.getElementById('configModal').classList.add('active');
+        }
+
+        function saveModuleConfig() {
+            const form = document.getElementById('moduleConfigForm');
+            if (form) {
+                form.submit();
+            }
+            showNotification('Configuration saved successfully', 'success');
+            closeModal();
         }
 
         function closeModal() {
-            document.getElementById('configModal').style.display = 'none';
+            document.getElementById('configModal').classList.remove('active');
         }
 
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'notification notification-' + type;
+            notification.innerHTML = message;
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 8px; color: white; z-index: 2000; animation: slideIn 0.3s ease;';
+
+            if (type === 'success') notification.style.background = '#059669';
+            else if (type === 'error') notification.style.background = '#dc2626';
+            else notification.style.background = '#3b82f6';
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Close modal on backdrop click
         document.getElementById('configModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
         });
     </script>
 </body>

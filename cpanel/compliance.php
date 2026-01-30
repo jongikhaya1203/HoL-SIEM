@@ -269,7 +269,7 @@ $currentPage = 'compliance';
                                     <td>Account Management - Inactive accounts not disabled</td>
                                     <td><span class="status-badge status-failed">Failed</span></td>
                                     <td><span class="risk-badge risk-high">High</span></td>
-                                    <td><button class="btn btn-secondary btn-sm">Remediate</button></td>
+                                    <td><button class="btn btn-secondary btn-sm" onclick="showRemediation('AC-2', 'NIST CSF', 'Account Management - Inactive accounts not disabled', 'high')">Remediate</button></td>
                                 </tr>
                                 <tr>
                                     <td><code>A.9.4.1</code></td>
@@ -277,7 +277,7 @@ $currentPage = 'compliance';
                                     <td>Information access restriction - Insufficient logging</td>
                                     <td><span class="status-badge status-failed">Failed</span></td>
                                     <td><span class="risk-badge risk-medium">Medium</span></td>
-                                    <td><button class="btn btn-secondary btn-sm">Remediate</button></td>
+                                    <td><button class="btn btn-secondary btn-sm" onclick="showRemediation('A.9.4.1', 'ISO 27001', 'Information access restriction - Insufficient logging', 'medium')">Remediate</button></td>
                                 </tr>
                                 <tr>
                                     <td><code>3.1</code></td>
@@ -285,7 +285,7 @@ $currentPage = 'compliance';
                                     <td>Data Protection - Encryption at rest not enabled</td>
                                     <td><span class="status-badge status-failed">Failed</span></td>
                                     <td><span class="risk-badge risk-critical">Critical</span></td>
-                                    <td><button class="btn btn-secondary btn-sm">Remediate</button></td>
+                                    <td><button class="btn btn-secondary btn-sm" onclick="showRemediation('3.1', 'CIS', 'Data Protection - Encryption at rest not enabled', 'critical')">Remediate</button></td>
                                 </tr>
                                 <tr>
                                     <td><code>8.3.1</code></td>
@@ -307,6 +307,167 @@ $currentPage = 'compliance';
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Framework Details Modal -->
+    <div id="frameworkModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 id="frameworkModalTitle">Framework Details</h2>
+                <button class="modal-close" onclick="closeModal('frameworkModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="frameworkDetails">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('frameworkModal')">Close</button>
+                <button class="btn btn-primary" onclick="exportFrameworkReport()">Export Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Framework Configuration Modal -->
+    <div id="configModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="configModalTitle">Configure Framework</h2>
+                <button class="modal-close" onclick="closeModal('configModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="configForm">
+                    <input type="hidden" id="configFrameworkCode" name="framework_code">
+                    <div class="form-group">
+                        <label>Assessment Frequency</label>
+                        <select id="assessmentFreq" name="assessment_freq" class="form-control">
+                            <option value="daily">Daily</option>
+                            <option value="weekly" selected>Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Auto-Remediation</label>
+                        <select id="autoRemediation" name="auto_remediation" class="form-control">
+                            <option value="disabled">Disabled</option>
+                            <option value="low_risk">Low Risk Only</option>
+                            <option value="all">All Findings</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Alert Threshold</label>
+                        <select id="alertThreshold" name="alert_threshold" class="form-control">
+                            <option value="critical">Critical Only</option>
+                            <option value="high" selected>High and Above</option>
+                            <option value="medium">Medium and Above</option>
+                            <option value="all">All Findings</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Notification Channels</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="notify_email" checked> Email
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="notify_slack"> Slack
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="notify_siem" checked> SIEM
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="notify_webhook"> Webhook
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Control Exclusions</label>
+                        <textarea id="controlExclusions" name="exclusions" class="form-control" rows="3" placeholder="Enter control IDs to exclude (one per line)"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('configModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveFrameworkConfig()">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remediation Modal -->
+    <div id="remediationModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2>Remediation Guidance</h2>
+                <button class="modal-close" onclick="closeModal('remediationModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="remediation-info">
+                    <div class="remediation-header">
+                        <span class="control-id" id="remControlId">AC-2</span>
+                        <span class="framework-badge" id="remFramework">NIST CSF</span>
+                        <span class="risk-badge" id="remRisk">High</span>
+                    </div>
+                    <p class="finding-desc" id="remDescription">Account Management - Inactive accounts not disabled</p>
+                </div>
+
+                <div class="remediation-steps">
+                    <h4>Recommended Actions</h4>
+                    <div id="remediationSteps">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="remediation-options" style="margin-top: 20px;">
+                    <h4>Remediation Options</h4>
+                    <div class="option-cards">
+                        <div class="option-card" onclick="applyRemediation('auto')">
+                            <div class="option-icon" style="background: #dbeafe;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" style="width: 24px; height: 24px;">
+                                    <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                                </svg>
+                            </div>
+                            <h5>Auto-Remediate</h5>
+                            <p>Apply automated fix</p>
+                        </div>
+                        <div class="option-card" onclick="applyRemediation('ticket')">
+                            <div class="option-icon" style="background: #fef3c7;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" style="width: 24px; height: 24px;">
+                                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                                    <rect x="9" y="3" width="6" height="4" rx="2"/>
+                                </svg>
+                            </div>
+                            <h5>Create Ticket</h5>
+                            <p>Assign to team</p>
+                        </div>
+                        <div class="option-card" onclick="applyRemediation('exception')">
+                            <div class="option-icon" style="background: #fee2e2;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" style="width: 24px; height: 24px;">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" y1="9" x2="12" y2="13"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                            <h5>Request Exception</h5>
+                            <p>Document risk acceptance</p>
+                        </div>
+                        <div class="option-card" onclick="applyRemediation('manual')">
+                            <div class="option-icon" style="background: #d1fae5;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" style="width: 24px; height: 24px;">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </div>
+                            <h5>Manual Fix</h5>
+                            <p>Mark as resolved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('remediationModal')">Close</button>
             </div>
         </div>
     </div>
@@ -451,17 +612,377 @@ $currentPage = 'compliance';
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Remediation modal styles */
+        .remediation-info {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .remediation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .control-id {
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .finding-desc {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .remediation-steps {
+            margin-top: 20px;
+        }
+        .remediation-steps h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .step-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .step-content h5 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .step-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .option-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        .option-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-card:hover {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+        .option-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .option-card h5 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .option-card p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .checkbox-label input {
+            width: 16px;
+            height: 16px;
+        }
+        .controls-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .controls-table th,
+        .controls-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .controls-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        @media (max-width: 600px) {
+            .option-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 
     <script src="assets/js/cpanel.js"></script>
     <script>
+        // Framework data for details view
+        const frameworkData = {
+            'NIST_CSF': {
+                name: 'NIST Cybersecurity Framework',
+                description: 'A comprehensive framework for managing cybersecurity risk.',
+                controls: [
+                    { id: 'ID.AM-1', name: 'Asset Management', status: 'passed' },
+                    { id: 'ID.AM-2', name: 'Software Inventory', status: 'passed' },
+                    { id: 'PR.AC-1', name: 'Access Control', status: 'passed' },
+                    { id: 'AC-2', name: 'Account Management', status: 'failed' },
+                    { id: 'DE.CM-1', name: 'Network Monitoring', status: 'passed' },
+                    { id: 'RS.RP-1', name: 'Response Planning', status: 'passed' }
+                ]
+            },
+            'ISO_27001': {
+                name: 'ISO 27001',
+                description: 'International standard for information security management systems.',
+                controls: [
+                    { id: 'A.5.1', name: 'Information Security Policies', status: 'passed' },
+                    { id: 'A.6.1', name: 'Internal Organization', status: 'passed' },
+                    { id: 'A.9.4.1', name: 'Information Access Restriction', status: 'failed' },
+                    { id: 'A.12.1', name: 'Operational Security', status: 'passed' },
+                    { id: 'A.13.1', name: 'Network Security', status: 'passed' }
+                ]
+            },
+            'CIS': {
+                name: 'CIS Controls',
+                description: 'Prioritized set of actions to protect organizations from cyber attacks.',
+                controls: [
+                    { id: '1.1', name: 'Hardware Asset Inventory', status: 'passed' },
+                    { id: '2.1', name: 'Software Asset Inventory', status: 'passed' },
+                    { id: '3.1', name: 'Data Protection', status: 'failed' },
+                    { id: '4.1', name: 'Secure Configuration', status: 'passed' },
+                    { id: '5.1', name: 'Account Management', status: 'passed' }
+                ]
+            },
+            'PCI_DSS': {
+                name: 'PCI DSS',
+                description: 'Payment Card Industry Data Security Standard for protecting cardholder data.',
+                controls: [
+                    { id: '1.1', name: 'Firewall Configuration', status: 'passed' },
+                    { id: '3.4', name: 'Data Encryption', status: 'passed' },
+                    { id: '6.5', name: 'Secure Development', status: 'passed' },
+                    { id: '8.3.1', name: 'Password Complexity', status: 'passed' },
+                    { id: '10.1', name: 'Audit Logging', status: 'passed' }
+                ]
+            },
+            'HIPAA': {
+                name: 'HIPAA',
+                description: 'Health Insurance Portability and Accountability Act security requirements.',
+                controls: [
+                    { id: '164.308', name: 'Administrative Safeguards', status: 'passed' },
+                    { id: '164.310', name: 'Physical Safeguards', status: 'passed' },
+                    { id: '164.312', name: 'Technical Safeguards', status: 'passed' },
+                    { id: '164.314', name: 'Organizational Requirements', status: 'passed' }
+                ]
+            },
+            'SOC2': {
+                name: 'SOC 2',
+                description: 'Service Organization Control 2 trust service criteria.',
+                controls: [
+                    { id: 'CC1.1', name: 'Control Environment', status: 'passed' },
+                    { id: 'CC6.1', name: 'Logical Access', status: 'passed' },
+                    { id: 'CC7.1', name: 'System Operations', status: 'passed' },
+                    { id: 'CC8.1', name: 'Change Management', status: 'passed' }
+                ]
+            }
+        };
+
+        // Remediation guidance data
+        const remediationData = {
+            'AC-2': {
+                steps: [
+                    { title: 'Identify Inactive Accounts', desc: 'Run a query to find accounts with no login activity in the past 90 days.' },
+                    { title: 'Review Account List', desc: 'Verify the accounts identified are truly inactive and not service accounts.' },
+                    { title: 'Disable Accounts', desc: 'Disable the inactive accounts through Active Directory or IAM console.' },
+                    { title: 'Document Changes', desc: 'Log all disabled accounts for audit trail and compliance reporting.' }
+                ]
+            },
+            'A.9.4.1': {
+                steps: [
+                    { title: 'Enable Audit Logging', desc: 'Configure comprehensive logging for all access events.' },
+                    { title: 'Set Log Retention', desc: 'Ensure logs are retained for at least 90 days.' },
+                    { title: 'Configure SIEM Integration', desc: 'Forward logs to SIEM for centralized monitoring.' },
+                    { title: 'Create Alert Rules', desc: 'Set up alerts for suspicious access patterns.' }
+                ]
+            },
+            '3.1': {
+                steps: [
+                    { title: 'Identify Sensitive Data', desc: 'Scan storage systems to identify unencrypted sensitive data.' },
+                    { title: 'Enable Encryption', desc: 'Enable encryption at rest for all identified data stores.' },
+                    { title: 'Manage Encryption Keys', desc: 'Implement proper key management using a KMS.' },
+                    { title: 'Verify Encryption', desc: 'Run validation tests to confirm encryption is active.' }
+                ]
+            }
+        };
+
+        let currentRemediationControl = null;
+
         function viewFramework(code) {
-            alert('Viewing detailed controls for framework: ' + code);
+            const framework = frameworkData[code];
+            if (!framework) {
+                showNotification('Framework data not found', 'error');
+                return;
+            }
+
+            document.getElementById('frameworkModalTitle').textContent = framework.name + ' - Control Details';
+
+            let html = '<p style="color: var(--text-secondary); margin-bottom: 20px;">' + framework.description + '</p>';
+            html += '<table class="controls-table">';
+            html += '<thead><tr><th>Control ID</th><th>Name</th><th>Status</th></tr></thead>';
+            html += '<tbody>';
+
+            framework.controls.forEach(control => {
+                const statusClass = control.status === 'passed' ? 'status-passed' : 'status-failed';
+                const statusText = control.status === 'passed' ? 'Passed' : 'Failed';
+                html += '<tr>';
+                html += '<td><code>' + control.id + '</code></td>';
+                html += '<td>' + control.name + '</td>';
+                html += '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>';
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+
+            document.getElementById('frameworkDetails').innerHTML = html;
+            document.getElementById('frameworkModal').classList.add('active');
         }
 
         function configureFramework(code) {
-            alert('Configuration panel for framework: ' + code);
+            const framework = frameworkData[code];
+            document.getElementById('configModalTitle').textContent = 'Configure ' + (framework ? framework.name : code);
+            document.getElementById('configFrameworkCode').value = code;
+            document.getElementById('configModal').classList.add('active');
         }
+
+        function saveFrameworkConfig() {
+            const code = document.getElementById('configFrameworkCode').value;
+            showNotification('Configuration saved for ' + code, 'success');
+            closeModal('configModal');
+        }
+
+        function exportFrameworkReport() {
+            showNotification('Exporting compliance report...', 'info');
+            closeModal('frameworkModal');
+        }
+
+        function showRemediation(controlId, framework, description, riskLevel) {
+            currentRemediationControl = controlId;
+
+            document.getElementById('remControlId').textContent = controlId;
+            document.getElementById('remFramework').textContent = framework;
+            document.getElementById('remDescription').textContent = description;
+
+            const riskBadge = document.getElementById('remRisk');
+            riskBadge.textContent = riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1);
+            riskBadge.className = 'risk-badge risk-' + riskLevel;
+
+            // Get remediation steps
+            const steps = remediationData[controlId] ? remediationData[controlId].steps : [
+                { title: 'Review Finding', desc: 'Analyze the compliance finding and its impact.' },
+                { title: 'Plan Remediation', desc: 'Develop a remediation plan based on best practices.' },
+                { title: 'Implement Fix', desc: 'Apply the necessary changes to address the finding.' },
+                { title: 'Verify Resolution', desc: 'Run a new assessment to confirm the issue is resolved.' }
+            ];
+
+            let stepsHtml = '';
+            steps.forEach((step, index) => {
+                stepsHtml += '<div class="step-item">';
+                stepsHtml += '<span class="step-number">' + (index + 1) + '</span>';
+                stepsHtml += '<div class="step-content">';
+                stepsHtml += '<h5>' + step.title + '</h5>';
+                stepsHtml += '<p>' + step.desc + '</p>';
+                stepsHtml += '</div></div>';
+            });
+
+            document.getElementById('remediationSteps').innerHTML = stepsHtml;
+            document.getElementById('remediationModal').classList.add('active');
+        }
+
+        function applyRemediation(type) {
+            const messages = {
+                'auto': 'Auto-remediation initiated for ' + currentRemediationControl + '. Changes will be applied automatically.',
+                'ticket': 'Support ticket created for ' + currentRemediationControl + '. Assigned to Security Team.',
+                'exception': 'Exception request submitted for ' + currentRemediationControl + '. Pending approval.',
+                'manual': 'Control ' + currentRemediationControl + ' marked for manual remediation. Please document changes.'
+            };
+
+            showNotification(messages[type] || 'Action initiated', 'success');
+            closeModal('remediationModal');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'notification notification-' + type;
+            notification.innerHTML = message;
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 8px; color: white; z-index: 2000; animation: slideIn 0.3s ease;';
+
+            if (type === 'success') notification.style.background = '#059669';
+            else if (type === 'error') notification.style.background = '#dc2626';
+            else notification.style.background = '#3b82f6';
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Close modals on backdrop click and Escape key
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
     </script>
 </body>
 </html>
