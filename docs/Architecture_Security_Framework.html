@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOC Intelligent Operating Centre - Architecture & Security Framework</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            padding: 20px;
+        }
+        .cover-page {
+            page-break-after: always;
+            text-align: center;
+            padding-top: 150px;
+        }
+        .cover-page h1 {
+            font-size: 32pt;
+            color: #1a5490;
+            margin-bottom: 20px;
+        }
+        .cover-page h2 {
+            font-size: 18pt;
+            color: #666;
+            font-weight: normal;
+            margin-bottom: 40px;
+        }
+        .cover-page .version {
+            font-size: 14pt;
+            color: #888;
+            margin-top: 60px;
+        }
+        .cover-page .date {
+            font-size: 12pt;
+            color: #888;
+            margin-top: 10px;
+        }
+        .cover-page .logo {
+            font-size: 48pt;
+            margin-bottom: 30px;
+        }
+        .toc {
+            page-break-after: always;
+        }
+        .toc h2 {
+            font-size: 18pt;
+            color: #1a5490;
+            border-bottom: 2px solid #1a5490;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .toc ul {
+            list-style: none;
+        }
+        .toc li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+        .toc a {
+            color: #333;
+            text-decoration: none;
+        }
+        .toc .section-num {
+            color: #1a5490;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        h1 {
+            font-size: 20pt;
+            color: #1a5490;
+            border-bottom: 3px solid #1a5490;
+            padding-bottom: 10px;
+            margin: 30px 0 20px 0;
+            page-break-after: avoid;
+        }
+        h2 {
+            font-size: 14pt;
+            color: #2c5282;
+            margin: 25px 0 15px 0;
+            page-break-after: avoid;
+        }
+        h3 {
+            font-size: 12pt;
+            color: #4a5568;
+            margin: 20px 0 10px 0;
+            page-break-after: avoid;
+        }
+        p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        ul, ol {
+            margin: 10px 0 15px 25px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 10pt;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #1a5490;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .code-block {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 9pt;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .highlight-box {
+            background: #e8f4fd;
+            border-left: 4px solid #1a5490;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .diagram {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Consolas', monospace;
+            font-size: 9pt;
+            white-space: pre;
+            line-height: 1.4;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            margin: 2px;
+        }
+        .badge-critical { background: #dc3545; color: white; }
+        .badge-high { background: #fd7e14; color: white; }
+        .badge-medium { background: #ffc107; color: #333; }
+        .badge-low { background: #17a2b8; color: white; }
+        .badge-info { background: #6c757d; color: white; }
+        .section {
+            page-break-inside: avoid;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #888;
+            font-size: 9pt;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Cover Page -->
+<div class="cover-page">
+    <div class="logo">🛡️</div>
+    <h1>IOC Intelligent Operating Centre</h1>
+    <h2>Architecture & Security Framework Documentation</h2>
+    <p style="font-size: 14pt; color: #555;">Enterprise Network Security & SCADA Monitoring Platform</p>
+    <div class="version">Version 1.0</div>
+    <div class="date">January 2026</div>
+    <p style="margin-top: 100px; color: #888;">CONFIDENTIAL</p>
+</div>
+
+<!-- Table of Contents -->
+<div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+        <li><span class="section-num">1.</span> Executive Summary</li>
+        <li><span class="section-num">2.</span> System Architecture Overview</li>
+        <li><span class="section-num">3.</span> Core Components</li>
+        <li><span class="section-num">4.</span> Database Architecture</li>
+        <li><span class="section-num">5.</span> Security Framework</li>
+        <li><span class="section-num">6.</span> Network Scanning Engine</li>
+        <li><span class="section-num">7.</span> SCADA/ICS Monitoring</li>
+        <li><span class="section-num">8.</span> Email DLP System</li>
+        <li><span class="section-num">9.</span> API Architecture</li>
+        <li><span class="section-num">10.</span> Compliance Framework</li>
+        <li><span class="section-num">11.</span> Deployment Architecture</li>
+        <li><span class="section-num">12.</span> Technology Stack</li>
+    </ul>
+</div>
+
+<!-- Section 1: Executive Summary -->
+<h1>1. Executive Summary</h1>
+<div class="section">
+    <p>The <strong>IOC Intelligent Operating Centre</strong> (networkscanscada) is an enterprise-grade network security and SCADA monitoring platform designed to provide comprehensive security assessment, industrial control system monitoring, compliance checking, and data loss prevention capabilities.</p>
+
+    <div class="highlight-box">
+        <strong>Key Capabilities:</strong>
+        <ul>
+            <li>Network vulnerability assessment with CVSS 3.1 scoring</li>
+            <li>SCADA/ICS monitoring supporting Modbus, OPC UA, and DNP3 protocols</li>
+            <li>Email Data Loss Prevention (DLP) with pattern-based detection</li>
+            <li>Multi-framework compliance checking (NIST, ISO 27001, PCI DSS, HIPAA)</li>
+            <li>Multi-tenant SaaS architecture with role-based access control</li>
+            <li>RESTful API for integration and automation</li>
+        </ul>
+    </div>
+
+    <p>The platform is built using PHP with MySQL/MariaDB backend, featuring a modular architecture that spans 174+ PHP files organized across structured modules and classes. It supports industry-specific deployments including Oil & Gas, Rail, Mining, and Manufacturing sectors.</p>
+</div>
+
+<!-- Section 2: System Architecture Overview -->
+<h1>2. System Architecture Overview</h1>
+<div class="section">
+    <h2>2.1 High-Level Architecture</h2>
+
+    <div class="diagram">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        IOC INTELLIGENT OPERATING CENTRE                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                 │
+│   │   Web UI     │    │  Admin CMS   │    │   REST API   │                 │
+│   │  (index.php) │    │  (/admin/)   │    │  (api.php)   │                 │
+│   └──────┬───────┘    └──────┬───────┘    └──────┬───────┘                 │
+│          │                   │                   │                          │
+│          └───────────────────┼───────────────────┘                          │
+│                              │                                              │
+│                    ┌─────────┴─────────┐                                    │
+│                    │   Core Classes    │                                    │
+│                    │   (/classes/)     │                                    │
+│                    └─────────┬─────────┘                                    │
+│                              │                                              │
+│    ┌─────────────────────────┼─────────────────────────┐                   │
+│    │                         │                         │                    │
+│    ▼                         ▼                         ▼                    │
+│ ┌────────────┐      ┌────────────────┐      ┌──────────────┐               │
+│ │  Network   │      │     SCADA      │      │   Email      │               │
+│ │  Scanner   │      │    Monitor     │      │    DLP       │               │
+│ └────────────┘      └────────────────┘      └──────────────┘               │
+│                              │                                              │
+│                    ┌─────────┴─────────┐                                    │
+│                    │    Database.php   │                                    │
+│                    │   (PDO Singleton) │                                    │
+│                    └─────────┬─────────┘                                    │
+│                              │                                              │
+│                    ┌─────────┴─────────┐                                    │
+│                    │  MySQL/MariaDB    │                                    │
+│                    │   Database        │                                    │
+│                    └───────────────────┘                                    │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+    </div>
+
+    <h2>2.2 Directory Structure</h2>
+    <div class="code-block">networkscanscada/
+├── classes/                    # Core PHP Classes (29 classes)
+│   ├── Network Scanning        # NetworkScanner, PortScanner, ServiceDetector
+│   ├── Industrial Control      # SCADAMonitor, ModbusProtocol, OPCUAProtocol, DNP3Protocol
+│   ├── Security               # VulnerabilityScanner, ComplianceChecker, RateLimiter
+│   ├── Monitoring             # AlertManager, RealtimeMonitor, DeviceDiscovery
+│   ├── Storage                # StorageScanner, CalibrationManager, TankMonitor
+│   ├── Industry/              # OilGasModule, RailModule, MiningModule, ManufacturingModule
+│   └── Reporting              # ReportGenerator
+├── modules/                    # Feature Modules (30+ modules)
+│   ├── ITSM                   # itsm.php, log_incident.php, log_problem.php
+│   ├── Network Tools          # nta.php, ipam.php, snmp_monitor.php
+│   ├── Database               # dpa.php, sql_sentry.php
+│   └── Application            # sam.php, ai_analytics.php
+├── admin/                      # Admin CMS Portal
+│   ├── login.php              # Authentication
+│   ├── settings.php           # Configuration
+│   └── tenants.php            # Multi-tenant management
+├── agent/                      # Remote Agent
+├── database/                   # SQL Schema Files
+├── config/                     # Configuration Files
+├── templates/                  # Report Templates
+└── docs/                       # Documentation</div>
+</div>
+
+<!-- Section 3: Core Components -->
+<h1>3. Core Components</h1>
+<div class="section">
+    <h2>3.1 Component Overview</h2>
+
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>File(s)</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><strong>Database Layer</strong></td>
+            <td>Database.php</td>
+            <td>Singleton PDO connection manager with prepared statements</td>
+        </tr>
+        <tr>
+            <td><strong>Network Scanner</strong></td>
+            <td>NetworkScanner.php, PortScanner.php</td>
+            <td>TCP/UDP port scanning with service detection</td>
+        </tr>
+        <tr>
+            <td><strong>Vulnerability Engine</strong></td>
+            <td>VulnerabilityScanner.php</td>
+            <td>CVSS-based vulnerability assessment</td>
+        </tr>
+        <tr>
+            <td><strong>SCADA Monitor</strong></td>
+            <td>SCADAMonitor.php</td>
+            <td>Industrial control system monitoring</td>
+        </tr>
+        <tr>
+            <td><strong>Protocol Handlers</strong></td>
+            <td>ModbusProtocol.php, OPCUAProtocol.php, DNP3Protocol.php</td>
+            <td>Industrial protocol implementations</td>
+        </tr>
+        <tr>
+            <td><strong>Compliance Checker</strong></td>
+            <td>ComplianceChecker.php</td>
+            <td>Multi-framework compliance assessment</td>
+        </tr>
+        <tr>
+            <td><strong>Email DLP</strong></td>
+            <td>EmailScanner.php, EmailLeakTracker.php</td>
+            <td>Data loss prevention for email content</td>
+        </tr>
+        <tr>
+            <td><strong>Alert Manager</strong></td>
+            <td>AlertManager.php</td>
+            <td>Multi-channel alert routing</td>
+        </tr>
+        <tr>
+            <td><strong>Report Generator</strong></td>
+            <td>ReportGenerator.php</td>
+            <td>Multi-format report generation</td>
+        </tr>
+        <tr>
+            <td><strong>Rate Limiter</strong></td>
+            <td>RateLimiter.php</td>
+            <td>API rate limiting protection</td>
+        </tr>
+    </table>
+
+    <h2>3.2 Industry-Specific Modules</h2>
+    <p>The platform includes specialized modules for different industrial sectors:</p>
+
+    <table>
+        <tr>
+            <th>Module</th>
+            <th>Features</th>
+        </tr>
+        <tr>
+            <td><strong>Oil & Gas</strong></td>
+            <td>Pipeline monitoring, leak detection, LACT units, custody transfer</td>
+        </tr>
+        <tr>
+            <td><strong>Rail</strong></td>
+            <td>Rail infrastructure monitoring, signaling systems</td>
+        </tr>
+        <tr>
+            <td><strong>Mining</strong></td>
+            <td>Mining equipment tracking, environmental monitoring</td>
+        </tr>
+        <tr>
+            <td><strong>Manufacturing</strong></td>
+            <td>Manufacturing process control, quality assurance</td>
+        </tr>
+    </table>
+</div>
+
+<!-- Section 4: Database Architecture -->
+<h1>4. Database Architecture</h1>
+<div class="section">
+    <h2>4.1 Database Configuration</h2>
+    <div class="code-block">// config/database.php
+$config = [
+    'host'     => getenv('DB_HOST') ?: 'localhost',
+    'port'     => getenv('DB_PORT') ?: '3307',
+    'dbname'   => getenv('DB_NAME') ?: 'network_security_scanner',
+    'user'     => getenv('DB_USER') ?: 'root',
+    'password' => getenv('DB_PASS') ?: '',
+    'charset'  => 'utf8mb4',
+    'collation'=> 'utf8mb4_unicode_ci'
+];</div>
+
+    <h2>4.2 Main Database Schema</h2>
+    <p>The <code>network_security_scanner</code> database contains the following core tables:</p>
+
+    <table>
+        <tr>
+            <th>Table</th>
+            <th>Purpose</th>
+            <th>Key Fields</th>
+        </tr>
+        <tr>
+            <td>scans</td>
+            <td>Scan execution records</td>
+            <td>id, scan_name, target_range, scan_type, status, start_time, end_time</td>
+        </tr>
+        <tr>
+            <td>hosts</td>
+            <td>Discovered network devices</td>
+            <td>id, scan_id, ip_address, hostname, os_info, risk_score</td>
+        </tr>
+        <tr>
+            <td>ports</td>
+            <td>Open ports and services</td>
+            <td>id, host_id, port_number, protocol, service_name, version</td>
+        </tr>
+        <tr>
+            <td>vulnerabilities</td>
+            <td>CVE database</td>
+            <td>id, cve_id, severity, cvss_score, description, solution</td>
+        </tr>
+        <tr>
+            <td>scan_results</td>
+            <td>Vulnerability findings</td>
+            <td>id, scan_id, host_id, vulnerability_id, evidence</td>
+        </tr>
+        <tr>
+            <td>compliance_frameworks</td>
+            <td>Compliance standards</td>
+            <td>id, name, version, description</td>
+        </tr>
+        <tr>
+            <td>compliance_controls</td>
+            <td>Individual controls</td>
+            <td>id, framework_id, control_id, title, description</td>
+        </tr>
+        <tr>
+            <td>admin_users</td>
+            <td>CMS user management</td>
+            <td>id, username, password_hash, role, tenant_code</td>
+        </tr>
+        <tr>
+            <td>audit_log</td>
+            <td>Activity tracking</td>
+            <td>id, user_id, action, details, timestamp</td>
+        </tr>
+        <tr>
+            <td>api_rate_limits</td>
+            <td>Rate limiting data</td>
+            <td>client_identifier, request_count, window_start</td>
+        </tr>
+    </table>
+
+    <h2>4.3 Email DLP Database Schema</h2>
+    <p>The <code>mailscan_dlp</code> database is dedicated to email data loss prevention:</p>
+
+    <table>
+        <tr>
+            <th>Table</th>
+            <th>Purpose</th>
+        </tr>
+        <tr>
+            <td>detection_rules</td>
+            <td>DLP pattern matching rules (regex, keyword, pattern)</td>
+        </tr>
+        <tr>
+            <td>email_logs</td>
+            <td>Email metadata and content storage</td>
+        </tr>
+        <tr>
+            <td>scan_results</td>
+            <td>Rule match tracking and violations</td>
+        </tr>
+        <tr>
+            <td>email_forwarding_chains</td>
+            <td>Leak path tracking</td>
+        </tr>
+        <tr>
+            <td>audit_log</td>
+            <td>DLP action audit trail</td>
+        </tr>
+    </table>
+
+    <h2>4.4 Entity Relationship Diagram</h2>
+    <div class="diagram">
+┌─────────────┐       ┌─────────────┐       ┌──────────────────┐
+│   scans     │───┐   │    hosts    │───┐   │  vulnerabilities │
+├─────────────┤   │   ├─────────────┤   │   ├──────────────────┤
+│ id          │   │   │ id          │   │   │ id               │
+│ scan_name   │   └──▶│ scan_id     │   │   │ cve_id           │
+│ target_range│       │ ip_address  │   │   │ severity         │
+│ scan_type   │       │ hostname    │   │   │ cvss_score       │
+│ status      │       │ risk_score  │   │   │ description      │
+└─────────────┘       └─────────────┘   │   └──────────────────┘
+                             │          │            │
+                             ▼          │            │
+                      ┌─────────────┐   │            │
+                      │    ports    │   │            │
+                      ├─────────────┤   │            │
+                      │ id          │   │            │
+                      │ host_id     │◀──┘            │
+                      │ port_number │                │
+                      │ service_name│                │
+                      └─────────────┘                │
+                             │                       │
+                             ▼                       ▼
+                      ┌─────────────────────────────────┐
+                      │         scan_results            │
+                      ├─────────────────────────────────┤
+                      │ id                              │
+                      │ scan_id, host_id, vulnerability_id│
+                      │ evidence, status                │
+                      └─────────────────────────────────┘
+    </div>
+</div>
+
+<!-- Section 5: Security Framework -->
+<h1>5. Security Framework</h1>
+<div class="section">
+    <h2>5.1 Authentication & Authorization</h2>
+
+    <h3>Authentication Mechanisms</h3>
+    <table>
+        <tr>
+            <th>Mechanism</th>
+            <th>Implementation</th>
+            <th>Location</th>
+        </tr>
+        <tr>
+            <td>Password Hashing</td>
+            <td>bcrypt ($2y$10$...)</td>
+            <td>admin/login.php</td>
+        </tr>
+        <tr>
+            <td>Session Management</td>
+            <td>PHP native sessions</td>
+            <td>admin/login.php</td>
+        </tr>
+        <tr>
+            <td>Role-Based Access</td>
+            <td>admin, analyst, viewer</td>
+            <td>Database user roles</td>
+        </tr>
+        <tr>
+            <td>Multi-Tenancy</td>
+            <td>tenant_code isolation</td>
+            <td>All queries</td>
+        </tr>
+    </table>
+
+    <h3>Authorization Flow</h3>
+    <div class="diagram">
+┌──────────┐    ┌──────────────┐    ┌─────────────┐    ┌──────────────┐
+│  User    │───▶│  login.php   │───▶│  Validate   │───▶│   Session    │
+│  Login   │    │  (POST)      │    │  bcrypt     │    │   Created    │
+└──────────┘    └──────────────┘    └─────────────┘    └──────────────┘
+                                           │                    │
+                                           ▼                    ▼
+                                    ┌─────────────┐    ┌──────────────┐
+                                    │   Failed    │    │  Role-Based  │
+                                    │   Login     │    │   Access     │
+                                    └─────────────┘    └──────────────┘
+    </div>
+
+    <h2>5.2 Input Security</h2>
+    <div class="success-box">
+        <strong>Security Measures Implemented:</strong>
+        <ul>
+            <li><strong>SQL Injection Prevention:</strong> PDO prepared statements with parameterized queries throughout</li>
+            <li><strong>XSS Prevention:</strong> htmlspecialchars() for all output escaping</li>
+            <li><strong>CSRF Protection:</strong> Session-based validation for form submissions</li>
+            <li><strong>Input Validation:</strong> Server-side validation for all user inputs</li>
+        </ul>
+    </div>
+
+    <h3>Example Secure Query Pattern</h3>
+    <div class="code-block">// Parameterized query example from the codebase
+$stmt = $db->prepare("
+    SELECT * FROM scans
+    WHERE id = ? AND tenant_code = ?
+");
+$stmt->execute([$scan_id, $tenant_code]);</div>
+
+    <h2>5.3 Rate Limiting</h2>
+    <p>The platform implements database-backed rate limiting to prevent abuse:</p>
+
+    <table>
+        <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Default Limit</td>
+            <td>100 requests/minute</td>
+        </tr>
+        <tr>
+            <td>Time Window</td>
+            <td>1-minute sliding window</td>
+        </tr>
+        <tr>
+            <td>Client Identification</td>
+            <td>MD5(IP + User-Agent)</td>
+        </tr>
+        <tr>
+            <td>Exceeded Response</td>
+            <td>HTTP 429 Too Many Requests</td>
+        </tr>
+    </table>
+
+    <h2>5.4 Audit Logging</h2>
+    <p>All security-relevant actions are logged to the audit_log table:</p>
+    <ul>
+        <li>User authentication (login/logout)</li>
+        <li>Configuration changes</li>
+        <li>Scan initiation and completion</li>
+        <li>Report generation</li>
+        <li>API access</li>
+        <li>DLP violations detected</li>
+    </ul>
+
+    <h2>5.5 Data Protection</h2>
+    <table>
+        <tr>
+            <th>Protection Type</th>
+            <th>Implementation</th>
+        </tr>
+        <tr>
+            <td>Passwords</td>
+            <td>bcrypt hashing with salt</td>
+        </tr>
+        <tr>
+            <td>Sessions</td>
+            <td>Server-side storage, secure cookies</td>
+        </tr>
+        <tr>
+            <td>Database</td>
+            <td>PDO with prepared statements</td>
+        </tr>
+        <tr>
+            <td>Output</td>
+            <td>HTML entity encoding</td>
+        </tr>
+        <tr>
+            <td>Sensitive Data</td>
+            <td>DLP scanning and classification</td>
+        </tr>
+    </table>
+</div>
+
+<!-- Section 6: Network Scanning Engine -->
+<h1>6. Network Scanning Engine</h1>
+<div class="section">
+    <h2>6.1 Scanning Architecture</h2>
+
+    <div class="diagram">
+┌─────────────────────────────────────────────────────────────┐
+│                   NETWORK SCANNING ENGINE                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│   ┌──────────────────┐                                      │
+│   │  NetworkScanner  │◀─── Main Orchestrator                │
+│   └────────┬─────────┘                                      │
+│            │                                                 │
+│   ┌────────┼────────────────────────────┐                   │
+│   │        │                            │                   │
+│   ▼        ▼                            ▼                   │
+│ ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐   │
+│ │ PortScanner  │  │ServiceDetector│ │VulnerabilityScanner│  │
+│ │              │  │              │  │                    │   │
+│ │ - TCP Scan   │  │ - Banner Grab│  │ - CVE Matching     │   │
+│ │ - UDP Scan   │  │ - Version ID │  │ - CVSS Scoring     │   │
+│ │ - Host Alive │  │ - Protocol ID│  │ - Risk Assessment  │   │
+│ └──────────────┘  └──────────────┘  └──────────────────┘   │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+    </div>
+
+    <h2>6.2 Scanning Features</h2>
+
+    <h3>Port Scanning</h3>
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>Details</th>
+        </tr>
+        <tr>
+            <td>Target Formats</td>
+            <td>Single IP, CIDR notation, IP lists</td>
+        </tr>
+        <tr>
+            <td>Common Ports</td>
+            <td>21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 445, 993, 995, 3306, 3389, 5900, 8080</td>
+        </tr>
+        <tr>
+            <td>Protocols</td>
+            <td>TCP and UDP</td>
+        </tr>
+        <tr>
+            <td>Timeout</td>
+            <td>0.5 seconds per port</td>
+        </tr>
+        <tr>
+            <td>Service Detection</td>
+            <td>Banner grabbing and protocol identification</td>
+        </tr>
+    </table>
+
+    <h3>Scan Types</h3>
+    <ul>
+        <li><strong>Full Scan:</strong> Comprehensive assessment of all ports and services</li>
+        <li><strong>Quick Scan:</strong> Common ports only for rapid assessment</li>
+        <li><strong>Custom Scan:</strong> User-defined port ranges and parameters</li>
+        <li><strong>Compliance Scan:</strong> Framework-specific security checks</li>
+        <li><strong>Vulnerability Scan:</strong> Focused on known weaknesses</li>
+    </ul>
+
+    <h2>6.3 Vulnerability Assessment</h2>
+
+    <h3>Security Checks Performed</h3>
+    <table>
+        <tr>
+            <th>Check Category</th>
+            <th>Severity</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>Weak Protocols</td>
+            <td><span class="badge badge-high">HIGH</span></td>
+            <td>FTP, Telnet, HTTP (unencrypted)</td>
+        </tr>
+        <tr>
+            <td>Outdated Versions</td>
+            <td><span class="badge badge-high">HIGH</span></td>
+            <td>Services with known CVEs</td>
+        </tr>
+        <tr>
+            <td>Default Credentials</td>
+            <td><span class="badge badge-critical">CRITICAL</span></td>
+            <td>Services using default passwords</td>
+        </tr>
+        <tr>
+            <td>SSL/TLS Issues</td>
+            <td><span class="badge badge-medium">MEDIUM</span></td>
+            <td>Weak ciphers, expired certificates</td>
+        </tr>
+        <tr>
+            <td>Missing Headers</td>
+            <td><span class="badge badge-low">LOW</span></td>
+            <td>Security headers not configured</td>
+        </tr>
+        <tr>
+            <td>Open Databases</td>
+            <td><span class="badge badge-critical">CRITICAL</span></td>
+            <td>Unauthenticated database access</td>
+        </tr>
+    </table>
+
+    <h3>CVSS Scoring</h3>
+    <p>Vulnerabilities are scored using CVSS 3.1:</p>
+    <ul>
+        <li><span class="badge badge-critical">CRITICAL</span> 9.0 - 10.0</li>
+        <li><span class="badge badge-high">HIGH</span> 7.0 - 8.9</li>
+        <li><span class="badge badge-medium">MEDIUM</span> 4.0 - 6.9</li>
+        <li><span class="badge badge-low">LOW</span> 0.1 - 3.9</li>
+        <li><span class="badge badge-info">INFO</span> 0.0</li>
+    </ul>
+</div>
+
+<!-- Section 7: SCADA/ICS Monitoring -->
+<h1>7. SCADA/ICS Monitoring</h1>
+<div class="section">
+    <h2>7.1 Protocol Support</h2>
+
+    <table>
+        <tr>
+            <th>Protocol</th>
+            <th>Class</th>
+            <th>Port</th>
+            <th>Usage</th>
+        </tr>
+        <tr>
+            <td>Modbus TCP</td>
+            <td>ModbusProtocol.php</td>
+            <td>502</td>
+            <td>PLC communication, register read/write</td>
+        </tr>
+        <tr>
+            <td>Modbus RTU</td>
+            <td>ModbusProtocol.php</td>
+            <td>Serial</td>
+            <td>Serial device communication</td>
+        </tr>
+        <tr>
+            <td>OPC UA</td>
+            <td>OPCUAProtocol.php</td>
+            <td>4840</td>
+            <td>Industrial automation, data exchange</td>
+        </tr>
+        <tr>
+            <td>DNP3</td>
+            <td>DNP3Protocol.php</td>
+            <td>20000</td>
+            <td>Utility SCADA, power systems</td>
+        </tr>
+    </table>
+
+    <h2>7.2 SCADA Architecture</h2>
+
+    <div class="diagram">
+┌─────────────────────────────────────────────────────────────────┐
+│                      SCADA MONITORING LAYER                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   ┌──────────────────────────────────────────────────────┐      │
+│   │                  SCADAMonitor.php                     │      │
+│   │  - Device Discovery    - Tag Management              │      │
+│   │  - Data Acquisition    - Alarm Processing            │      │
+│   └────────────────────────────────────────────────────────┘    │
+│                              │                                   │
+│        ┌─────────────────────┼─────────────────────┐            │
+│        │                     │                     │            │
+│        ▼                     ▼                     ▼            │
+│   ┌──────────┐        ┌──────────┐        ┌──────────┐         │
+│   │  Modbus  │        │  OPC UA  │        │   DNP3   │         │
+│   │ Protocol │        │ Protocol │        │ Protocol │         │
+│   └────┬─────┘        └────┬─────┘        └────┬─────┘         │
+│        │                   │                   │                 │
+│        ▼                   ▼                   ▼                 │
+│   ┌──────────┐        ┌──────────┐        ┌──────────┐         │
+│   │   PLCs   │        │   HMIs   │        │   RTUs   │         │
+│   │   RTUs   │        │ Servers  │        │   IEDs   │         │
+│   └──────────┘        └──────────┘        └──────────┘         │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+    </div>
+
+    <h2>7.3 Monitoring Capabilities</h2>
+    <ul>
+        <li><strong>Real-time Data Acquisition:</strong> Continuous polling of PLC/RTU values</li>
+        <li><strong>Alarm Threshold Management:</strong> Configurable high/low limits</li>
+        <li><strong>Device Discovery:</strong> Automatic detection of SCADA devices</li>
+        <li><strong>Tag Value Tracking:</strong> Historical data logging</li>
+        <li><strong>Alarm Event Recording:</strong> Complete alarm history</li>
+    </ul>
+
+    <h2>7.4 Industry-Specific Features</h2>
+
+    <h3>Oil & Gas (OilGasModule.php)</h3>
+    <ul>
+        <li>Pipeline leak detection (5% flow imbalance threshold)</li>
+        <li>Pressure variance monitoring</li>
+        <li>LACT unit monitoring</li>
+        <li>Custody transfer tracking</li>
+    </ul>
+
+    <h3>Additional Modules</h3>
+    <ul>
+        <li><strong>TankMonitor.php:</strong> Tank level and inventory tracking</li>
+        <li><strong>CalibrationManager.php:</strong> Instrument calibration scheduling</li>
+        <li><strong>ValveController.php:</strong> Valve position control</li>
+        <li><strong>ShutdownManager.php:</strong> Emergency shutdown (ESD) management</li>
+    </ul>
+</div>
+
+<!-- Section 8: Email DLP System -->
+<h1>8. Email DLP System</h1>
+<div class="section">
+    <h2>8.1 DLP Architecture</h2>
+
+    <div class="diagram">
+┌─────────────────────────────────────────────────────────────────┐
+│                      EMAIL DLP SYSTEM                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   ┌────────────┐    ┌────────────────┐    ┌────────────────┐   │
+│   │  Email     │───▶│ EmailScanner   │───▶│ Detection      │   │
+│   │  Input     │    │ .php           │    │ Rules          │   │
+│   └────────────┘    └───────┬────────┘    └────────────────┘   │
+│                             │                                    │
+│                             ▼                                    │
+│                    ┌────────────────┐                           │
+│                    │ Pattern Match  │                           │
+│                    │ - Regex        │                           │
+│                    │ - Keywords     │                           │
+│                    │ - Patterns     │                           │
+│                    └───────┬────────┘                           │
+│                            │                                     │
+│              ┌─────────────┼─────────────┐                      │
+│              │             │             │                       │
+│              ▼             ▼             ▼                       │
+│        ┌──────────┐  ┌──────────┐  ┌──────────┐                │
+│        │  FLAG    │  │  BLOCK   │  │QUARANTINE│                │
+│        └──────────┘  └──────────┘  └──────────┘                │
+│                                                                  │
+│   ┌────────────────────────────────────────────────────────┐   │
+│   │              EmailLeakTracker.php                       │   │
+│   │  - Forwarding Chain Analysis                           │   │
+│   │  - External Recipient Detection                        │   │
+│   │  - Leak Risk Scoring                                   │   │
+│   └────────────────────────────────────────────────────────┘   │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+    </div>
+
+    <h2>8.2 Detection Rules</h2>
+
+    <table>
+        <tr>
+            <th>Rule Type</th>
+            <th>Pattern</th>
+            <th>Severity</th>
+        </tr>
+        <tr>
+            <td>Credit Cards</td>
+            <td>Visa, MasterCard, Amex, Discover patterns</td>
+            <td><span class="badge badge-critical">CRITICAL</span></td>
+        </tr>
+        <tr>
+            <td>SSN</td>
+            <td>XXX-XX-XXXX format</td>
+            <td><span class="badge badge-critical">CRITICAL</span></td>
+        </tr>
+        <tr>
+            <td>API Keys</td>
+            <td>sk_live_, AKIA prefix patterns</td>
+            <td><span class="badge badge-critical">CRITICAL</span></td>
+        </tr>
+        <tr>
+            <td>AWS Keys</td>
+            <td>AKIA[0-9A-Z]{16}</td>
+            <td><span class="badge badge-critical">CRITICAL</span></td>
+        </tr>
+        <tr>
+            <td>Passwords</td>
+            <td>password: or pwd= patterns</td>
+            <td><span class="badge badge-critical">CRITICAL</span></td>
+        </tr>
+        <tr>
+            <td>Bank Accounts</td>
+            <td>Account number patterns</td>
+            <td><span class="badge badge-high">HIGH</span></td>
+        </tr>
+        <tr>
+            <td>Medical IDs</td>
+            <td>MRN-, Patient ID patterns</td>
+            <td><span class="badge badge-high">HIGH</span></td>
+        </tr>
+        <tr>
+            <td>Email Addresses</td>
+            <td>Standard email regex</td>
+            <td><span class="badge badge-low">LOW</span></td>
+        </tr>
+        <tr>
+            <td>Phone Numbers</td>
+            <td>US phone format</td>
+            <td><span class="badge badge-low">LOW</span></td>
+        </tr>
+    </table>
+
+    <h2>8.3 Leak Tracking</h2>
+    <p>The EmailLeakTracker component monitors email forwarding patterns to detect potential data leaks:</p>
+
+    <ul>
+        <li><strong>Forwarding Chain Analysis:</strong> Tracks email forward paths</li>
+        <li><strong>Hop Number Tracking:</strong> Counts forwarding depth</li>
+        <li><strong>External Recipient Detection:</strong> Identifies outside addresses</li>
+        <li><strong>Risk Score Calculation:</strong> Threshold of 70 for alerts</li>
+        <li><strong>Forward Type Classification:</strong> direct_forward, cc, bcc</li>
+    </ul>
+
+    <h2>8.4 Content Scanning Fields</h2>
+    <ul>
+        <li>Subject line</li>
+        <li>Body text (plain text)</li>
+        <li>HTML body (tags stripped)</li>
+        <li>Sender email address</li>
+        <li>Recipient email addresses</li>
+        <li>Attachment metadata</li>
+    </ul>
+</div>
+
+<!-- Section 9: API Architecture -->
+<h1>9. API Architecture</h1>
+<div class="section">
+    <h2>9.1 REST API Endpoints</h2>
+
+    <table>
+        <tr>
+            <th>Method</th>
+            <th>Endpoint</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api.php?action=stats</td>
+            <td>Dashboard statistics</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api.php?action=scans</td>
+            <td>List recent scans (max 50)</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api.php?action=scan&id=X</td>
+            <td>Get specific scan details</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td>/api.php?action=start_scan</td>
+            <td>Initiate new scan</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api.php?action=vulnerabilities</td>
+            <td>List vulnerabilities</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api.php?action=hosts&scan_id=X</td>
+            <td>List hosts from scan</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td>/api.php?action=report</td>
+            <td>Generate report</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api.php?action=compliance&scan_id=X</td>
+            <td>Compliance results</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api.php?action=export&scan_id=X</td>
+            <td>Export data (JSON/CSV)</td>
+        </tr>
+    </table>
+
+    <h2>9.2 API Response Format</h2>
+    <div class="code-block">{
+    "success": true,
+    "data": {
+        "total_scans": 150,
+        "total_vulnerabilities": 423,
+        "critical_count": 12,
+        "high_count": 45,
+        "medium_count": 156,
+        "low_count": 210
+    },
+    "timestamp": "2026-01-30T10:30:00Z"
+}</div>
+
+    <h2>9.3 API Security</h2>
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>Implementation</th>
+        </tr>
+        <tr>
+            <td>Rate Limiting</td>
+            <td>100 requests/minute per client</td>
+        </tr>
+        <tr>
+            <td>CORS</td>
+            <td>Configurable origin headers</td>
+        </tr>
+        <tr>
+            <td>Error Handling</td>
+            <td>JSON error responses, no stack traces</td>
+        </tr>
+        <tr>
+            <td>Timeout</td>
+            <td>10-minute execution limit for scans</td>
+        </tr>
+    </table>
+</div>
+
+<!-- Section 10: Compliance Framework -->
+<h1>10. Compliance Framework</h1>
+<div class="section">
+    <h2>10.1 Supported Standards</h2>
+
+    <table>
+        <tr>
+            <th>Framework</th>
+            <th>Version</th>
+            <th>Controls</th>
+        </tr>
+        <tr>
+            <td>NIST CSF</td>
+            <td>1.1</td>
+            <td>5 Functions, 23 Categories</td>
+        </tr>
+        <tr>
+            <td>ISO 27001</td>
+            <td>2013</td>
+            <td>114 Controls</td>
+        </tr>
+        <tr>
+            <td>CIS Controls</td>
+            <td>v8</td>
+            <td>18 Controls</td>
+        </tr>
+        <tr>
+            <td>PCI DSS</td>
+            <td>v4.0</td>
+            <td>12 Requirements</td>
+        </tr>
+        <tr>
+            <td>HIPAA</td>
+            <td>2013</td>
+            <td>45 Controls</td>
+        </tr>
+        <tr>
+            <td>SOC 2</td>
+            <td>Type II</td>
+            <td>64 Controls</td>
+        </tr>
+    </table>
+
+    <h2>10.2 Control Categories</h2>
+    <ul>
+        <li>Asset Inventory and Management</li>
+        <li>Access Control and Authentication</li>
+        <li>Data Encryption (at rest and in transit)</li>
+        <li>Protective Technology Implementation</li>
+        <li>Secure Configuration Management</li>
+        <li>Audit Logging and Monitoring</li>
+        <li>Vulnerability Management</li>
+        <li>Firewall and Network Security</li>
+        <li>Default Credential Elimination</li>
+        <li>Incident Response Procedures</li>
+    </ul>
+
+    <h2>10.3 Compliance Reporting</h2>
+    <p>The ComplianceChecker generates detailed reports including:</p>
+    <ul>
+        <li>Overall compliance score per framework</li>
+        <li>Individual control pass/fail status</li>
+        <li>Evidence collection for audit</li>
+        <li>Remediation recommendations</li>
+        <li>Gap analysis and prioritization</li>
+    </ul>
+</div>
+
+<!-- Section 11: Deployment Architecture -->
+<h1>11. Deployment Architecture</h1>
+<div class="section">
+    <h2>11.1 Deployment Options</h2>
+
+    <table>
+        <tr>
+            <th>Deployment Type</th>
+            <th>Description</th>
+            <th>Use Case</th>
+        </tr>
+        <tr>
+            <td><strong>POC (Proof of Concept)</strong></td>
+            <td>Single-server local installation</td>
+            <td>Evaluation, testing, small environments</td>
+        </tr>
+        <tr>
+            <td><strong>Hybrid</strong></td>
+            <td>Cloud management + on-premise collectors</td>
+            <td>Enterprise with distributed sites</td>
+        </tr>
+        <tr>
+            <td><strong>SaaS (Cloud-Only)</strong></td>
+            <td>Full cloud deployment with Terraform</td>
+            <td>Cloud-native organizations</td>
+        </tr>
+    </table>
+
+    <h2>11.2 POC Architecture</h2>
+    <div class="diagram">
+┌─────────────────────────────────────────────┐
+│              LOCAL SERVER                    │
+│                                              │
+│   ┌────────────┐    ┌────────────┐          │
+│   │   Apache   │    │   MySQL    │          │
+│   │  + PHP     │───▶│  Database  │          │
+│   └────────────┘    └────────────┘          │
+│         │                                    │
+│         ▼                                    │
+│   ┌────────────────────────────────┐        │
+│   │     IOC Application            │        │
+│   │  - Web UI                      │        │
+│   │  - API                         │        │
+│   │  - Scanners                    │        │
+│   └────────────────────────────────┘        │
+│                                              │
+└─────────────────────────────────────────────┘
+    </div>
+
+    <h2>11.3 Hybrid Architecture</h2>
+    <div class="diagram">
+┌─────────────────────────────────────────────────────────────────┐
+│                         CLOUD                                    │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │            Management Console                            │   │
+│   │  - Dashboard     - Reporting    - Configuration         │   │
+│   └─────────────────────────────────────────────────────────┘   │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │
+                    HTTPS (Encrypted)
+                               │
+┌──────────────────────────────┼──────────────────────────────────┐
+│                         ON-PREMISE                               │
+│                               │                                  │
+│   ┌───────────────────────────▼───────────────────────────┐     │
+│   │                  Collector Agent                       │     │
+│   │  - Network Scanning                                   │     │
+│   │  - SCADA Monitoring                                   │     │
+│   │  - Local Database                                     │     │
+│   └───────────────────────────────────────────────────────┘     │
+│                               │                                  │
+│              ┌────────────────┼────────────────┐                │
+│              │                │                │                 │
+│              ▼                ▼                ▼                 │
+│         ┌────────┐      ┌────────┐      ┌────────┐             │
+│         │ PLCs   │      │ RTUs   │      │Servers │             │
+│         └────────┘      └────────┘      └────────┘             │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+    </div>
+
+    <h2>11.4 Multi-Tenant Architecture</h2>
+    <p>The platform supports multi-tenant deployments with:</p>
+    <ul>
+        <li><strong>Tenant Isolation:</strong> Data segregation via tenant_code</li>
+        <li><strong>User Limits:</strong> Configurable per-tenant user quotas</li>
+        <li><strong>Storage Quotas:</strong> Per-tenant storage limits</li>
+        <li><strong>Tenant Status:</strong> active, inactive, suspended states</li>
+        <li><strong>Role-Based Access:</strong> Per-tenant admin, analyst, viewer roles</li>
+    </ul>
+</div>
+
+<!-- Section 12: Technology Stack -->
+<h1>12. Technology Stack</h1>
+<div class="section">
+    <h2>12.1 Backend Technologies</h2>
+
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Technology</th>
+            <th>Version</th>
+        </tr>
+        <tr>
+            <td>Language</td>
+            <td>PHP</td>
+            <td>7.4+</td>
+        </tr>
+        <tr>
+            <td>Database</td>
+            <td>MySQL / MariaDB</td>
+            <td>5.7+</td>
+        </tr>
+        <tr>
+            <td>Database Layer</td>
+            <td>PDO</td>
+            <td>Native</td>
+        </tr>
+        <tr>
+            <td>Web Server</td>
+            <td>Apache / Nginx</td>
+            <td>2.4+ / 1.18+</td>
+        </tr>
+        <tr>
+            <td>Architecture</td>
+            <td>Custom MVC-like</td>
+            <td>-</td>
+        </tr>
+    </table>
+
+    <h2>12.2 Frontend Technologies</h2>
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Technology</th>
+        </tr>
+        <tr>
+            <td>Markup</td>
+            <td>HTML5</td>
+        </tr>
+        <tr>
+            <td>Styling</td>
+            <td>CSS3 (inline and embedded)</td>
+        </tr>
+        <tr>
+            <td>Scripting</td>
+            <td>JavaScript (ES6+)</td>
+        </tr>
+        <tr>
+            <td>Charts</td>
+            <td>Native canvas rendering</td>
+        </tr>
+    </table>
+
+    <h2>12.3 Required PHP Extensions</h2>
+    <ul>
+        <li>PDO and PDO_MySQL</li>
+        <li>Sockets</li>
+        <li>cURL</li>
+        <li>JSON</li>
+        <li>OpenSSL</li>
+        <li>mbstring</li>
+    </ul>
+
+    <h2>12.4 System Requirements</h2>
+    <table>
+        <tr>
+            <th>Resource</th>
+            <th>Minimum</th>
+            <th>Recommended</th>
+        </tr>
+        <tr>
+            <td>CPU</td>
+            <td>2 cores</td>
+            <td>4+ cores</td>
+        </tr>
+        <tr>
+            <td>RAM</td>
+            <td>4 GB</td>
+            <td>8+ GB</td>
+        </tr>
+        <tr>
+            <td>Storage</td>
+            <td>20 GB</td>
+            <td>100+ GB</td>
+        </tr>
+        <tr>
+            <td>Network</td>
+            <td>100 Mbps</td>
+            <td>1 Gbps</td>
+        </tr>
+    </table>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>IOC Intelligent Operating Centre - Architecture & Security Framework Documentation</p>
+    <p>Version 1.0 | January 2026 | Confidential</p>
+</div>
+
+</body>
+</html>
