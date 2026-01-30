@@ -311,7 +311,7 @@ $currentPage = 'channels';
                 <div class="section-card">
                     <div class="section-header">
                         <h2>Notification Rules</h2>
-                        <button class="btn btn-primary btn-sm" onclick="addRule()">
+                        <button class="btn btn-primary btn-sm" onclick="openRuleModal()">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -331,49 +331,145 @@ $currentPage = 'channels';
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
+                            <tbody id="rulesTableBody">
+                                <tr data-rule-id="1">
                                     <td>Critical Security Alerts</td>
                                     <td>Security Scan</td>
                                     <td><span class="severity-badge critical">Critical</span></td>
                                     <td>Email, Slack, PagerDuty</td>
                                     <td><span class="status-badge success">Active</span></td>
                                     <td>
-                                        <button class="btn btn-secondary btn-sm">Edit</button>
+                                        <div style="display: flex; gap: 5px;">
+                                            <button class="btn btn-secondary btn-sm" onclick="editRule(1, 'Critical Security Alerts', 'security_scan', 'critical', ['email','slack','pagerduty'], true)">Edit</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteRule(1)">Delete</button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr data-rule-id="2">
                                     <td>DLP Violations</td>
                                     <td>Email DLP</td>
                                     <td><span class="severity-badge high">High</span></td>
                                     <td>Email, Teams</td>
                                     <td><span class="status-badge success">Active</span></td>
                                     <td>
-                                        <button class="btn btn-secondary btn-sm">Edit</button>
+                                        <div style="display: flex; gap: 5px;">
+                                            <button class="btn btn-secondary btn-sm" onclick="editRule(2, 'DLP Violations', 'email_dlp', 'high', ['email','teams'], true)">Edit</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteRule(2)">Delete</button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr data-rule-id="3">
                                     <td>SCADA Alarms</td>
                                     <td>SCADA Monitor</td>
                                     <td><span class="severity-badge medium">Medium+</span></td>
                                     <td>Email, SMS, Webhook</td>
                                     <td><span class="status-badge success">Active</span></td>
                                     <td>
-                                        <button class="btn btn-secondary btn-sm">Edit</button>
+                                        <div style="display: flex; gap: 5px;">
+                                            <button class="btn btn-secondary btn-sm" onclick="editRule(3, 'SCADA Alarms', 'scada_monitor', 'medium', ['email','sms','webhook'], true)">Edit</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteRule(3)">Delete</button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr data-rule-id="4">
                                     <td>Compliance Failures</td>
                                     <td>Compliance Check</td>
                                     <td><span class="severity-badge low">All</span></td>
                                     <td>Email</td>
                                     <td><span class="status-badge warning">Paused</span></td>
                                     <td>
-                                        <button class="btn btn-secondary btn-sm">Edit</button>
+                                        <div style="display: flex; gap: 5px;">
+                                            <button class="btn btn-secondary btn-sm" onclick="editRule(4, 'Compliance Failures', 'compliance', 'all', ['email'], false)">Edit</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteRule(4)">Delete</button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- Add/Edit Rule Modal -->
+                <div id="ruleModal" class="modal">
+                    <div class="modal-content" style="max-width: 600px;">
+                        <div class="modal-header">
+                            <h3 id="ruleModalTitle">Add Notification Rule</h3>
+                            <button class="modal-close" onclick="closeRuleModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="ruleForm" onsubmit="saveRule(event)">
+                                <input type="hidden" id="ruleId" name="rule_id" value="">
+
+                                <div class="form-group">
+                                    <label>Rule Name *</label>
+                                    <input type="text" id="ruleName" name="rule_name" required placeholder="e.g., Critical Security Alerts">
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Event Type *</label>
+                                        <select id="ruleEventType" name="event_type" required>
+                                            <option value="">Select event type...</option>
+                                            <option value="security_scan">Security Scan</option>
+                                            <option value="email_dlp">Email DLP</option>
+                                            <option value="scada_monitor">SCADA Monitor</option>
+                                            <option value="compliance">Compliance Check</option>
+                                            <option value="network_traffic">Network Traffic</option>
+                                            <option value="system_health">System Health</option>
+                                            <option value="user_activity">User Activity</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Minimum Severity *</label>
+                                        <select id="ruleSeverity" name="severity" required>
+                                            <option value="all">All Severities</option>
+                                            <option value="low">Low and above</option>
+                                            <option value="medium">Medium and above</option>
+                                            <option value="high">High and above</option>
+                                            <option value="critical">Critical only</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Notification Channels *</label>
+                                    <div class="checkbox-grid">
+                                        <?php foreach ($channels as $key => $channel): ?>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="channels[]" value="<?= $key ?>">
+                                            <span><?= htmlspecialchars($channel['name']) ?></span>
+                                        </label>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Additional Conditions (Optional)</label>
+                                    <textarea id="ruleConditions" name="conditions" rows="3" placeholder='{"ip_range": "192.168.1.0/24", "exclude_hosts": ["test-server"]}'></textarea>
+                                    <small>JSON format for advanced filtering</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select id="ruleStatus" name="status">
+                                        <option value="1">Active</option>
+                                        <option value="0">Paused</option>
+                                    </select>
+                                </div>
+
+                                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                                    <button type="button" class="btn btn-secondary" onclick="closeRuleModal()">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+                                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                            <polyline points="7 3 7 8 15 8"></polyline>
+                                        </svg>
+                                        Save Rule
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -438,6 +534,34 @@ $currentPage = 'channels';
         .severity-badge.high { background: #ffedd5; color: #ea580c; }
         .severity-badge.medium { background: #fef3c7; color: #d97706; }
         .severity-badge.low { background: #dbeafe; color: #2563eb; }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .checkbox-label input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        small {
+            display: block;
+            margin-top: 5px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
     </style>
 
     <script src="assets/js/cpanel.js"></script>
@@ -463,9 +587,186 @@ $currentPage = 'channels';
             form.submit();
         }
 
-        function addRule() {
-            alert('Rule editor would open here');
+        // Rule Modal Functions
+        function openRuleModal() {
+            document.getElementById('ruleModalTitle').textContent = 'Add Notification Rule';
+            document.getElementById('ruleForm').reset();
+            document.getElementById('ruleId').value = '';
+            document.getElementById('ruleModal').classList.add('active');
         }
+
+        function closeRuleModal() {
+            document.getElementById('ruleModal').classList.remove('active');
+        }
+
+        function editRule(id, name, eventType, severity, channels, isActive) {
+            document.getElementById('ruleModalTitle').textContent = 'Edit Notification Rule';
+            document.getElementById('ruleId').value = id;
+            document.getElementById('ruleName').value = name;
+            document.getElementById('ruleEventType').value = eventType;
+            document.getElementById('ruleSeverity').value = severity;
+            document.getElementById('ruleStatus').value = isActive ? '1' : '0';
+
+            // Reset all checkboxes
+            document.querySelectorAll('input[name="channels[]"]').forEach(cb => cb.checked = false);
+
+            // Check the selected channels
+            channels.forEach(ch => {
+                const checkbox = document.querySelector(`input[name="channels[]"][value="${ch}"]`);
+                if (checkbox) checkbox.checked = true;
+            });
+
+            document.getElementById('ruleModal').classList.add('active');
+        }
+
+        function deleteRule(id) {
+            if (confirm('Are you sure you want to delete this notification rule?')) {
+                const row = document.querySelector(`tr[data-rule-id="${id}"]`);
+                if (row) {
+                    row.style.transition = 'opacity 0.3s';
+                    row.style.opacity = '0';
+                    setTimeout(() => {
+                        row.remove();
+                        showNotification('Rule deleted successfully', 'success');
+                    }, 300);
+                }
+            }
+        }
+
+        function saveRule(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('ruleForm');
+            const formData = new FormData(form);
+
+            const ruleId = formData.get('rule_id');
+            const ruleName = formData.get('rule_name');
+            const eventType = formData.get('event_type');
+            const severity = formData.get('severity');
+            const status = formData.get('status');
+            const channels = formData.getAll('channels[]');
+
+            if (channels.length === 0) {
+                alert('Please select at least one notification channel.');
+                return;
+            }
+
+            // Map values to display text
+            const eventTypeLabels = {
+                'security_scan': 'Security Scan',
+                'email_dlp': 'Email DLP',
+                'scada_monitor': 'SCADA Monitor',
+                'compliance': 'Compliance Check',
+                'network_traffic': 'Network Traffic',
+                'system_health': 'System Health',
+                'user_activity': 'User Activity'
+            };
+
+            const severityLabels = {
+                'all': 'All',
+                'low': 'Low',
+                'medium': 'Medium',
+                'high': 'High',
+                'critical': 'Critical'
+            };
+
+            const channelLabels = {
+                'email': 'Email',
+                'sms': 'SMS',
+                'slack': 'Slack',
+                'teams': 'Teams',
+                'webhook': 'Webhook',
+                'pushover': 'Pushover',
+                'pagerduty': 'PagerDuty',
+                'discord': 'Discord',
+                'syslog': 'Syslog'
+            };
+
+            const channelDisplay = channels.map(c => channelLabels[c] || c).join(', ');
+            const severityClass = severity === 'all' ? 'low' : severity;
+            const statusClass = status === '1' ? 'success' : 'warning';
+            const statusText = status === '1' ? 'Active' : 'Paused';
+
+            if (ruleId) {
+                // Update existing row
+                const row = document.querySelector(`tr[data-rule-id="${ruleId}"]`);
+                if (row) {
+                    row.innerHTML = `
+                        <td>${ruleName}</td>
+                        <td>${eventTypeLabels[eventType] || eventType}</td>
+                        <td><span class="severity-badge ${severityClass}">${severityLabels[severity] || severity}</span></td>
+                        <td>${channelDisplay}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <div style="display: flex; gap: 5px;">
+                                <button class="btn btn-secondary btn-sm" onclick="editRule(${ruleId}, '${ruleName}', '${eventType}', '${severity}', ${JSON.stringify(channels)}, ${status === '1'})">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteRule(${ruleId})">Delete</button>
+                            </div>
+                        </td>
+                    `;
+                }
+                showNotification('Rule updated successfully', 'success');
+            } else {
+                // Add new row
+                const newId = Date.now();
+                const tbody = document.getElementById('rulesTableBody');
+                const newRow = document.createElement('tr');
+                newRow.setAttribute('data-rule-id', newId);
+                newRow.innerHTML = `
+                    <td>${ruleName}</td>
+                    <td>${eventTypeLabels[eventType] || eventType}</td>
+                    <td><span class="severity-badge ${severityClass}">${severityLabels[severity] || severity}</span></td>
+                    <td>${channelDisplay}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary btn-sm" onclick="editRule(${newId}, '${ruleName}', '${eventType}', '${severity}', ${JSON.stringify(channels)}, ${status === '1'})">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteRule(${newId})">Delete</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(newRow);
+                showNotification('Rule added successfully', 'success');
+            }
+
+            closeRuleModal();
+        }
+
+        // Simple notification function
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type}`;
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease;';
+            notification.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                ${message}
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('ruleModal').addEventListener('click', function(e) {
+            if (e.target === this) closeRuleModal();
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeRuleModal();
+        });
     </script>
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
 </body>
 </html>

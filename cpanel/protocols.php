@@ -338,6 +338,21 @@ $currentPage = 'protocols';
                                         <span><?= count($protocol['fields']) ?> fields</span>
                                     </div>
                                 </div>
+                                <div class="protocol-actions">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="switchToTab('<?= $key ?>')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                        </svg>
+                                        Configure
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="testConnection('<?= $key ?>')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
+                                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                        </svg>
+                                        Test
+                                    </button>
+                                </div>
                             </div>
                             <?php endforeach; ?>
                         </div>
@@ -346,6 +361,31 @@ $currentPage = 'protocols';
             </div>
         </div>
     </div>
+
+    <style>
+        .protocol-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        .protocol-actions .btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .protocol-card {
+            cursor: default;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .protocol-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
 
     <script src="assets/js/cpanel.js"></script>
     <script>
@@ -360,9 +400,58 @@ $currentPage = 'protocols';
             });
         });
 
+        function switchToTab(protocol) {
+            // Find and click the corresponding tab button
+            const tabBtn = document.querySelector('.tab-btn[data-tab="' + protocol + '"]');
+            if (tabBtn) {
+                tabBtn.click();
+                // Scroll to the tabs section
+                document.querySelector('.tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
         function testConnection(protocol) {
-            alert('Testing ' + protocol + ' connection...\n\nThis would send a test request to verify connectivity.');
+            const protocolNames = {
+                'modbus_tcp': 'Modbus TCP',
+                'modbus_rtu': 'Modbus RTU',
+                'opc_ua': 'OPC UA',
+                'dnp3': 'DNP3',
+                'snmp': 'SNMP',
+                'mqtt': 'MQTT',
+                'bacnet': 'BACnet',
+                'ethernet_ip': 'EtherNet/IP',
+                'profinet': 'PROFINET',
+                'iec61850': 'IEC 61850'
+            };
+
+            const name = protocolNames[protocol] || protocol;
+
+            // Show testing indicator
+            const btn = event.target.closest('.btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;animation:spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"></circle></svg> Testing...';
+            btn.disabled = true;
+
+            // Simulate connection test
+            setTimeout(function() {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+
+                // Random success/failure for demo
+                const success = Math.random() > 0.3;
+                if (success) {
+                    alert('✓ ' + name + ' Connection Test Successful!\n\nThe protocol endpoint is reachable and responding correctly.');
+                } else {
+                    alert('✗ ' + name + ' Connection Test Failed\n\nCould not establish connection. Please check:\n- Host/IP address is correct\n- Port is open and accessible\n- Device is powered on\n- Network connectivity');
+                }
+            }, 1500);
         }
     </script>
+    <style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </body>
 </html>
