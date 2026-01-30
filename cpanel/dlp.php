@@ -545,24 +545,101 @@ $currentPage = 'dlp';
 
         function addPreset(type) {
             const presets = {
-                'pci': { name: 'Credit Card Numbers', pattern: '\\b(?:\\d{4}[-\\s]?){3}\\d{4}\\b', severity: 'critical' },
-                'hipaa': { name: 'Medical Record Numbers', pattern: 'MRN[:\\s]?\\d{6,}|patient[\\s]?id[:\\s]?\\d+', severity: 'critical' },
-                'pii': { name: 'Social Security Numbers', pattern: '\\b\\d{3}-\\d{2}-\\d{4}\\b', severity: 'critical' },
-                'code': { name: 'Source Code Detection', pattern: 'function\\s+\\w+|class\\s+\\w+|import\\s+\\w+|require\\(', severity: 'high' },
-                'secrets': { name: 'API Keys and Secrets', pattern: '(?:api[_-]?key|secret|password)["\\'\\s]*[:=]["\\'\\s]*[\\w-]{16,}', severity: 'critical' },
-                'financial': { name: 'Bank Account Numbers', pattern: '\\b\\d{8,17}\\b|IBAN[:\\s]?[A-Z]{2}\\d{2}', severity: 'high' }
+                'pci': { name: 'Credit Card Numbers', pattern: '\\b(?:\\d{4}[-\\s]?){3}\\d{4}\\b', severity: 'critical', action: 'block' },
+                'hipaa': { name: 'Medical Record Numbers', pattern: 'MRN[:\\s]?\\d{6,}|patient[\\s]?id[:\\s]?\\d+', severity: 'critical', action: 'block' },
+                'pii': { name: 'Social Security Numbers', pattern: '\\b\\d{3}-\\d{2}-\\d{4}\\b', severity: 'critical', action: 'block' },
+                'code': { name: 'Source Code Detection', pattern: 'function\\s+\\w+|class\\s+\\w+|import\\s+\\w+|require\\(', severity: 'high', action: 'flag' },
+                'secrets': { name: 'API Keys and Secrets', pattern: '(?:api[_-]?key|secret|password)["\\'\\s]*[:=]["\\'\\s]*[\\w-]{16,}', severity: 'critical', action: 'block' },
+                'financial': { name: 'Bank Account Numbers', pattern: '\\b\\d{8,17}\\b|IBAN[:\\s]?[A-Z]{2}\\d{2}', severity: 'high', action: 'flag' }
             };
 
             if (presets[type]) {
+                // Set modal title
+                document.getElementById('ruleModalTitle').textContent = 'Add DLP Rule - ' + presets[type].name;
+
+                // Reset form first
+                document.getElementById('ruleForm').reset();
+                document.getElementById('ruleId').value = '';
+
+                // Fill in preset values
                 document.getElementById('ruleName').value = presets[type].name;
                 document.getElementById('rulePattern').value = presets[type].pattern;
                 document.getElementById('ruleSeverity').value = presets[type].severity;
                 document.getElementById('ruleType').value = 'regex';
                 document.getElementById('ruleAction').value = 'add_rule';
+                document.getElementById('ruleActionSelect').value = presets[type].action;
                 document.getElementById('ruleEnabled').checked = true;
+
+                // Open modal
                 document.getElementById('ruleModal').classList.add('active');
+
+                // Show confirmation that preset was loaded
+                showNotification('Preset "' + presets[type].name + '" loaded. Review and save to add the rule.', 'info');
             }
         }
+
+        // Simple notification function
+        function showNotification(message, type) {
+            const colors = {
+                'success': '#10b981',
+                'error': '#ef4444',
+                'info': '#3b82f6',
+                'warning': '#f59e0b'
+            };
+
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 10001;
+                padding: 15px 20px;
+                background: white;
+                border-left: 4px solid ${colors[type] || colors.info};
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideIn 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                max-width: 400px;
+            `;
+            notification.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="${colors[type] || colors.info}" stroke-width="2" style="width: 20px; height: 20px; flex-shrink: 0;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('ruleModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
     </script>
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
 </body>
 </html>
