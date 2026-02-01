@@ -912,6 +912,11 @@ try {
                     <span class="label">SIEM Brochure</span>
                     <span class="badge new">NEW</span>
                 </div>
+                <div class="nav-item" onclick="showModule('compliance-reports')">
+                    <span class="icon">📋</span>
+                    <span class="label">Compliance Reports</span>
+                    <span class="badge new">NEW</span>
+                </div>
                 <div class="nav-item" onclick="showModule('architecture-review')">
                     <span class="icon">🏗️</span>
                     <span class="label">Architecture Review</span>
@@ -3872,6 +3877,233 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
 
                         <div style="margin-top: 25px;">
                             <button class="btn btn-secondary" onclick="showModule('scada-security')">← Back: ICS Security</button>
+                            <button class="btn btn-primary" onclick="showModule('architecture-review')" style="margin-left: 10px;">🏗️ Next: Architecture Review →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compliance Reports Module -->
+            <div id="compliance-reports" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>Documentation</span>
+                        <span>/</span>
+                        <span>Compliance Reports</span>
+                    </div>
+                    <h2>📋 International Compliance Reports</h2>
+                    <p>Multi-framework compliance reporting with interactive recommendations and automated remediation.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>🎯</span>
+                        <h3>Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The Compliance Reports module provides comprehensive compliance assessment against 7 international security standards, with scan-based findings and interactive remediation capabilities.</p>
+
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0;">
+                            <div style="background: linear-gradient(135deg, #2196F3, #1976D2); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 28px; font-weight: bold;">7</div>
+                                <div style="font-size: 12px; opacity: 0.9;">Frameworks</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #4CAF50, #388E3C); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 28px; font-weight: bold;">600+</div>
+                                <div style="font-size: 12px; opacity: 0.9;">Controls Mapped</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #FF9800, #F57C00); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 28px; font-weight: bold;">16</div>
+                                <div style="font-size: 12px; opacity: 0.9;">Auto-Fix Templates</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #9C27B0, #7B1FA2); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 28px; font-weight: bold;">1-Click</div>
+                                <div style="font-size: 12px; opacity: 0.9;">Remediation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>🔒</span>
+                        <h3>Supported Frameworks</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #2196F3;">
+                                <strong style="color: #2196F3;">🔒 ISO 27001:2022</strong>
+                                <p style="font-size: 13px; margin-top: 5px; color: var(--text-muted);">Information Security Management System - 93 controls across 4 domains</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #4CAF50;">
+                                <strong style="color: #4CAF50;">🛡️ NIST CSF 2.0</strong>
+                                <p style="font-size: 13px; margin-top: 5px; color: var(--text-muted);">Cybersecurity Framework - 108 controls across 6 functions</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #FF9800;">
+                                <strong style="color: #FF9800;">💳 PCI-DSS 4.0</strong>
+                                <p style="font-size: 13px; margin-top: 5px; color: var(--text-muted);">Payment Card Industry Standard - 324 controls across 12 requirements</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #9C27B0;">
+                                <strong style="color: #9C27B0;">✅ SOC 2 Type II</strong>
+                                <p style="font-size: 13px; margin-top: 5px; color: var(--text-muted);">Service Organization Control - 64 controls across 9 criteria</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #3F51B5;">
+                                <strong style="color: #3F51B5;">🇪🇺 GDPR</strong>
+                                <p style="font-size: 13px; margin-top: 5px; color: var(--text-muted);">General Data Protection Regulation - 99 controls across 8 articles</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63;">
+                                <strong style="color: #E91E63;">🏥 HIPAA</strong>
+                                <p style="font-size: 13px; margin-top: 5px; color: var(--text-muted);">Health Insurance Portability - 75 controls across 5 safeguards</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #00BCD4; grid-column: span 2;">
+                                <strong style="color: #00BCD4;">🔐 CIS Controls v8</strong>
+                                <p style="font-size: 13px; margin-top: 5px; color: var(--text-muted);">Center for Internet Security - 153 controls across 18 control groups</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>💡</span>
+                        <h3>Interactive Recommendation Features</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The compliance reports include a powerful interactive recommendation system that guides you through remediation.</p>
+
+                        <div style="margin: 20px 0;">
+                            <h4 style="color: var(--primary); margin-bottom: 15px;">Three-Step Remediation Workflow</h4>
+                            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 200px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); padding: 20px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 32px; margin-bottom: 10px;">💡</div>
+                                    <h5 style="color: #4338ca; margin-bottom: 8px;">1. View Recommendation</h5>
+                                    <p style="font-size: 12px; color: #6366f1;">See detailed steps, scripts, and risk assessment for each finding</p>
+                                </div>
+                                <div style="flex: 1; min-width: 200px; background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 20px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 32px; margin-bottom: 10px;">✓</div>
+                                    <h5 style="color: #d97706; margin-bottom: 8px;">2. Accept Recommendation</h5>
+                                    <p style="font-size: 12px; color: #f59e0b;">Approve the remediation plan and queue it for implementation</p>
+                                </div>
+                                <div style="flex: 1; min-width: 200px; background: linear-gradient(135deg, #d1fae5, #a7f3d0); padding: 20px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 32px; margin-bottom: 10px;">🔧</div>
+                                    <h5 style="color: #059669; margin-bottom: 8px;">3. Fix & Apply</h5>
+                                    <p style="font-size: 12px; color: #10b981;">Apply the automated fix and update compliance status</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-box tip">
+                            <span class="info-box-icon">💡</span>
+                            <div class="info-box-content">
+                                <strong>Bulk Operations</strong>
+                                <p>Use the "Apply All Accepted" button to remediate multiple findings at once after accepting them.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>🔧</span>
+                        <h3>Auto-Fix Templates Available</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="doc-table">
+                            <thead>
+                                <tr>
+                                    <th>Template</th>
+                                    <th>Description</th>
+                                    <th>Priority</th>
+                                    <th>Platforms</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Critical Vulnerability Patching</strong></td>
+                                    <td>Automated security patch installation</td>
+                                    <td><span style="background: #7f1d1d; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px;">CRITICAL</span></td>
+                                    <td>Linux, Windows</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SSL/TLS Configuration</strong></td>
+                                    <td>Enforce TLS 1.2+ with strong ciphers</td>
+                                    <td><span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px;">HIGH</span></td>
+                                    <td>Apache, Nginx</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Password Policy Enforcement</strong></td>
+                                    <td>Configure password complexity requirements</td>
+                                    <td><span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px;">HIGH</span></td>
+                                    <td>Linux PAM, Windows AD</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Firewall Configuration Audit</strong></td>
+                                    <td>Export and review firewall rules</td>
+                                    <td><span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px;">HIGH</span></td>
+                                    <td>iptables, Windows Firewall</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Centralized Logging</strong></td>
+                                    <td>Configure syslog forwarding to SIEM</td>
+                                    <td><span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px;">HIGH</span></td>
+                                    <td>All platforms</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Database Encryption</strong></td>
+                                    <td>Enable transparent data encryption</td>
+                                    <td><span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px;">HIGH</span></td>
+                                    <td>MySQL, PostgreSQL</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="color: var(--text-muted); font-size: 12px; margin-top: 10px;">* 16 auto-fix templates available across all compliance frameworks</p>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>🚀</span>
+                        <h3>Access Compliance Reports</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 40px; border-radius: 16px; text-align: center; color: white;">
+                            <div style="font-size: 64px; margin-bottom: 20px;">📋</div>
+                            <h3 style="font-size: 24px; margin-bottom: 10px;">International Compliance Reports</h3>
+                            <p style="opacity: 0.9; margin-bottom: 25px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                                Access comprehensive compliance assessments with interactive recommendations, auto-fix scripts, and one-click remediation.
+                            </p>
+                            <a href="compliance_reports.php" class="btn btn-primary" style="background: white; color: #667eea; padding: 15px 40px; font-size: 16px; text-decoration: none; display: inline-block; border-radius: 10px; font-weight: 600;" target="_blank">
+                                Open Compliance Reports
+                            </a>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 25px;">
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
+                                <strong>Scan-Based</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Real network scan data</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 8px;">💡</div>
+                                <strong>Interactive</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Accept & apply fixes</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 8px;">🖨️</div>
+                                <strong>Exportable</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Print/PDF ready</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 8px;">🔄</div>
+                                <strong>Persistent</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Saves your progress</p>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-secondary" onclick="showModule('siem-brochure')">← Back: SIEM Brochure</button>
                             <button class="btn btn-primary" onclick="showModule('architecture-review')" style="margin-left: 10px;">🏗️ Next: Architecture Review →</button>
                         </div>
                     </div>

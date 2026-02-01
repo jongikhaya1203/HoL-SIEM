@@ -7,7 +7,7 @@
                 </svg>
             </div>
             <div class="sidebar-logo-text">
-                <h2>IOC CPanel</h2>
+                <h2>HoL CPanel</h2>
                 <span>Control Panel</span>
             </div>
         </div>

@@ -79,7 +79,7 @@ $currentPage = 'compliance';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compliance - IOC Control Panel</title>
+    <title>Compliance - HoL Control Panel</title>
     <link rel="stylesheet" href="assets/css/cpanel.css">
 </head>
 <body>
@@ -165,7 +165,7 @@ $currentPage = 'compliance';
 
                 <!-- Quick Actions -->
                 <div class="section-card">
-                    <div class="section-body" style="display: flex; gap: 15px; align-items: center;">
+                    <div class="section-body" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                         <form method="POST" style="display: inline;">
                             <input type="hidden" name="action" value="run_assessment">
                             <button type="submit" class="btn btn-primary">
@@ -186,9 +186,41 @@ $currentPage = 'compliance';
                                 Export Report
                             </button>
                         </form>
+                        <a href="../compliance_reports.php" class="btn" style="background: linear-gradient(135deg, #2196F3, #1976D2); color: white; text-decoration: none;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px; margin-right: 8px;">
+                                <path d="M9 11l3 3L22 4"></path>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                            </svg>
+                            Full Compliance Reports
+                        </a>
                         <span style="color: var(--text-secondary); font-size: 14px; margin-left: auto;">
                             Last assessment: Today at 08:30 AM
                         </span>
+                    </div>
+                </div>
+
+                <!-- Interactive Recommendations Feature -->
+                <div class="section-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: 20px;">
+                    <div class="section-body">
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="font-size: 48px;">💡</div>
+                            <div style="flex: 1;">
+                                <h3 style="margin-bottom: 8px; font-size: 18px;">NEW: Interactive Compliance Recommendations</h3>
+                                <p style="opacity: 0.9; font-size: 14px; margin-bottom: 15px;">
+                                    Access detailed remediation guidance with step-by-step instructions, auto-fix scripts,
+                                    and one-click fix application for all 7 international compliance frameworks.
+                                </p>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <span style="background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 15px; font-size: 12px;">✓ View Recommendations</span>
+                                    <span style="background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 15px; font-size: 12px;">✓ Accept & Queue</span>
+                                    <span style="background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 15px; font-size: 12px;">✓ Auto-Fix Scripts</span>
+                                    <span style="background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 15px; font-size: 12px;">✓ Bulk Apply</span>
+                                </div>
+                            </div>
+                            <a href="../compliance_reports.php?framework=iso27001" style="background: white; color: #667eea; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; white-space: nowrap;">
+                                Try Now →
+                            </a>
+                        </div>
                     </div>
                 </div>
 
