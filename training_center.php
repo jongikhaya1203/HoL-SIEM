@@ -3777,18 +3777,22 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                                 </ul>
                             </div>
                             <div>
-                                <h4 style="color: var(--primary); margin-bottom: 15px;">Full Visual Brochure (10 Pages)</h4>
-                                <ul style="padding-left: 20px;">
-                                    <li style="margin-bottom: 10px;"><strong>Page 1:</strong> Cover - Product branding</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 2:</strong> Executive Dashboard screenshots</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 3:</strong> Network Configuration & Scanning</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 4:</strong> SCADA/ICS Tank Monitoring</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 5:</strong> Pipeline & Gas Storage</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 6:</strong> Service Desk interface</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 7:</strong> Data Loss Prevention</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 8:</strong> Alarm Management</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 9:</strong> Reports & Training</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 10:</strong> Contact & CTA</li>
+                                <h4 style="color: var(--primary); margin-bottom: 15px;">Full Visual Brochure (14 Pages)</h4>
+                                <ul style="padding-left: 20px; font-size: 13px;">
+                                    <li style="margin-bottom: 6px;"><strong>Page 1:</strong> Cover</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 2:</strong> Executive Dashboard</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 3:</strong> Network Configuration</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 4:</strong> SCADA Tank Monitoring</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 5:</strong> Pipeline & Gas Storage</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 6:</strong> Service Desk</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 7:</strong> Data Loss Prevention</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 8:</strong> Email DLP</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 9:</strong> Dark Web Monitoring</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 10:</strong> Report Builder</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 11:</strong> Compliance Dashboards</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 12:</strong> Alarm Management</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 13:</strong> Reports & Training</li>
+                                    <li style="margin-bottom: 6px;"><strong>Page 14:</strong> Contact & CTA</li>
                                 </ul>
                             </div>
                         </div>
@@ -3827,12 +3831,13 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                                     <span style="position: absolute; top: -5px; right: -35px; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: bold;">NEW</span>
                                 </div>
                                 <h3 style="color: white; font-size: 22px; margin-bottom: 8px;">Full Visual Brochure</h3>
-                                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 14px;">Screenshots & Dashboards | 10 Pages</p>
-                                <ul style="text-align: left; color: rgba(255,255,255,0.8); font-size: 13px; padding-left: 20px; margin-bottom: 20px;">
-                                    <li style="margin-bottom: 5px;">Executive Dashboard visuals</li>
-                                    <li style="margin-bottom: 5px;">Network & SCADA screenshots</li>
-                                    <li style="margin-bottom: 5px;">Service Desk interface</li>
-                                    <li style="margin-bottom: 5px;">DLP & Alarm modules</li>
+                                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 14px;">Screenshots & Dashboards | 14 Pages</p>
+                                <ul style="text-align: left; color: rgba(255,255,255,0.8); font-size: 12px; padding-left: 20px; margin-bottom: 20px;">
+                                    <li style="margin-bottom: 4px;">Executive Dashboard & Network</li>
+                                    <li style="margin-bottom: 4px;">SCADA & Pipeline Monitoring</li>
+                                    <li style="margin-bottom: 4px;">Email DLP & Dark Web</li>
+                                    <li style="margin-bottom: 4px;">Report Builder & Compliance</li>
+                                    <li style="margin-bottom: 4px;">Service Desk & Alarms</li>
                                 </ul>
                                 <a href="siem_brochure_full.php" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #3b82f6); border: none; padding: 15px 35px; font-size: 16px; text-decoration: none; display: inline-block; border-radius: 10px;" target="_blank">
                                     Open Full Brochure

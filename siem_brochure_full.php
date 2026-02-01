@@ -1154,7 +1154,492 @@ try {
             </div>
         </div>
 
-        <!-- Page 8: Alarms & Alerts -->
+        <!-- Page 8: Email DLP -->
+        <div class="page section-page">
+            <div class="page-header">
+                <div class="page-header-icon">📧</div>
+                <div>
+                    <h2>Email Data Loss Prevention</h2>
+                    <p>Comprehensive email security with content inspection and policy enforcement</p>
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <div class="screenshot-header">
+                    <div class="screenshot-dot red"></div>
+                    <div class="screenshot-dot yellow"></div>
+                    <div class="screenshot-dot green"></div>
+                    <span class="screenshot-title">HoL SIEM - Email DLP Dashboard</span>
+                </div>
+                <div class="screenshot-body">
+                    <div style="padding: 15px;">
+                        <div class="dlp-stats">
+                            <div class="dlp-stat">
+                                <div class="dlp-stat-icon">📨</div>
+                                <div class="dlp-stat-value" style="color: #3b82f6;">45,892</div>
+                                <div class="dlp-stat-label">Emails Today</div>
+                            </div>
+                            <div class="dlp-stat">
+                                <div class="dlp-stat-icon">🔍</div>
+                                <div class="dlp-stat-value" style="color: #10b981;">45,721</div>
+                                <div class="dlp-stat-label">Clean</div>
+                            </div>
+                            <div class="dlp-stat">
+                                <div class="dlp-stat-icon">⚠️</div>
+                                <div class="dlp-stat-value" style="color: #f59e0b;">142</div>
+                                <div class="dlp-stat-label">Flagged</div>
+                            </div>
+                            <div class="dlp-stat">
+                                <div class="dlp-stat-icon">🚫</div>
+                                <div class="dlp-stat-value" style="color: #ef4444;">29</div>
+                                <div class="dlp-stat-label">Blocked</div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                            <div style="background: #1e293b; border-radius: 8px; padding: 12px;">
+                                <div style="color: #94a3b8; font-size: 10px; margin-bottom: 8px;">DETECTION BY CATEGORY</div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">PII Data (SSN, ID)</span>
+                                        <span style="background: #ef4444; padding: 2px 8px; border-radius: 10px; font-size: 10px; color: white;">47</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">Financial Data</span>
+                                        <span style="background: #f59e0b; padding: 2px 8px; border-radius: 10px; font-size: 10px; color: white;">38</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">Confidential Docs</span>
+                                        <span style="background: #8b5cf6; padding: 2px 8px; border-radius: 10px; font-size: 10px; color: white;">52</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">Source Code</span>
+                                        <span style="background: #3b82f6; padding: 2px 8px; border-radius: 10px; font-size: 10px; color: white;">34</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="background: #1e293b; border-radius: 8px; padding: 12px;">
+                                <div style="color: #94a3b8; font-size: 10px; margin-bottom: 8px;">ATTACHMENT ANALYSIS</div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">📄 Documents</span>
+                                        <span style="color: #10b981; font-size: 11px;">12,456 scanned</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">📊 Spreadsheets</span>
+                                        <span style="color: #10b981; font-size: 11px;">8,234 scanned</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">🗜️ Archives</span>
+                                        <span style="color: #f59e0b; font-size: 11px;">2,156 inspected</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">🖼️ Images (OCR)</span>
+                                        <span style="color: #3b82f6; font-size: 11px;">1,892 analyzed</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="module-list">
+                <div class="module-item">
+                    <div class="icon">🔍</div>
+                    <div>
+                        <h5>Content Inspection</h5>
+                        <p>Deep scan of email body and attachments</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">📎</div>
+                    <div>
+                        <h5>Attachment Analysis</h5>
+                        <p>OCR, archive extraction, macro detection</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">🔐</div>
+                    <div>
+                        <h5>Encryption Enforcement</h5>
+                        <p>Auto-encrypt sensitive outbound emails</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">📋</div>
+                    <div>
+                        <h5>Policy Templates</h5>
+                        <p>GDPR, HIPAA, PCI-DSS ready policies</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span>HoL SIEM Product Brochure</span>
+                <span>Page 8</span>
+            </div>
+        </div>
+
+        <!-- Page 9: Dark Web Monitoring -->
+        <div class="page section-page">
+            <div class="page-header">
+                <div class="page-header-icon">🌐</div>
+                <div>
+                    <h2>Dark Web Monitoring</h2>
+                    <p>Proactive threat intelligence from underground sources</p>
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <div class="screenshot-header">
+                    <div class="screenshot-dot red"></div>
+                    <div class="screenshot-dot yellow"></div>
+                    <div class="screenshot-dot green"></div>
+                    <span class="screenshot-title">HoL SIEM - Dark Web Intelligence</span>
+                </div>
+                <div class="screenshot-body">
+                    <div style="padding: 15px;">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px;">
+                            <div style="background: linear-gradient(135deg, #ef4444, #dc2626); padding: 12px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 22px; font-weight: bold; color: white;">23</div>
+                                <div style="font-size: 9px; color: rgba(255,255,255,0.8);">Credential Leaks</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 12px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 22px; font-weight: bold; color: white;">8</div>
+                                <div style="font-size: 9px; color: rgba(255,255,255,0.8);">Brand Mentions</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); padding: 12px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 22px; font-weight: bold; color: white;">156</div>
+                                <div style="font-size: 9px; color: rgba(255,255,255,0.8);">Sources Monitored</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 12px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 22px; font-weight: bold; color: white;">24/7</div>
+                                <div style="font-size: 9px; color: rgba(255,255,255,0.8);">Active Scanning</div>
+                            </div>
+                        </div>
+
+                        <table class="table-mock">
+                            <thead>
+                                <tr>
+                                    <th>Date Found</th>
+                                    <th>Type</th>
+                                    <th>Source</th>
+                                    <th>Risk</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Today 14:22</td>
+                                    <td>Credential Leak</td>
+                                    <td>Paste Site</td>
+                                    <td><span class="status-badge danger">Critical</span></td>
+                                    <td>Investigating</td>
+                                </tr>
+                                <tr>
+                                    <td>Today 09:15</td>
+                                    <td>Domain Mention</td>
+                                    <td>Forum Post</td>
+                                    <td><span class="status-badge warning">Medium</span></td>
+                                    <td>Reviewed</td>
+                                </tr>
+                                <tr>
+                                    <td>Yesterday</td>
+                                    <td>Data Breach</td>
+                                    <td>Leak Database</td>
+                                    <td><span class="status-badge danger">High</span></td>
+                                    <td>Mitigated</td>
+                                </tr>
+                                <tr>
+                                    <td>2 days ago</td>
+                                    <td>Phishing Kit</td>
+                                    <td>Marketplace</td>
+                                    <td><span class="status-badge warning">Medium</span></td>
+                                    <td>Blocked</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="module-list">
+                <div class="module-item">
+                    <div class="icon">🔑</div>
+                    <div>
+                        <h5>Credential Monitoring</h5>
+                        <p>Detect leaked passwords and accounts</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">🏷️</div>
+                    <div>
+                        <h5>Brand Protection</h5>
+                        <p>Monitor brand mentions and impersonation</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">📡</div>
+                    <div>
+                        <h5>Threat Intelligence</h5>
+                        <p>Real-time feeds from dark web sources</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">🚨</div>
+                    <div>
+                        <h5>Instant Alerts</h5>
+                        <p>Immediate notification of discoveries</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span>HoL SIEM Product Brochure</span>
+                <span>Page 9</span>
+            </div>
+        </div>
+
+        <!-- Page 10: Report Builder -->
+        <div class="page section-page">
+            <div class="page-header">
+                <div class="page-header-icon">📊</div>
+                <div>
+                    <h2>Advanced Report Builder</h2>
+                    <p>Create professional security reports with AI-powered analysis</p>
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <div class="screenshot-header">
+                    <div class="screenshot-dot red"></div>
+                    <div class="screenshot-dot yellow"></div>
+                    <div class="screenshot-dot green"></div>
+                    <span class="screenshot-title">HoL SIEM - Report Builder</span>
+                </div>
+                <div class="screenshot-body">
+                    <div style="padding: 15px;">
+                        <div style="display: grid; grid-template-columns: 200px 1fr; gap: 15px;">
+                            <div style="background: #1e293b; border-radius: 8px; padding: 12px;">
+                                <div style="color: #94a3b8; font-size: 10px; margin-bottom: 10px;">REPORT TYPES</div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <div style="background: #3b82f6; padding: 8px 10px; border-radius: 6px; color: white; font-size: 11px;">📊 Executive Summary</div>
+                                    <div style="background: #2d3748; padding: 8px 10px; border-radius: 6px; color: #e2e8f0; font-size: 11px;">🛡️ Vulnerability Report</div>
+                                    <div style="background: #2d3748; padding: 8px 10px; border-radius: 6px; color: #e2e8f0; font-size: 11px;">📋 Compliance Audit</div>
+                                    <div style="background: #2d3748; padding: 8px 10px; border-radius: 6px; color: #e2e8f0; font-size: 11px;">🏭 SCADA Operations</div>
+                                    <div style="background: #2d3748; padding: 8px 10px; border-radius: 6px; color: #e2e8f0; font-size: 11px;">🎫 Incident Summary</div>
+                                    <div style="background: #2d3748; padding: 8px 10px; border-radius: 6px; color: #e2e8f0; font-size: 11px;">📈 Trend Analysis</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="background: #1e293b; border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                                    <div style="color: #94a3b8; font-size: 10px; margin-bottom: 8px;">REPORT PREVIEW</div>
+                                    <div style="background: white; border-radius: 6px; padding: 15px; min-height: 120px;">
+                                        <div style="display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #3b82f6; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <div style="font-size: 24px;">🛡️</div>
+                                            <div>
+                                                <div style="font-weight: bold; color: #1e293b;">Executive Security Summary</div>
+                                                <div style="font-size: 10px; color: #64748b;">Generated: <?= date('M d, Y') ?></div>
+                                            </div>
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                            <div style="text-align: center; padding: 8px; background: #f0fdf4; border-radius: 6px;">
+                                                <div style="font-size: 18px; font-weight: bold; color: #10b981;">94%</div>
+                                                <div style="font-size: 9px; color: #64748b;">Security Score</div>
+                                            </div>
+                                            <div style="text-align: center; padding: 8px; background: #fef3c7; border-radius: 6px;">
+                                                <div style="font-size: 18px; font-weight: bold; color: #f59e0b;">12</div>
+                                                <div style="font-size: 9px; color: #64748b;">Open Issues</div>
+                                            </div>
+                                            <div style="text-align: center; padding: 8px; background: #eff6ff; border-radius: 6px;">
+                                                <div style="font-size: 18px; font-weight: bold; color: #3b82f6;">847</div>
+                                                <div style="font-size: 9px; color: #64748b;">Events/Day</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                                    <div style="background: #1e293b; border-radius: 8px; padding: 10px; text-align: center;">
+                                        <div style="font-size: 20px; margin-bottom: 5px;">📄</div>
+                                        <div style="color: white; font-size: 11px;">PDF Export</div>
+                                    </div>
+                                    <div style="background: #1e293b; border-radius: 8px; padding: 10px; text-align: center;">
+                                        <div style="font-size: 20px; margin-bottom: 5px;">📅</div>
+                                        <div style="color: white; font-size: 11px;">Schedule</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="module-list">
+                <div class="module-item">
+                    <div class="icon">🤖</div>
+                    <div>
+                        <h5>AI Analysis</h5>
+                        <p>Intelligent insights and recommendations</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">📊</div>
+                    <div>
+                        <h5>Custom Charts</h5>
+                        <p>Drag-and-drop visualization builder</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">📧</div>
+                    <div>
+                        <h5>Auto Distribution</h5>
+                        <p>Scheduled email delivery to stakeholders</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">🎨</div>
+                    <div>
+                        <h5>Brand Templates</h5>
+                        <p>Custom logos, colors, and layouts</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span>HoL SIEM Product Brochure</span>
+                <span>Page 10</span>
+            </div>
+        </div>
+
+        <!-- Page 11: Compliance Dashboards -->
+        <div class="page section-page">
+            <div class="page-header">
+                <div class="page-header-icon">✅</div>
+                <div>
+                    <h2>Compliance Reporting Dashboards</h2>
+                    <p>Real-time compliance monitoring for major regulatory frameworks</p>
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <div class="screenshot-header">
+                    <div class="screenshot-dot red"></div>
+                    <div class="screenshot-dot yellow"></div>
+                    <div class="screenshot-dot green"></div>
+                    <span class="screenshot-title">HoL SIEM - Compliance Dashboard</span>
+                </div>
+                <div class="screenshot-body">
+                    <div style="padding: 15px;">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px;">
+                            <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 10px; color: rgba(255,255,255,0.8); margin-bottom: 5px;">ISO 27001</div>
+                                <div style="font-size: 24px; font-weight: bold; color: white;">94%</div>
+                                <div style="font-size: 9px; color: rgba(255,255,255,0.7);">Compliant</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 10px; color: rgba(255,255,255,0.8); margin-bottom: 5px;">NIST CSF</div>
+                                <div style="font-size: 24px; font-weight: bold; color: white;">89%</div>
+                                <div style="font-size: 9px; color: rgba(255,255,255,0.7);">Compliant</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 10px; color: rgba(255,255,255,0.8); margin-bottom: 5px;">PCI-DSS</div>
+                                <div style="font-size: 24px; font-weight: bold; color: white;">97%</div>
+                                <div style="font-size: 9px; color: rgba(255,255,255,0.7);">Compliant</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 10px; color: rgba(255,255,255,0.8); margin-bottom: 5px;">SOC 2</div>
+                                <div style="font-size: 24px; font-weight: bold; color: white;">91%</div>
+                                <div style="font-size: 9px; color: rgba(255,255,255,0.7);">Compliant</div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="background: #1e293b; border-radius: 8px; padding: 12px;">
+                                <div style="color: #94a3b8; font-size: 10px; margin-bottom: 8px;">CONTROL STATUS</div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
+                                        <span style="color: #e2e8f0; font-size: 11px; flex: 1;">Access Control</span>
+                                        <span style="color: #10b981; font-size: 11px;">Passed</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
+                                        <span style="color: #e2e8f0; font-size: 11px; flex: 1;">Data Encryption</span>
+                                        <span style="color: #10b981; font-size: 11px;">Passed</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%;"></div>
+                                        <span style="color: #e2e8f0; font-size: 11px; flex: 1;">Audit Logging</span>
+                                        <span style="color: #f59e0b; font-size: 11px;">Partial</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
+                                        <span style="color: #e2e8f0; font-size: 11px; flex: 1;">Incident Response</span>
+                                        <span style="color: #10b981; font-size: 11px;">Passed</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="background: #1e293b; border-radius: 8px; padding: 12px;">
+                                <div style="color: #94a3b8; font-size: 10px; margin-bottom: 8px;">UPCOMING AUDITS</div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <div style="background: #2d3748; padding: 8px; border-radius: 6px; display: flex; justify-content: space-between;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">ISO 27001 Review</span>
+                                        <span style="color: #3b82f6; font-size: 10px;">Mar 15</span>
+                                    </div>
+                                    <div style="background: #2d3748; padding: 8px; border-radius: 6px; display: flex; justify-content: space-between;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">PCI-DSS Assessment</span>
+                                        <span style="color: #3b82f6; font-size: 10px;">Apr 02</span>
+                                    </div>
+                                    <div style="background: #2d3748; padding: 8px; border-radius: 6px; display: flex; justify-content: space-between;">
+                                        <span style="color: #e2e8f0; font-size: 11px;">SOC 2 Type II</span>
+                                        <span style="color: #3b82f6; font-size: 10px;">May 20</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="module-list">
+                <div class="module-item">
+                    <div class="icon">📋</div>
+                    <div>
+                        <h5>Framework Mapping</h5>
+                        <p>ISO 27001, NIST, PCI-DSS, SOC 2, GDPR</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">📈</div>
+                    <div>
+                        <h5>Gap Analysis</h5>
+                        <p>Identify compliance gaps with remediation</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">📅</div>
+                    <div>
+                        <h5>Audit Readiness</h5>
+                        <p>Track audit schedules and evidence</p>
+                    </div>
+                </div>
+                <div class="module-item">
+                    <div class="icon">📄</div>
+                    <div>
+                        <h5>Evidence Collection</h5>
+                        <p>Automated evidence gathering for audits</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span>HoL SIEM Product Brochure</span>
+                <span>Page 11</span>
+            </div>
+        </div>
+
+        <!-- Page 12: Alarms & Alerts -->
         <div class="page section-page">
             <div class="page-header">
                 <div class="page-header-icon">🚨</div>
@@ -1242,11 +1727,11 @@ try {
 
             <div class="page-footer">
                 <span>HoL SIEM Product Brochure</span>
-                <span>Page 8</span>
+                <span>Page 12</span>
             </div>
         </div>
 
-        <!-- Page 9: Reports & Training -->
+        <!-- Page 13: Reports & Training -->
         <div class="page section-page">
             <div class="page-header">
                 <div class="page-header-icon">📈</div>
@@ -1379,11 +1864,11 @@ try {
 
             <div class="page-footer">
                 <span>HoL SIEM Product Brochure</span>
-                <span>Page 9</span>
+                <span>Page 13</span>
             </div>
         </div>
 
-        <!-- Page 10: CTA -->
+        <!-- Page 14: CTA -->
         <div class="page cta-section">
             <div style="font-size: 80px; margin-bottom: 30px;">🚀</div>
             <h2>Ready to Transform Your Operations?</h2>
