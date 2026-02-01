@@ -59,6 +59,349 @@ $maxPenalty = ($networkScanData['critical_vulns'] * 10) + ($networkScanData['hig
               ($networkScanData['medium_vulns'] * 2) + ($networkScanData['low_vulns'] * 1);
 $securityScore = max(0, 100 - min(100, $maxPenalty / 10));
 
+// Detailed recommendations with fix scripts
+$recommendationDetails = [
+    'vuln_patching' => [
+        'title' => 'Critical Vulnerability Patching',
+        'description' => 'Implement immediate patching for all critical and high severity vulnerabilities detected in the network scan.',
+        'steps' => [
+            'Generate vulnerability report sorted by severity',
+            'Identify affected systems and create maintenance window schedule',
+            'Download and verify patches from official vendor sources',
+            'Test patches in staging environment before production deployment',
+            'Deploy patches during maintenance window with rollback plan',
+            'Verify patch installation and conduct post-patch vulnerability scan'
+        ],
+        'auto_fix' => [
+            'type' => 'script',
+            'command' => 'sudo apt update && sudo apt upgrade -y --security',
+            'windows_command' => 'Install-WindowsUpdate -AcceptAll -AutoReboot',
+            'description' => 'Automated security patch installation'
+        ],
+        'effort' => 'high',
+        'priority' => 'critical',
+        'estimated_time' => '4-8 hours',
+        'risk_if_ignored' => 'System compromise, data breach, regulatory penalties'
+    ],
+    'ssl_update' => [
+        'title' => 'SSL/TLS Certificate and Configuration Update',
+        'description' => 'Update SSL certificates and enforce minimum TLS 1.2 for all encrypted communications.',
+        'steps' => [
+            'Audit all SSL certificates for expiration and weak algorithms',
+            'Generate new certificates using RSA 2048+ or ECC 256+ keys',
+            'Configure servers to disable TLS 1.0, 1.1 and SSL 3.0',
+            'Enable TLS 1.2 and TLS 1.3 with strong cipher suites',
+            'Implement HSTS headers on web servers',
+            'Test configuration using SSL Labs or similar tools'
+        ],
+        'auto_fix' => [
+            'type' => 'config',
+            'apache_config' => "SSLProtocol -all +TLSv1.2 +TLSv1.3\nSSLCipherSuite HIGH:!aNULL:!MD5:!3DES",
+            'nginx_config' => "ssl_protocols TLSv1.2 TLSv1.3;\nssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256';",
+            'description' => 'Server TLS configuration update'
+        ],
+        'effort' => 'medium',
+        'priority' => 'high',
+        'estimated_time' => '2-4 hours',
+        'risk_if_ignored' => 'Man-in-the-middle attacks, data interception'
+    ],
+    'firewall_config' => [
+        'title' => 'Firewall Configuration Remediation',
+        'description' => 'Review and correct firewall misconfigurations to ensure proper network segmentation and access control.',
+        'steps' => [
+            'Export current firewall rules for audit',
+            'Identify overly permissive rules (any-any, 0.0.0.0/0)',
+            'Document required network flows and create rule matrix',
+            'Replace permissive rules with specific allow rules',
+            'Implement deny-by-default policy',
+            'Enable firewall logging for all denied connections',
+            'Test connectivity after changes'
+        ],
+        'auto_fix' => [
+            'type' => 'audit',
+            'command' => 'iptables -L -n --line-numbers > firewall_audit.txt',
+            'windows_command' => 'Get-NetFirewallRule | Export-Csv firewall_rules.csv',
+            'description' => 'Export firewall rules for review'
+        ],
+        'effort' => 'medium',
+        'priority' => 'high',
+        'estimated_time' => '3-6 hours',
+        'risk_if_ignored' => 'Unauthorized access, lateral movement by attackers'
+    ],
+    'access_review' => [
+        'title' => 'Access Control Review and Enhancement',
+        'description' => 'Conduct comprehensive access review and implement role-based access control improvements.',
+        'steps' => [
+            'Generate user access report across all systems',
+            'Review access levels against job functions',
+            'Remove orphaned and inactive accounts',
+            'Implement least privilege principle',
+            'Enable multi-factor authentication for privileged accounts',
+            'Document access control policies and procedures'
+        ],
+        'auto_fix' => [
+            'type' => 'report',
+            'command' => 'getent passwd | awk -F: \'$3 >= 1000 {print $1}\'',
+            'windows_command' => 'Get-LocalUser | Select Name, Enabled, LastLogon',
+            'description' => 'Generate user account audit report'
+        ],
+        'effort' => 'medium',
+        'priority' => 'medium',
+        'estimated_time' => '4-8 hours',
+        'risk_if_ignored' => 'Privilege escalation, insider threats'
+    ],
+    'default_creds' => [
+        'title' => 'Default Credentials Remediation',
+        'description' => 'Change all default credentials on network devices, applications, and systems.',
+        'steps' => [
+            'Inventory all systems with default credentials',
+            'Generate strong unique passwords using password manager',
+            'Update credentials on each affected system',
+            'Store new credentials securely in password vault',
+            'Enable account lockout policies',
+            'Schedule regular credential rotation'
+        ],
+        'auto_fix' => [
+            'type' => 'script',
+            'command' => 'passwd --expire $(getent passwd | awk -F: \'$3 >= 1000 {print $1}\')',
+            'description' => 'Force password change on next login'
+        ],
+        'effort' => 'low',
+        'priority' => 'critical',
+        'estimated_time' => '1-2 hours',
+        'risk_if_ignored' => 'Immediate system compromise, automated attacks'
+    ],
+    'encryption_data' => [
+        'title' => 'Data Encryption Implementation',
+        'description' => 'Implement AES-256 encryption for all sensitive data at rest and in transit.',
+        'steps' => [
+            'Classify data and identify sensitive information',
+            'Enable transparent data encryption on databases',
+            'Implement disk encryption on servers and workstations',
+            'Configure encrypted backup storage',
+            'Implement key management procedures',
+            'Test data recovery procedures'
+        ],
+        'auto_fix' => [
+            'type' => 'config',
+            'mysql_config' => 'ALTER TABLE sensitive_data ENCRYPTION=\'Y\';',
+            'description' => 'Enable database table encryption'
+        ],
+        'effort' => 'high',
+        'priority' => 'high',
+        'estimated_time' => '8-16 hours',
+        'risk_if_ignored' => 'Data breach, regulatory non-compliance'
+    ],
+    'software_update' => [
+        'title' => 'Outdated Software Remediation',
+        'description' => 'Update all outdated software to latest secure versions.',
+        'steps' => [
+            'Generate software inventory with version information',
+            'Identify software with known vulnerabilities',
+            'Plan update schedule with minimal business disruption',
+            'Create system restore points before updates',
+            'Deploy updates in phases starting with critical systems',
+            'Verify functionality after updates'
+        ],
+        'auto_fix' => [
+            'type' => 'script',
+            'command' => 'apt list --upgradable 2>/dev/null | grep security',
+            'windows_command' => 'Get-WmiObject -Class Win32_Product | Select Name, Version',
+            'description' => 'List software requiring security updates'
+        ],
+        'effort' => 'medium',
+        'priority' => 'high',
+        'estimated_time' => '4-8 hours',
+        'risk_if_ignored' => 'Known vulnerability exploitation'
+    ],
+    'patch_management' => [
+        'title' => 'Automated Patch Management',
+        'description' => 'Implement automated patch management system for continuous security updates.',
+        'steps' => [
+            'Deploy patch management solution (WSUS, SCCM, or third-party)',
+            'Configure automatic patch download and staging',
+            'Create test group for patch validation',
+            'Define maintenance windows for production deployment',
+            'Configure compliance reporting',
+            'Set up alerts for failed patches'
+        ],
+        'auto_fix' => [
+            'type' => 'config',
+            'description' => 'Configure Windows Update Group Policy',
+            'gpo_settings' => 'Configure Automatic Updates: Auto download and schedule install'
+        ],
+        'effort' => 'high',
+        'priority' => 'high',
+        'estimated_time' => '8-24 hours',
+        'risk_if_ignored' => 'Accumulating vulnerabilities, compliance failures'
+    ],
+    'password_policy' => [
+        'title' => 'Password Policy Enforcement',
+        'description' => 'Implement strong password complexity requirements and rotation policies.',
+        'steps' => [
+            'Define password complexity requirements (12+ chars, mixed case, numbers, symbols)',
+            'Configure password history (prevent last 12 passwords)',
+            'Set maximum password age (90 days)',
+            'Enable account lockout after 5 failed attempts',
+            'Implement password blacklist for common passwords',
+            'Deploy password strength meter on login forms'
+        ],
+        'auto_fix' => [
+            'type' => 'config',
+            'linux_config' => 'password requisite pam_pwquality.so minlen=12 dcredit=-1 ucredit=-1 lcredit=-1 ocredit=-1',
+            'windows_command' => 'net accounts /minpwlen:12 /maxpwage:90 /minpwage:1 /uniquepw:12',
+            'description' => 'Configure password policy'
+        ],
+        'effort' => 'low',
+        'priority' => 'high',
+        'estimated_time' => '1-2 hours',
+        'risk_if_ignored' => 'Brute force attacks, credential stuffing'
+    ],
+    'unencrypted_protocols' => [
+        'title' => 'Disable Unencrypted Protocols',
+        'description' => 'Replace unencrypted protocols (HTTP, FTP, Telnet) with encrypted alternatives.',
+        'steps' => [
+            'Inventory all services using unencrypted protocols',
+            'Plan migration to encrypted alternatives (HTTPS, SFTP, SSH)',
+            'Generate and deploy SSL certificates',
+            'Configure protocol redirects (HTTP to HTTPS)',
+            'Update firewall rules to block unencrypted ports',
+            'Update documentation and client configurations'
+        ],
+        'auto_fix' => [
+            'type' => 'config',
+            'apache_config' => 'Redirect permanent / https://yourdomain.com/',
+            'description' => 'Configure HTTP to HTTPS redirect'
+        ],
+        'effort' => 'medium',
+        'priority' => 'critical',
+        'estimated_time' => '4-8 hours',
+        'risk_if_ignored' => 'Credential theft, data interception'
+    ],
+    'network_monitoring' => [
+        'title' => 'Network Monitoring Enhancement',
+        'description' => 'Expand network monitoring coverage and enable anomaly detection.',
+        'steps' => [
+            'Deploy network monitoring agents on all segments',
+            'Configure SNMP monitoring for network devices',
+            'Enable NetFlow/sFlow collection',
+            'Set up baseline traffic analysis',
+            'Configure alerting thresholds',
+            'Create monitoring dashboards'
+        ],
+        'auto_fix' => [
+            'type' => 'deploy',
+            'description' => 'Deploy HoL SIEM monitoring agent'
+        ],
+        'effort' => 'medium',
+        'priority' => 'medium',
+        'estimated_time' => '4-8 hours',
+        'risk_if_ignored' => 'Undetected security incidents'
+    ],
+    'rbac_implementation' => [
+        'title' => 'Role-Based Access Control Implementation',
+        'description' => 'Implement comprehensive RBAC to enforce least privilege access.',
+        'steps' => [
+            'Define organizational roles and responsibilities',
+            'Map roles to required system permissions',
+            'Create role templates in identity management system',
+            'Assign users to appropriate roles',
+            'Remove direct permissions in favor of role assignments',
+            'Implement periodic role certification reviews'
+        ],
+        'auto_fix' => [
+            'type' => 'audit',
+            'description' => 'Generate RBAC compliance report'
+        ],
+        'effort' => 'high',
+        'priority' => 'high',
+        'estimated_time' => '16-40 hours',
+        'risk_if_ignored' => 'Excessive permissions, audit findings'
+    ],
+    'breach_notification' => [
+        'title' => 'Breach Notification Procedures',
+        'description' => 'Establish and test data breach notification procedures.',
+        'steps' => [
+            'Document incident classification criteria',
+            'Define notification timelines (72 hours for GDPR)',
+            'Create notification templates for authorities and individuals',
+            'Establish communication chain of command',
+            'Conduct tabletop breach response exercise',
+            'Review and update procedures annually'
+        ],
+        'auto_fix' => [
+            'type' => 'documentation',
+            'description' => 'Generate breach response procedure template'
+        ],
+        'effort' => 'medium',
+        'priority' => 'high',
+        'estimated_time' => '8-16 hours',
+        'risk_if_ignored' => 'Regulatory penalties, reputational damage'
+    ],
+    'asset_inventory' => [
+        'title' => 'Asset Inventory Maintenance',
+        'description' => 'Maintain accurate and automated asset inventory.',
+        'steps' => [
+            'Deploy asset discovery tools',
+            'Configure automated scanning schedules',
+            'Integrate with CMDB for asset tracking',
+            'Establish asset classification scheme',
+            'Implement change detection alerts',
+            'Conduct quarterly inventory reconciliation'
+        ],
+        'auto_fix' => [
+            'type' => 'scan',
+            'command' => 'nmap -sn 192.168.0.0/24 -oX asset_discovery.xml',
+            'description' => 'Run network asset discovery scan'
+        ],
+        'effort' => 'low',
+        'priority' => 'medium',
+        'estimated_time' => '2-4 hours',
+        'risk_if_ignored' => 'Shadow IT, unmanaged assets'
+    ],
+    'logging_config' => [
+        'title' => 'Centralized Logging Configuration',
+        'description' => 'Ensure all critical systems send logs to centralized SIEM.',
+        'steps' => [
+            'Identify all log sources requiring collection',
+            'Configure syslog forwarding on Linux systems',
+            'Configure Windows Event forwarding',
+            'Set up application-specific log collection',
+            'Configure log retention policies',
+            'Create correlation rules for security events'
+        ],
+        'auto_fix' => [
+            'type' => 'config',
+            'syslog_config' => '*.* @@siem.company.com:514',
+            'description' => 'Configure syslog forwarding to SIEM'
+        ],
+        'effort' => 'medium',
+        'priority' => 'high',
+        'estimated_time' => '4-8 hours',
+        'risk_if_ignored' => 'Undetected security events, forensic gaps'
+    ],
+    'pia_assessment' => [
+        'title' => 'Privacy Impact Assessment',
+        'description' => 'Conduct Privacy Impact Assessment for systems processing personal data.',
+        'steps' => [
+            'Identify systems processing personal data',
+            'Document data flows and storage locations',
+            'Assess privacy risks and impacts',
+            'Identify mitigation measures',
+            'Document residual risks and acceptance',
+            'Obtain DPO review and sign-off'
+        ],
+        'auto_fix' => [
+            'type' => 'documentation',
+            'description' => 'Generate PIA questionnaire template'
+        ],
+        'effort' => 'high',
+        'priority' => 'medium',
+        'estimated_time' => '16-40 hours',
+        'risk_if_ignored' => 'GDPR non-compliance, regulatory action'
+    ]
+];
+
 // Compliance Frameworks with detailed control mappings
 $frameworks = [
     'iso27001' => [
@@ -75,11 +418,11 @@ $frameworks = [
             ['name' => 'A.8 Technological Controls', 'controls' => 34, 'passed' => 28, 'failed' => 4, 'na' => 2]
         ],
         'findings' => [
-            ['control' => 'A.8.8', 'title' => 'Management of technical vulnerabilities', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['critical_vulns'] . ' critical vulnerabilities detected', 'recommendation' => 'Implement immediate patching for critical vulnerabilities'],
-            ['control' => 'A.8.24', 'title' => 'Use of cryptography', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['ssl_issues'] . ' SSL/TLS configuration issues', 'recommendation' => 'Update SSL certificates and enforce TLS 1.2+'],
-            ['control' => 'A.8.9', 'title' => 'Configuration management', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['firewall_misconfigs'] . ' firewall misconfigurations', 'recommendation' => 'Review and correct firewall rules'],
-            ['control' => 'A.5.15', 'title' => 'Access control', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Access controls properly implemented', 'recommendation' => 'Continue regular access reviews'],
-            ['control' => 'A.8.15', 'title' => 'Logging', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Centralized logging enabled', 'recommendation' => 'Maintain current logging configuration']
+            ['id' => 'iso-001', 'control' => 'A.8.8', 'title' => 'Management of technical vulnerabilities', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['critical_vulns'] . ' critical vulnerabilities detected', 'recommendation' => 'Implement immediate patching for critical vulnerabilities', 'rec_key' => 'vuln_patching'],
+            ['id' => 'iso-002', 'control' => 'A.8.24', 'title' => 'Use of cryptography', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['ssl_issues'] . ' SSL/TLS configuration issues', 'recommendation' => 'Update SSL certificates and enforce TLS 1.2+', 'rec_key' => 'ssl_update'],
+            ['id' => 'iso-003', 'control' => 'A.8.9', 'title' => 'Configuration management', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['firewall_misconfigs'] . ' firewall misconfigurations', 'recommendation' => 'Review and correct firewall rules', 'rec_key' => 'firewall_config'],
+            ['id' => 'iso-004', 'control' => 'A.5.15', 'title' => 'Access control', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Access controls properly implemented', 'recommendation' => 'Continue regular access reviews', 'rec_key' => 'access_review'],
+            ['id' => 'iso-005', 'control' => 'A.8.15', 'title' => 'Logging', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Centralized logging enabled', 'recommendation' => 'Maintain current logging configuration', 'rec_key' => 'logging_config']
         ]
     ],
     'nist' => [
@@ -98,11 +441,11 @@ $frameworks = [
             ['name' => 'RECOVER (RC)', 'controls' => 12, 'passed' => 10, 'failed' => 1, 'na' => 1]
         ],
         'findings' => [
-            ['control' => 'PR.DS-1', 'title' => 'Data-at-rest protection', 'status' => 'fail', 'severity' => 'high', 'finding' => 'Unencrypted data stores detected', 'recommendation' => 'Implement AES-256 encryption for all data at rest'],
-            ['control' => 'PR.PS-1', 'title' => 'Baseline configurations', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['outdated_software'] . ' systems with outdated software', 'recommendation' => 'Update all systems to latest secure versions'],
-            ['control' => 'DE.CM-1', 'title' => 'Network monitoring', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Network monitoring active on all segments', 'recommendation' => 'Continue current monitoring practices'],
-            ['control' => 'ID.AM-1', 'title' => 'Asset inventory', 'status' => 'pass', 'severity' => 'info', 'finding' => $networkScanData['total_hosts'] . ' hosts inventoried', 'recommendation' => 'Maintain asset inventory accuracy'],
-            ['control' => 'PR.AC-1', 'title' => 'Identity management', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['default_credentials'] . ' systems with default credentials', 'recommendation' => 'Change all default credentials immediately']
+            ['id' => 'nist-001', 'control' => 'PR.DS-1', 'title' => 'Data-at-rest protection', 'status' => 'fail', 'severity' => 'high', 'finding' => 'Unencrypted data stores detected', 'recommendation' => 'Implement AES-256 encryption for all data at rest', 'rec_key' => 'encryption_data'],
+            ['id' => 'nist-002', 'control' => 'PR.PS-1', 'title' => 'Baseline configurations', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['outdated_software'] . ' systems with outdated software', 'recommendation' => 'Update all systems to latest secure versions', 'rec_key' => 'software_update'],
+            ['id' => 'nist-003', 'control' => 'DE.CM-1', 'title' => 'Network monitoring', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Network monitoring active on all segments', 'recommendation' => 'Continue current monitoring practices', 'rec_key' => 'network_monitoring'],
+            ['id' => 'nist-004', 'control' => 'ID.AM-1', 'title' => 'Asset inventory', 'status' => 'pass', 'severity' => 'info', 'finding' => $networkScanData['total_hosts'] . ' hosts inventoried', 'recommendation' => 'Maintain asset inventory accuracy', 'rec_key' => 'asset_inventory'],
+            ['id' => 'nist-005', 'control' => 'PR.AC-1', 'title' => 'Identity management', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['default_credentials'] . ' systems with default credentials', 'recommendation' => 'Change all default credentials immediately', 'rec_key' => 'default_creds']
         ]
     ],
     'pci' => [
@@ -127,11 +470,11 @@ $frameworks = [
             ['name' => 'Req 12: Security Policies', 'controls' => 12, 'passed' => 11, 'failed' => 0, 'na' => 1]
         ],
         'findings' => [
-            ['control' => '6.3.3', 'title' => 'Vulnerability scanning', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['critical_vulns'] + $networkScanData['high_vulns'] . ' high/critical vulnerabilities unresolved', 'recommendation' => 'Remediate all high and critical vulnerabilities within 30 days'],
-            ['control' => '2.2.1', 'title' => 'System configurations', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['default_credentials'] . ' systems with vendor defaults', 'recommendation' => 'Remove all vendor-supplied default accounts'],
-            ['control' => '4.2.1', 'title' => 'Strong cryptography', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['unencrypted_protocols'] . ' unencrypted transmission channels', 'recommendation' => 'Implement TLS 1.2+ for all transmissions'],
-            ['control' => '11.3.1', 'title' => 'Penetration testing', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Annual penetration test completed', 'recommendation' => 'Schedule next quarterly internal scan'],
-            ['control' => '10.2.1', 'title' => 'Audit logs', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Audit logging enabled on all systems', 'recommendation' => 'Continue log retention for 12 months']
+            ['id' => 'pci-001', 'control' => '6.3.3', 'title' => 'Vulnerability scanning', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['critical_vulns'] + $networkScanData['high_vulns'] . ' high/critical vulnerabilities unresolved', 'recommendation' => 'Remediate all high and critical vulnerabilities within 30 days', 'rec_key' => 'vuln_patching'],
+            ['id' => 'pci-002', 'control' => '2.2.1', 'title' => 'System configurations', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['default_credentials'] . ' systems with vendor defaults', 'recommendation' => 'Remove all vendor-supplied default accounts', 'rec_key' => 'default_creds'],
+            ['id' => 'pci-003', 'control' => '4.2.1', 'title' => 'Strong cryptography', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['unencrypted_protocols'] . ' unencrypted transmission channels', 'recommendation' => 'Implement TLS 1.2+ for all transmissions', 'rec_key' => 'unencrypted_protocols'],
+            ['id' => 'pci-004', 'control' => '11.3.1', 'title' => 'Penetration testing', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Annual penetration test completed', 'recommendation' => 'Schedule next quarterly internal scan', 'rec_key' => 'vuln_patching'],
+            ['id' => 'pci-005', 'control' => '10.2.1', 'title' => 'Audit logs', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Audit logging enabled on all systems', 'recommendation' => 'Continue log retention for 12 months', 'rec_key' => 'logging_config']
         ]
     ],
     'soc2' => [
@@ -153,10 +496,10 @@ $frameworks = [
             ['name' => 'CC9: Risk Mitigation', 'controls' => 4, 'passed' => 3, 'failed' => 1, 'na' => 0]
         ],
         'findings' => [
-            ['control' => 'CC6.1', 'title' => 'Logical access security', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['weak_passwords'] . ' accounts with weak passwords', 'recommendation' => 'Enforce password complexity policy'],
-            ['control' => 'CC7.2', 'title' => 'Vulnerability management', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['missing_patches'] . ' missing security patches', 'recommendation' => 'Implement automated patch management'],
-            ['control' => 'CC6.6', 'title' => 'System boundaries', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Network segmentation properly configured', 'recommendation' => 'Continue regular boundary reviews'],
-            ['control' => 'CC7.1', 'title' => 'Infrastructure monitoring', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Continuous monitoring active', 'recommendation' => 'Maintain current monitoring coverage']
+            ['id' => 'soc2-001', 'control' => 'CC6.1', 'title' => 'Logical access security', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['weak_passwords'] . ' accounts with weak passwords', 'recommendation' => 'Enforce password complexity policy', 'rec_key' => 'password_policy'],
+            ['id' => 'soc2-002', 'control' => 'CC7.2', 'title' => 'Vulnerability management', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['missing_patches'] . ' missing security patches', 'recommendation' => 'Implement automated patch management', 'rec_key' => 'patch_management'],
+            ['id' => 'soc2-003', 'control' => 'CC6.6', 'title' => 'System boundaries', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Network segmentation properly configured', 'recommendation' => 'Continue regular boundary reviews', 'rec_key' => 'firewall_config'],
+            ['id' => 'soc2-004', 'control' => 'CC7.1', 'title' => 'Infrastructure monitoring', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Continuous monitoring active', 'recommendation' => 'Maintain current monitoring coverage', 'rec_key' => 'network_monitoring']
         ]
     ],
     'gdpr' => [
@@ -177,10 +520,10 @@ $frameworks = [
             ['name' => 'Art. 44-49: International Transfers', 'controls' => 12, 'passed' => 10, 'failed' => 1, 'na' => 1]
         ],
         'findings' => [
-            ['control' => 'Art. 32', 'title' => 'Security of processing', 'status' => 'fail', 'severity' => 'high', 'finding' => 'Encryption gaps detected in ' . $networkScanData['ssl_issues'] . ' systems', 'recommendation' => 'Implement end-to-end encryption for all personal data'],
-            ['control' => 'Art. 33', 'title' => 'Breach notification', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Breach notification procedures documented', 'recommendation' => 'Conduct annual breach response drill'],
-            ['control' => 'Art. 25', 'title' => 'Data protection by design', 'status' => 'fail', 'severity' => 'medium', 'finding' => 'Privacy impact assessment overdue', 'recommendation' => 'Complete PIA for new systems'],
-            ['control' => 'Art. 17', 'title' => 'Right to erasure', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Data deletion procedures implemented', 'recommendation' => 'Automate data retention enforcement']
+            ['id' => 'gdpr-001', 'control' => 'Art. 32', 'title' => 'Security of processing', 'status' => 'fail', 'severity' => 'high', 'finding' => 'Encryption gaps detected in ' . $networkScanData['ssl_issues'] . ' systems', 'recommendation' => 'Implement end-to-end encryption for all personal data', 'rec_key' => 'encryption_data'],
+            ['id' => 'gdpr-002', 'control' => 'Art. 33', 'title' => 'Breach notification', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Breach notification procedures documented', 'recommendation' => 'Conduct annual breach response drill', 'rec_key' => 'breach_notification'],
+            ['id' => 'gdpr-003', 'control' => 'Art. 25', 'title' => 'Data protection by design', 'status' => 'fail', 'severity' => 'medium', 'finding' => 'Privacy impact assessment overdue', 'recommendation' => 'Complete PIA for new systems', 'rec_key' => 'pia_assessment'],
+            ['id' => 'gdpr-004', 'control' => 'Art. 17', 'title' => 'Right to erasure', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Data deletion procedures implemented', 'recommendation' => 'Automate data retention enforcement', 'rec_key' => 'encryption_data']
         ]
     ],
     'hipaa' => [
@@ -198,10 +541,10 @@ $frameworks = [
             ['name' => 'Policies & Documentation', 'controls' => 5, 'passed' => 4, 'failed' => 1, 'na' => 0]
         ],
         'findings' => [
-            ['control' => '164.312(a)(1)', 'title' => 'Access control', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['access_control_issues'] . ' access control deficiencies', 'recommendation' => 'Implement role-based access control'],
-            ['control' => '164.312(e)(1)', 'title' => 'Transmission security', 'status' => 'fail', 'severity' => 'critical', 'finding' => $networkScanData['unencrypted_protocols'] . ' unencrypted ePHI transmissions', 'recommendation' => 'Encrypt all ePHI in transit immediately'],
-            ['control' => '164.312(b)', 'title' => 'Audit controls', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Audit logging active for ePHI access', 'recommendation' => 'Continue audit log reviews'],
-            ['control' => '164.308(a)(1)', 'title' => 'Security management', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Risk analysis completed', 'recommendation' => 'Update risk analysis annually']
+            ['id' => 'hipaa-001', 'control' => '164.312(a)(1)', 'title' => 'Access control', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['access_control_issues'] . ' access control deficiencies', 'recommendation' => 'Implement role-based access control', 'rec_key' => 'rbac_implementation'],
+            ['id' => 'hipaa-002', 'control' => '164.312(e)(1)', 'title' => 'Transmission security', 'status' => 'fail', 'severity' => 'critical', 'finding' => $networkScanData['unencrypted_protocols'] . ' unencrypted ePHI transmissions', 'recommendation' => 'Encrypt all ePHI in transit immediately', 'rec_key' => 'unencrypted_protocols'],
+            ['id' => 'hipaa-003', 'control' => '164.312(b)', 'title' => 'Audit controls', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Audit logging active for ePHI access', 'recommendation' => 'Continue audit log reviews', 'rec_key' => 'logging_config'],
+            ['id' => 'hipaa-004', 'control' => '164.308(a)(1)', 'title' => 'Security management', 'status' => 'pass', 'severity' => 'info', 'finding' => 'Risk analysis completed', 'recommendation' => 'Update risk analysis annually', 'rec_key' => 'pia_assessment']
         ]
     ],
     'cis' => [
@@ -232,13 +575,16 @@ $frameworks = [
             ['name' => 'CIS 18: Penetration Testing', 'controls' => 5, 'passed' => 4, 'failed' => 1, 'na' => 0]
         ],
         'findings' => [
-            ['control' => '7.1', 'title' => 'Vulnerability scanning', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['total_vulnerabilities'] . ' vulnerabilities detected across network', 'recommendation' => 'Establish weekly vulnerability scanning'],
-            ['control' => '4.1', 'title' => 'Secure configuration', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['firewall_misconfigs'] . ' configuration deviations', 'recommendation' => 'Implement configuration management baseline'],
-            ['control' => '1.1', 'title' => 'Asset inventory', 'status' => 'pass', 'severity' => 'info', 'finding' => $networkScanData['total_hosts'] . ' assets tracked', 'recommendation' => 'Continue automated discovery'],
-            ['control' => '8.2', 'title' => 'Centralized logging', 'status' => 'pass', 'severity' => 'info', 'finding' => 'SIEM collecting logs from all critical systems', 'recommendation' => 'Expand log sources coverage']
+            ['id' => 'cis-001', 'control' => '7.1', 'title' => 'Vulnerability scanning', 'status' => 'fail', 'severity' => 'high', 'finding' => $networkScanData['total_vulnerabilities'] . ' vulnerabilities detected across network', 'recommendation' => 'Establish weekly vulnerability scanning', 'rec_key' => 'vuln_patching'],
+            ['id' => 'cis-002', 'control' => '4.1', 'title' => 'Secure configuration', 'status' => 'fail', 'severity' => 'medium', 'finding' => $networkScanData['firewall_misconfigs'] . ' configuration deviations', 'recommendation' => 'Implement configuration management baseline', 'rec_key' => 'firewall_config'],
+            ['id' => 'cis-003', 'control' => '1.1', 'title' => 'Asset inventory', 'status' => 'pass', 'severity' => 'info', 'finding' => $networkScanData['total_hosts'] . ' assets tracked', 'recommendation' => 'Continue automated discovery', 'rec_key' => 'asset_inventory'],
+            ['id' => 'cis-004', 'control' => '8.2', 'title' => 'Centralized logging', 'status' => 'pass', 'severity' => 'info', 'finding' => 'SIEM collecting logs from all critical systems', 'recommendation' => 'Expand log sources coverage', 'rec_key' => 'logging_config']
         ]
     ]
 ];
+
+// JSON encode recommendations for JavaScript
+$recommendationsJson = json_encode($recommendationDetails);
 
 // Calculate compliance scores for each framework
 foreach ($frameworks as $key => &$framework) {
@@ -677,10 +1023,395 @@ $activeFramework = $frameworks[$activeTab] ?? null;
 
         .framework-metrics span { display: flex; align-items: center; gap: 5px; }
 
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-action:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-view {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .btn-view:hover {
+            background: #c7d2fe;
+        }
+
+        .btn-accept {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .btn-accept:hover {
+            background: #fde68a;
+        }
+
+        .btn-accept.accepted {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .btn-fix {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-fix:hover:not(:disabled) {
+            background: #fecaca;
+        }
+
+        .btn-fix.applied {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .compliant-badge {
+            color: var(--success);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .modal-body {
+            padding: 25px;
+            overflow-y: auto;
+            max-height: calc(90vh - 180px);
+        }
+
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: #f8fafc;
+        }
+
+        .rec-section {
+            margin-bottom: 25px;
+        }
+
+        .rec-section h3 {
+            font-size: 14px;
+            color: var(--gray);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rec-description {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .rec-steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .rec-steps li {
+            counter-increment: step-counter;
+            padding: 12px 15px 12px 50px;
+            background: var(--light);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .rec-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .rec-code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        .rec-code-label {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .rec-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .rec-meta-item {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .rec-meta-label {
+            font-size: 11px;
+            color: var(--gray);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .rec-meta-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .rec-meta-value.critical { color: #7f1d1d; }
+        .rec-meta-value.high { color: var(--danger); }
+        .rec-meta-value.medium { color: var(--warning); }
+        .rec-meta-value.low { color: var(--info); }
+
+        .risk-warning {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 15px;
+            color: #991b1b;
+            font-size: 13px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .risk-warning-icon {
+            font-size: 20px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: toastSlide 0.3s ease;
+            min-width: 300px;
+        }
+
+        @keyframes toastSlide {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast-icon {
+            font-size: 24px;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .progress-indicator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px 50px;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            z-index: 1200;
+            text-align: center;
+        }
+
+        .progress-indicator.active {
+            display: block;
+        }
+
+        .progress-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .fix-applied-row {
+            background: #f0fdf4 !important;
+        }
+
+        .fix-applied-row .status-badge.fail {
+            background: #d1fae5;
+            color: #059669;
+        }
+
         /* Print Styles */
         @media print {
             body { background: white; padding: 0; }
-            .header-actions, .framework-tabs, .btn { display: none; }
+            .header-actions, .framework-tabs, .btn, .action-buttons, .modal-overlay, .toast-container { display: none; }
             .card { box-shadow: none; border: 1px solid #e2e8f0; }
         }
 
@@ -875,7 +1606,12 @@ $activeFramework = $frameworks[$activeTab] ?? null;
                 <div class="card">
                     <div class="card-header">
                         <h2>🔍 Scan-Based Compliance Findings</h2>
-                        <span style="color: var(--gray); font-size: 13px;"><?= count($activeFramework['findings']) ?> findings</span>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span style="color: var(--gray); font-size: 13px;"><?= count($activeFramework['findings']) ?> findings</span>
+                            <button class="btn btn-success btn-sm" onclick="applyAllRecommendations()" style="padding: 8px 16px; font-size: 12px;">
+                                ✨ Apply All Accepted
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body" style="padding: 0;">
                         <table class="findings-table">
@@ -886,18 +1622,38 @@ $activeFramework = $frameworks[$activeTab] ?? null;
                                     <th>Status</th>
                                     <th>Severity</th>
                                     <th>Finding</th>
-                                    <th>Recommendation</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($activeFramework['findings'] as $finding): ?>
-                                <tr>
+                                <tr id="finding-row-<?= $finding['id'] ?>" data-finding-id="<?= $finding['id'] ?>" data-rec-key="<?= $finding['rec_key'] ?>">
                                     <td><span class="control-id"><?= $finding['control'] ?></span></td>
                                     <td style="font-weight: 500;"><?= $finding['title'] ?></td>
-                                    <td><span class="status-badge <?= $finding['status'] ?>"><?= ucfirst($finding['status']) ?></span></td>
+                                    <td>
+                                        <span class="status-badge <?= $finding['status'] ?>" id="status-<?= $finding['id'] ?>">
+                                            <?= ucfirst($finding['status']) ?>
+                                        </span>
+                                    </td>
                                     <td><span class="severity-badge <?= $finding['severity'] ?>"><?= ucfirst($finding['severity']) ?></span></td>
-                                    <td style="color: var(--gray);"><?= $finding['finding'] ?></td>
-                                    <td style="font-size: 12px;"><?= $finding['recommendation'] ?></td>
+                                    <td style="color: var(--gray); font-size: 12px;"><?= $finding['finding'] ?></td>
+                                    <td>
+                                        <div class="action-buttons" id="actions-<?= $finding['id'] ?>">
+                                            <button class="btn-action btn-view" onclick="viewRecommendation('<?= $finding['id'] ?>', '<?= $finding['rec_key'] ?>')" title="View Recommendation">
+                                                💡 View
+                                            </button>
+                                            <?php if ($finding['status'] === 'fail'): ?>
+                                            <button class="btn-action btn-accept" onclick="acceptRecommendation('<?= $finding['id'] ?>')" title="Accept Recommendation" id="accept-btn-<?= $finding['id'] ?>">
+                                                ✓ Accept
+                                            </button>
+                                            <button class="btn-action btn-fix" onclick="applyFix('<?= $finding['id'] ?>', '<?= $finding['rec_key'] ?>')" title="Fix & Apply" id="fix-btn-<?= $finding['id'] ?>" disabled>
+                                                🔧 Fix & Apply
+                                            </button>
+                                            <?php else: ?>
+                                            <span class="compliant-badge">✅ Compliant</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -986,7 +1742,342 @@ $activeFramework = $frameworks[$activeTab] ?? null;
         <?php endif; ?>
     </div>
 
+    <!-- Recommendation Modal -->
+    <div class="modal-overlay" id="recModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">💡 Recommendation Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be dynamically populated -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal()">Close</button>
+                <button class="btn btn-primary" id="modalAcceptBtn" onclick="acceptFromModal()">✓ Accept Recommendation</button>
+                <button class="btn btn-success" id="modalApplyBtn" onclick="applyFromModal()" disabled>🔧 Fix & Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-indicator" id="progressIndicator">
+        <div class="progress-spinner"></div>
+        <div class="progress-text">Applying fix...</div>
+    </div>
+
     <script>
+        // Recommendations data from PHP
+        const recommendations = <?= $recommendationsJson ?>;
+
+        // Track accepted and applied recommendations
+        let acceptedRecs = JSON.parse(localStorage.getItem('acceptedRecs_<?= $activeTab ?>') || '{}');
+        let appliedRecs = JSON.parse(localStorage.getItem('appliedRecs_<?= $activeTab ?>') || '{}');
+
+        // Current modal context
+        let currentFindingId = null;
+        let currentRecKey = null;
+
+        // Initialize UI state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Restore accepted/applied states
+            Object.keys(acceptedRecs).forEach(findingId => {
+                updateAcceptedUI(findingId);
+            });
+            Object.keys(appliedRecs).forEach(findingId => {
+                updateAppliedUI(findingId);
+            });
+        });
+
+        // View Recommendation
+        function viewRecommendation(findingId, recKey) {
+            currentFindingId = findingId;
+            currentRecKey = recKey;
+
+            const rec = recommendations[recKey];
+            if (!rec) {
+                showToast('error', 'Error', 'Recommendation details not found');
+                return;
+            }
+
+            const modalBody = document.getElementById('modalBody');
+            const modalTitle = document.getElementById('modalTitle');
+
+            modalTitle.innerHTML = `💡 ${rec.title}`;
+
+            let stepsHtml = rec.steps.map(step => `<li>${step}</li>`).join('');
+
+            let autoFixHtml = '';
+            if (rec.auto_fix) {
+                autoFixHtml = `
+                    <div class="rec-section">
+                        <h3>🔧 Auto-Fix Script</h3>
+                        <div class="rec-code">
+                            <span class="rec-code-label">${rec.auto_fix.description}</span>
+                            ${rec.auto_fix.command ? `<div>Linux/macOS: <code>${rec.auto_fix.command}</code></div>` : ''}
+                            ${rec.auto_fix.windows_command ? `<div style="margin-top: 8px;">Windows: <code>${rec.auto_fix.windows_command}</code></div>` : ''}
+                            ${rec.auto_fix.apache_config ? `<div style="margin-top: 8px;">Apache Config:<br><code>${rec.auto_fix.apache_config.replace(/\n/g, '<br>')}</code></div>` : ''}
+                            ${rec.auto_fix.nginx_config ? `<div style="margin-top: 8px;">Nginx Config:<br><code>${rec.auto_fix.nginx_config.replace(/\n/g, '<br>')}</code></div>` : ''}
+                            ${rec.auto_fix.mysql_config ? `<div style="margin-top: 8px;">MySQL: <code>${rec.auto_fix.mysql_config}</code></div>` : ''}
+                            ${rec.auto_fix.linux_config ? `<div style="margin-top: 8px;">PAM Config: <code>${rec.auto_fix.linux_config}</code></div>` : ''}
+                            ${rec.auto_fix.syslog_config ? `<div style="margin-top: 8px;">Syslog: <code>${rec.auto_fix.syslog_config}</code></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            modalBody.innerHTML = `
+                <div class="rec-section">
+                    <h3>📋 Description</h3>
+                    <div class="rec-description">${rec.description}</div>
+                </div>
+
+                <div class="rec-section">
+                    <h3>📝 Remediation Steps</h3>
+                    <ol class="rec-steps">${stepsHtml}</ol>
+                </div>
+
+                ${autoFixHtml}
+
+                <div class="rec-section">
+                    <h3>📊 Metadata</h3>
+                    <div class="rec-meta">
+                        <div class="rec-meta-item">
+                            <div class="rec-meta-label">Priority</div>
+                            <div class="rec-meta-value ${rec.priority}">${rec.priority.toUpperCase()}</div>
+                        </div>
+                        <div class="rec-meta-item">
+                            <div class="rec-meta-label">Effort Level</div>
+                            <div class="rec-meta-value">${rec.effort.toUpperCase()}</div>
+                        </div>
+                        <div class="rec-meta-item">
+                            <div class="rec-meta-label">Estimated Time</div>
+                            <div class="rec-meta-value">${rec.estimated_time}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rec-section">
+                    <h3>⚠️ Risk if Ignored</h3>
+                    <div class="risk-warning">
+                        <span class="risk-warning-icon">⚠️</span>
+                        <div>${rec.risk_if_ignored}</div>
+                    </div>
+                </div>
+            `;
+
+            // Update modal buttons state
+            const acceptBtn = document.getElementById('modalAcceptBtn');
+            const applyBtn = document.getElementById('modalApplyBtn');
+
+            if (appliedRecs[findingId]) {
+                acceptBtn.disabled = true;
+                acceptBtn.textContent = '✓ Applied';
+                applyBtn.disabled = true;
+                applyBtn.textContent = '✅ Fix Applied';
+            } else if (acceptedRecs[findingId]) {
+                acceptBtn.disabled = true;
+                acceptBtn.textContent = '✓ Accepted';
+                applyBtn.disabled = false;
+            } else {
+                acceptBtn.disabled = false;
+                acceptBtn.textContent = '✓ Accept Recommendation';
+                applyBtn.disabled = true;
+            }
+
+            document.getElementById('recModal').classList.add('active');
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('recModal').classList.remove('active');
+            currentFindingId = null;
+            currentRecKey = null;
+        }
+
+        // Accept Recommendation
+        function acceptRecommendation(findingId) {
+            acceptedRecs[findingId] = {
+                acceptedAt: new Date().toISOString(),
+                acceptedBy: 'Current User'
+            };
+            localStorage.setItem('acceptedRecs_<?= $activeTab ?>', JSON.stringify(acceptedRecs));
+
+            updateAcceptedUI(findingId);
+            showToast('success', 'Recommendation Accepted', 'The recommendation has been accepted and queued for implementation.');
+        }
+
+        // Update UI after acceptance
+        function updateAcceptedUI(findingId) {
+            const acceptBtn = document.getElementById(`accept-btn-${findingId}`);
+            const fixBtn = document.getElementById(`fix-btn-${findingId}`);
+
+            if (acceptBtn) {
+                acceptBtn.classList.add('accepted');
+                acceptBtn.textContent = '✓ Accepted';
+                acceptBtn.disabled = true;
+            }
+
+            if (fixBtn && !appliedRecs[findingId]) {
+                fixBtn.disabled = false;
+            }
+        }
+
+        // Accept from modal
+        function acceptFromModal() {
+            if (currentFindingId) {
+                acceptRecommendation(currentFindingId);
+
+                // Update modal buttons
+                document.getElementById('modalAcceptBtn').disabled = true;
+                document.getElementById('modalAcceptBtn').textContent = '✓ Accepted';
+                document.getElementById('modalApplyBtn').disabled = false;
+            }
+        }
+
+        // Apply Fix
+        function applyFix(findingId, recKey) {
+            if (!acceptedRecs[findingId]) {
+                showToast('warning', 'Acceptance Required', 'Please accept the recommendation before applying the fix.');
+                return;
+            }
+
+            const rec = recommendations[recKey];
+
+            // Show progress indicator
+            document.getElementById('progressIndicator').classList.add('active');
+
+            // Simulate fix application (in production, this would make an API call)
+            setTimeout(() => {
+                document.getElementById('progressIndicator').classList.remove('active');
+
+                appliedRecs[findingId] = {
+                    appliedAt: new Date().toISOString(),
+                    appliedBy: 'Current User',
+                    fixType: rec.auto_fix?.type || 'manual'
+                };
+                localStorage.setItem('appliedRecs_<?= $activeTab ?>', JSON.stringify(appliedRecs));
+
+                updateAppliedUI(findingId);
+                showToast('success', 'Fix Applied Successfully', `${rec.title} has been remediated. Status updated to compliant.`);
+            }, 2000);
+        }
+
+        // Update UI after fix application
+        function updateAppliedUI(findingId) {
+            const row = document.getElementById(`finding-row-${findingId}`);
+            const fixBtn = document.getElementById(`fix-btn-${findingId}`);
+            const statusBadge = document.getElementById(`status-${findingId}`);
+            const actionsDiv = document.getElementById(`actions-${findingId}`);
+
+            if (row) {
+                row.classList.add('fix-applied-row');
+            }
+
+            if (fixBtn) {
+                fixBtn.classList.add('applied');
+                fixBtn.textContent = '✅ Applied';
+                fixBtn.disabled = true;
+            }
+
+            if (statusBadge) {
+                statusBadge.textContent = 'Fixed';
+                statusBadge.classList.remove('fail');
+                statusBadge.classList.add('pass');
+            }
+        }
+
+        // Apply from modal
+        function applyFromModal() {
+            if (currentFindingId && currentRecKey) {
+                applyFix(currentFindingId, currentRecKey);
+                closeModal();
+            }
+        }
+
+        // Apply All Accepted Recommendations
+        function applyAllRecommendations() {
+            const accepted = Object.keys(acceptedRecs).filter(id => !appliedRecs[id]);
+
+            if (accepted.length === 0) {
+                showToast('warning', 'No Pending Fixes', 'No accepted recommendations pending application.');
+                return;
+            }
+
+            document.getElementById('progressIndicator').classList.add('active');
+            document.querySelector('.progress-text').textContent = `Applying ${accepted.length} fixes...`;
+
+            // Simulate batch application
+            let completed = 0;
+            accepted.forEach((findingId, index) => {
+                setTimeout(() => {
+                    const row = document.getElementById(`finding-row-${findingId}`);
+                    const recKey = row?.dataset.recKey;
+
+                    appliedRecs[findingId] = {
+                        appliedAt: new Date().toISOString(),
+                        appliedBy: 'Current User',
+                        fixType: 'batch'
+                    };
+
+                    updateAppliedUI(findingId);
+                    completed++;
+
+                    if (completed === accepted.length) {
+                        localStorage.setItem('appliedRecs_<?= $activeTab ?>', JSON.stringify(appliedRecs));
+                        document.getElementById('progressIndicator').classList.remove('active');
+                        showToast('success', 'All Fixes Applied', `Successfully applied ${accepted.length} remediation(s).`);
+                    }
+                }, (index + 1) * 500);
+            });
+        }
+
+        // Show Toast Notification
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icons = {
+                success: '✅',
+                warning: '⚠️',
+                error: '❌'
+            };
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type]}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Close modal on overlay click
+        document.getElementById('recModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
         <?php if ($activeTab !== 'overview' && $activeFramework): ?>
         // Compliance Chart
         const ctx = document.getElementById('complianceChart').getContext('2d');
@@ -1016,6 +2107,13 @@ $activeFramework = $frameworks[$activeTab] ?? null;
         function generatePDF() {
             alert('Generating PDF report... In production, this would use a library like jsPDF or server-side PDF generation.');
             window.print();
+        }
+
+        // Reset demo data (for testing)
+        function resetDemoData() {
+            localStorage.removeItem('acceptedRecs_<?= $activeTab ?>');
+            localStorage.removeItem('appliedRecs_<?= $activeTab ?>');
+            location.reload();
         }
     </script>
 </body>
