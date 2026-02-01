@@ -405,7 +405,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>IOC Intelligent Operating Centre</strong></p>
+            <p><strong>HoL Intelligent Operating Centre</strong></p>
             <p>Report generated on <?= date('Y-m-d H:i:s') ?></p>
             <p>This report contains confidential information and should be handled securely.</p>
             <p>AI-Powered Network Operations & Performance Management Platform</p>

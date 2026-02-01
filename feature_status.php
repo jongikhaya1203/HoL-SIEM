@@ -216,7 +216,7 @@
     <div class="container">
         <div class="header">
             <h1>✅ Feature Implementation Status</h1>
-            <p>IOC Intelligent Operating Centre - Enterprise Network Management Platform</p>
+            <p>HoL Intelligent Operating Centre - Enterprise Network Management Platform</p>
         </div>
 
         <!-- Statistics -->

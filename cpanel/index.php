@@ -58,7 +58,7 @@ $currentPage = 'dashboard';
             <div class="cpanel-content">
                 <div class="page-header">
                     <h1>Dashboard</h1>
-                    <p>Welcome to the IOC Intelligent Operating Centre Control Panel</p>
+                    <p>Welcome to the HoL Intelligent Operating Centre Control Panel</p>
                 </div>
 
                 <!-- Stats Cards -->

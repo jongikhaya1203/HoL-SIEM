@@ -24,7 +24,7 @@ function printBanner() {
     echo COLOR_CYAN . "
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║     🛡️  IOC Intelligent Operating Centre - CLI 🛡️          ║
+║     🛡️  HoL Intelligent Operating Centre - CLI 🛡️          ║
 ║                                                              ║
 ║     AI-Powered Network Operations Platform                  ║
 ║     Real-Time Monitoring & Predictive Analytics             ║

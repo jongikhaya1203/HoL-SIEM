@@ -4,7 +4,7 @@
  * Software-based calibration tracking and management
  * Compliant with ISO/IEC 17025 and ISA standards
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

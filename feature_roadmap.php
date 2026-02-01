@@ -303,7 +303,7 @@ $completionRate = round(($implemented / $totalFeatures) * 100, 1);
     <div class="container">
         <div class="header">
             <h1>🚀 Feature Roadmap 2025</h1>
-            <p>IOC Intelligent Operating Centre - Enterprise Network Management</p>
+            <p>HoL Intelligent Operating Centre - Enterprise Network Management</p>
         </div>
 
         <!-- Statistics -->

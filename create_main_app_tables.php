@@ -1,7 +1,7 @@
 <?php
 /**
  * Create Main Application Tables
- * This creates the tables needed for the IOC main application
+ * This creates the tables needed for the HoL main application
  */
 
 error_reporting(E_ALL);
@@ -103,7 +103,7 @@ try {
     // Insert default settings
     echo "Inserting default settings...\n";
     $conn->query("INSERT IGNORE INTO site_settings (setting_key, setting_value) VALUES
-        ('app_name', 'IOC Intelligent Operating Centre'),
+        ('app_name', 'HoL Intelligent Operating Centre'),
         ('logo_url', ''),
         ('theme_color', '#667eea')");
     echo "<span class='ok'>✓ Default settings inserted</span>\n";

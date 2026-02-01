@@ -1,13 +1,13 @@
 <?php
 /**
  * Complete Rebranding Script
- * Changes all "Network Security Scanner" references to "IOC Intelligent Operating Centre"
+ * Changes all "Network Security Scanner" references to "HoL Intelligent Operating Centre"
  */
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-echo "<!DOCTYPE html><html><head><title>Complete Rebranding - IOC</title>";
+echo "<!DOCTYPE html><html><head><title>Complete Rebranding - HoL</title>";
 echo "<style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -136,7 +136,7 @@ h1 {
 
 echo "<div class='container'>";
 echo "<h1>🎉 Complete Rebranding</h1>";
-echo "<div class='subtitle'>IOC Intelligent Operating Centre</div>";
+echo "<div class='subtitle'>HoL Intelligent Operating Centre</div>";
 
 require_once 'classes/Database.php';
 
@@ -155,8 +155,8 @@ try {
         // Update app_name setting
         $db->query("
             INSERT INTO settings (setting_key, setting_value)
-            VALUES ('app_name', 'IOC Intelligent Operating Centre')
-            ON DUPLICATE KEY UPDATE setting_value = 'IOC Intelligent Operating Centre'
+            VALUES ('app_name', 'HoL Intelligent Operating Centre')
+            ON DUPLICATE KEY UPDATE setting_value = 'HoL Intelligent Operating Centre'
         ");
         $updates[] = "Updated application name in settings table";
     } catch (Exception $e) {
@@ -226,7 +226,7 @@ try {
 
     echo "<h3 style='color: #333; margin: 20px 0 10px 0;'>New Branding:</h3>";
     echo "<div style='padding: 15px; background: #e8f5e9; border-radius: 8px; border-left: 4px solid #4CAF50;'>";
-    echo "<strong>Name:</strong> IOC Intelligent Operating Centre<br>";
+    echo "<strong>Name:</strong> HoL Intelligent Operating Centre<br>";
     echo "<strong>Tagline:</strong> Intelligent Network Operations & Performance Management Platform<br>";
     echo "<strong>Description:</strong> AI-Powered Monitoring, Predictive Analytics & Automated Insights";
     echo "</div>";
@@ -262,7 +262,7 @@ try {
     // Success message
     echo "<div class='success' style='font-size: 18px; text-align: center; padding: 25px;'>";
     echo "✅ <strong>Rebranding Complete!</strong><br><br>";
-    echo "All references to 'Network Security Scanner' have been updated to 'IOC Intelligent Operating Centre'";
+    echo "All references to 'Network Security Scanner' have been updated to 'HoL Intelligent Operating Centre'";
     echo "</div>";
 
     // Quick links

@@ -4,7 +4,7 @@
  * OPC Unified Architecture - Modern industrial IoT protocol
  * Provides secure, reliable communication for industrial automation
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

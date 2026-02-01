@@ -1,6 +1,6 @@
 <?php
 /**
- * IOC SIEM Complete Product Brochure
+ * HoL SIEM Complete Product Brochure
  * Full module showcase with dashboard screenshots
  */
 
@@ -8,16 +8,19 @@ require_once __DIR__ . '/classes/Database.php';
 
 try {
     $db = Database::getInstance();
-    $settings_result = $db->fetchAll("SELECT setting_key, setting_value FROM site_settings WHERE setting_key IN ('app_name', 'company_name')");
-    $app_name = 'IOC Intelligent Operating Centre';
+    $settings_result = $db->fetchAll("SELECT setting_key, setting_value FROM site_settings WHERE setting_key IN ('app_name', 'company_name', 'logo_url')");
+    $app_name = 'HoL Intelligent Operating Centre';
     $company_name = 'Your Organization';
+    $logo_url = '';
     foreach ($settings_result as $row) {
         if ($row['setting_key'] === 'app_name') $app_name = $row['setting_value'];
         if ($row['setting_key'] === 'company_name') $company_name = $row['setting_value'];
+        if ($row['setting_key'] === 'logo_url') $logo_url = $row['setting_value'];
     }
 } catch (Exception $e) {
-    $app_name = 'IOC Intelligent Operating Centre';
+    $app_name = 'HoL Intelligent Operating Centre';
     $company_name = 'Your Organization';
+    $logo_url = '';
 }
 ?>
 <!DOCTYPE html>
@@ -25,7 +28,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOC SIEM - Complete Product Brochure</title>
+    <title>HoL SIEM - Complete Product Brochure</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -405,8 +408,12 @@ try {
         <div class="page cover-page">
             <div class="cover-content">
                 <div class="cover-badge">Enterprise Security Platform</div>
+                <?php if ($logo_url): ?>
+                <div class="cover-logo"><img src="<?= htmlspecialchars($logo_url) ?>" alt="HoL SIEM Logo" style="max-height: 100px; max-width: 180px;"></div>
+                <?php else: ?>
                 <div class="cover-logo">🛡️</div>
-                <h1 class="cover-title">IOC SIEM</h1>
+                <?php endif; ?>
+                <h1 class="cover-title">HoL SIEM</h1>
                 <p class="cover-subtitle">Intelligent Operating Centre</p>
                 <p class="cover-tagline">
                     Complete IT/OT Security and Operations Platform.<br>
@@ -453,12 +460,12 @@ try {
                     <div class="screenshot-dot red"></div>
                     <div class="screenshot-dot yellow"></div>
                     <div class="screenshot-dot green"></div>
-                    <span class="screenshot-title">IOC SIEM - Executive Dashboard</span>
+                    <span class="screenshot-title">HoL SIEM - Executive Dashboard</span>
                 </div>
                 <div class="screenshot-body">
                     <div class="dashboard-mock">
                         <div class="sidebar-mock">
-                            <div class="sidebar-logo">🛡️ IOC SIEM</div>
+                            <div class="sidebar-logo">🛡️ HoL SIEM</div>
                             <div class="sidebar-item active">📊 Dashboard</div>
                             <div class="sidebar-item">🔍 Network Scan</div>
                             <div class="sidebar-item">🏭 SCADA</div>
@@ -528,7 +535,7 @@ try {
             </div>
 
             <div class="page-footer">
-                <span>IOC SIEM Product Brochure</span>
+                <span>HoL SIEM Product Brochure</span>
                 <span>Page 2</span>
             </div>
         </div>
@@ -548,7 +555,7 @@ try {
                     <div class="screenshot-dot red"></div>
                     <div class="screenshot-dot yellow"></div>
                     <div class="screenshot-dot green"></div>
-                    <span class="screenshot-title">IOC SIEM - Network Scanner</span>
+                    <span class="screenshot-title">HoL SIEM - Network Scanner</span>
                 </div>
                 <div class="screenshot-body">
                     <div style="padding: 10px;">
@@ -657,7 +664,7 @@ try {
             </div>
 
             <div class="page-footer">
-                <span>IOC SIEM Product Brochure</span>
+                <span>HoL SIEM Product Brochure</span>
                 <span>Page 3</span>
             </div>
         </div>
@@ -677,7 +684,7 @@ try {
                     <div class="screenshot-dot red"></div>
                     <div class="screenshot-dot yellow"></div>
                     <div class="screenshot-dot green"></div>
-                    <span class="screenshot-title">IOC SIEM - SCADA Dashboard</span>
+                    <span class="screenshot-title">HoL SIEM - SCADA Dashboard</span>
                 </div>
                 <div class="screenshot-body scada-mock">
                     <div class="scada-header">
@@ -782,7 +789,7 @@ try {
             </div>
 
             <div class="page-footer">
-                <span>IOC SIEM Product Brochure</span>
+                <span>HoL SIEM Product Brochure</span>
                 <span>Page 4</span>
             </div>
         </div>
@@ -802,7 +809,7 @@ try {
                     <div class="screenshot-dot red"></div>
                     <div class="screenshot-dot yellow"></div>
                     <div class="screenshot-dot green"></div>
-                    <span class="screenshot-title">IOC SIEM - Pipeline Monitoring</span>
+                    <span class="screenshot-title">HoL SIEM - Pipeline Monitoring</span>
                 </div>
                 <div class="screenshot-body">
                     <div class="pipeline-diagram">
@@ -920,7 +927,7 @@ try {
             </div>
 
             <div class="page-footer">
-                <span>IOC SIEM Product Brochure</span>
+                <span>HoL SIEM Product Brochure</span>
                 <span>Page 5</span>
             </div>
         </div>
@@ -940,7 +947,7 @@ try {
                     <div class="screenshot-dot red"></div>
                     <div class="screenshot-dot yellow"></div>
                     <div class="screenshot-dot green"></div>
-                    <span class="screenshot-title">IOC SIEM - Service Desk</span>
+                    <span class="screenshot-title">HoL SIEM - Service Desk</span>
                 </div>
                 <div class="screenshot-body">
                     <div style="padding: 10px;">
@@ -1023,7 +1030,7 @@ try {
             </div>
 
             <div class="page-footer">
-                <span>IOC SIEM Product Brochure</span>
+                <span>HoL SIEM Product Brochure</span>
                 <span>Page 6</span>
             </div>
         </div>
@@ -1043,7 +1050,7 @@ try {
                     <div class="screenshot-dot red"></div>
                     <div class="screenshot-dot yellow"></div>
                     <div class="screenshot-dot green"></div>
-                    <span class="screenshot-title">IOC SIEM - Data Loss Prevention</span>
+                    <span class="screenshot-title">HoL SIEM - Data Loss Prevention</span>
                 </div>
                 <div class="screenshot-body">
                     <div style="padding: 15px;">
@@ -1142,7 +1149,7 @@ try {
             </div>
 
             <div class="page-footer">
-                <span>IOC SIEM Product Brochure</span>
+                <span>HoL SIEM Product Brochure</span>
                 <span>Page 7</span>
             </div>
         </div>
@@ -1162,7 +1169,7 @@ try {
                     <div class="screenshot-dot red"></div>
                     <div class="screenshot-dot yellow"></div>
                     <div class="screenshot-dot green"></div>
-                    <span class="screenshot-title">IOC SIEM - Alarm Console</span>
+                    <span class="screenshot-title">HoL SIEM - Alarm Console</span>
                 </div>
                 <div class="screenshot-body">
                     <div style="padding: 15px;">
@@ -1234,7 +1241,7 @@ try {
             </div>
 
             <div class="page-footer">
-                <span>IOC SIEM Product Brochure</span>
+                <span>HoL SIEM Product Brochure</span>
                 <span>Page 8</span>
             </div>
         </div>
@@ -1371,7 +1378,7 @@ try {
             </div>
 
             <div class="page-footer">
-                <span>IOC SIEM Product Brochure</span>
+                <span>HoL SIEM Product Brochure</span>
                 <span>Page 9</span>
             </div>
         </div>
@@ -1380,7 +1387,7 @@ try {
         <div class="page cta-section">
             <div style="font-size: 80px; margin-bottom: 30px;">🚀</div>
             <h2>Ready to Transform Your Operations?</h2>
-            <p>Contact us today for a personalized demo and see how IOC SIEM can unify your IT and OT security operations.</p>
+            <p>Contact us today for a personalized demo and see how HoL SIEM can unify your IT and OT security operations.</p>
 
             <div class="cta-buttons">
                 <a href="#" class="cta-btn primary">Request a Demo</a>
@@ -1396,7 +1403,7 @@ try {
                 <div style="text-align: center;">
                     <div style="font-size: 28px; margin-bottom: 5px;">📞</div>
                     <div style="font-size: 12px; opacity: 0.7;">Phone</div>
-                    <div style="font-size: 14px; font-weight: 600;">+1 (800) IOC-SIEM</div>
+                    <div style="font-size: 14px; font-weight: 600;">+1 (800) HOL-SIEM</div>
                 </div>
                 <div style="text-align: center;">
                     <div style="font-size: 28px; margin-bottom: 5px;">🌐</div>
@@ -1406,8 +1413,8 @@ try {
             </div>
 
             <div style="margin-top: 80px; opacity: 0.6; font-size: 12px;">
-                <p>© <?= date('Y') ?> IOC SIEM. All rights reserved.</p>
-                <p style="margin-top: 10px;">IOC SIEM is a trademark of <?= htmlspecialchars($company_name) ?>.</p>
+                <p>© <?= date('Y') ?> HoL SIEM. All rights reserved.</p>
+                <p style="margin-top: 10px;">HoL SIEM is a trademark of <?= htmlspecialchars($company_name) ?>.</p>
             </div>
         </div>
     </div>

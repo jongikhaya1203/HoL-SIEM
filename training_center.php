@@ -11,12 +11,12 @@ require_once __DIR__ . '/classes/Database.php';
 try {
     $db = Database::getInstance();
     $settings_result = $db->fetchAll("SELECT setting_key, setting_value FROM site_settings WHERE setting_key IN ('app_name')");
-    $app_name = 'IOC Intelligent Operating Centre';
+    $app_name = 'HoL Intelligent Operating Centre';
     foreach ($settings_result as $row) {
         if ($row['setting_key'] === 'app_name') $app_name = $row['setting_value'];
     }
 } catch (Exception $e) {
-    $app_name = 'IOC Intelligent Operating Centre';
+    $app_name = 'HoL Intelligent Operating Centre';
 }
 ?>
 <!DOCTYPE html>
@@ -2001,7 +2001,7 @@ server.example.com
                         <span>Cloud Setup</span>
                     </div>
                     <h2>☁️ Cloud Setup Guide</h2>
-                    <p>Learn how to deploy IOC Intelligent Operating Centre in cloud environments.</p>
+                    <p>Learn how to deploy HoL Intelligent Operating Centre in cloud environments.</p>
                 </div>
 
                 <div class="card">
@@ -2092,7 +2092,7 @@ sudo yum install httpd mariadb-server -y
                                 <div class="step-number">3</div>
                                 <div class="step-content">
                                     <h4>Deploy Application</h4>
-                                    <p>Upload and configure the IOC application:</p>
+                                    <p>Upload and configure the HoL application:</p>
                                     <div class="code-block">
                                         <code>
 <span class="comment"># Clone or upload application files</span>
@@ -2170,8 +2170,8 @@ echo "0 12 * * * /usr/bin/certbot renew --quiet" | sudo crontab -
                                     <div class="code-block">
                                         <code>
 <span class="comment"># Azure CLI commands</span>
-az network vnet create --name IOC-VNet --resource-group IOC-RG
-az network nsg rule create --name AllowHTTPS --nsg-name IOC-NSG \
+az network vnet create --name HoL-VNet --resource-group HoL-RG
+az network nsg rule create --name AllowHTTPS --nsg-name HoL-NSG \
     --priority 100 --access Allow --protocol Tcp --destination-port-ranges 443
                                         </code>
                                     </div>
@@ -2201,7 +2201,7 @@ az network nsg rule create --name AllowHTTPS --nsg-name IOC-NSG \
                         <span>Cloud Hybrid</span>
                     </div>
                     <h2>🔄 Cloud Hybrid Architecture</h2>
-                    <p>Deploy IOC in a hybrid environment combining on-premises and cloud infrastructure.</p>
+                    <p>Deploy HoL in a hybrid environment combining on-premises and cloud infrastructure.</p>
                 </div>
 
                 <div class="card">
@@ -2230,9 +2230,9 @@ az network nsg rule create --name AllowHTTPS --nsg-name IOC-NSG \
                                     <rect x="150" y="100" width="90" height="60" fill="#1f2b47" stroke="#f59e0b" stroke-width="2" rx="5"/>
                                     <text x="195" y="135" fill="#e2e8f0" font-size="11" text-anchor="middle">Local DB</text>
 
-                                    <!-- IOC Agent -->
+                                    <!-- HoL Agent -->
                                     <rect x="40" y="200" width="200" height="60" fill="#1f2b47" stroke="#00b894" stroke-width="2" rx="5"/>
-                                    <text x="140" y="235" fill="#e2e8f0" font-size="12" text-anchor="middle">IOC Sync Agent</text>
+                                    <text x="140" y="235" fill="#e2e8f0" font-size="12" text-anchor="middle">HoL Sync Agent</text>
 
                                     <!-- Firewall -->
                                     <rect x="40" y="290" width="200" height="40" fill="#ef4444" stroke="#ef4444" stroke-width="2" rx="5" fill-opacity="0.3"/>
@@ -2242,9 +2242,9 @@ az network nsg rule create --name AllowHTTPS --nsg-name IOC-NSG \
                                     <rect x="530" y="50" width="250" height="300" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5" rx="10"/>
                                     <text x="655" y="80" fill="#3b82f6" font-size="14" text-anchor="middle" font-weight="bold">CLOUD (AWS/Azure)</text>
 
-                                    <!-- Cloud IOC -->
+                                    <!-- Cloud HoL -->
                                     <rect x="550" y="100" width="210" height="60" fill="#1f2b47" stroke="#00b894" stroke-width="2" rx="5"/>
-                                    <text x="655" y="135" fill="#e2e8f0" font-size="12" text-anchor="middle">IOC Main Server</text>
+                                    <text x="655" y="135" fill="#e2e8f0" font-size="12" text-anchor="middle">HoL Main Server</text>
 
                                     <!-- Cloud DB -->
                                     <rect x="550" y="180" width="100" height="50" fill="#1f2b47" stroke="#f59e0b" stroke-width="2" rx="5"/>
@@ -2289,7 +2289,7 @@ az network nsg rule create --name AllowHTTPS --nsg-name IOC-NSG \
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><strong>IOC Sync Agent</strong></td>
+                                    <td><strong>HoL Sync Agent</strong></td>
                                     <td>On-Premises</td>
                                     <td>Collects data from SCADA, PLCs, and local systems; syncs to cloud</td>
                                 </tr>
@@ -2299,7 +2299,7 @@ az network nsg rule create --name AllowHTTPS --nsg-name IOC-NSG \
                                     <td>Stores operational data locally for low-latency access and offline operation</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>IOC Main Server</strong></td>
+                                    <td><strong>HoL Main Server</strong></td>
                                     <td>Cloud</td>
                                     <td>Central processing, analytics, and reporting engine</td>
                                 </tr>
@@ -2352,13 +2352,13 @@ aws ec2 create-vpn-connection --type ipsec.1 \
                                     <div class="code-block">
                                         <code>
 <span class="comment"># Create VPN Gateway</span>
-az network vnet-gateway create --name IOC-VPN-Gateway \
-    --resource-group IOC-RG --vnet IOC-VNet \
+az network vnet-gateway create --name HoL-VPN-Gateway \
+    --resource-group HoL-RG --vnet HoL-VNet \
     --gateway-type Vpn --vpn-type RouteBased --sku VpnGw1
 
 <span class="comment"># Create Local Network Gateway (on-premises)</span>
 az network local-gateway create --name OnPrem-Gateway \
-    --resource-group IOC-RG \
+    --resource-group HoL-RG \
     --gateway-ip-address YOUR_ONPREM_IP \
     --local-address-prefixes 10.0.0.0/24
                                         </code>
@@ -2371,7 +2371,7 @@ az network local-gateway create --name OnPrem-Gateway \
 
                 <div class="card">
                     <div class="card-header">
-                        <h3>IOC Sync Agent Configuration</h3>
+                        <h3>HoL Sync Agent Configuration</h3>
                     </div>
                     <div class="card-body">
                         <p>Install and configure the sync agent on your on-premises server:</p>
@@ -2465,14 +2465,14 @@ return [
                         <span>POC Setup</span>
                     </div>
                     <h2>🧪 Proof of Concept (POC) Setup</h2>
-                    <p>Quick setup guide for evaluating IOC in a test environment.</p>
+                    <p>Quick setup guide for evaluating HoL in a test environment.</p>
                 </div>
 
                 <div class="info-box info">
                     <div class="info-box-icon">ℹ️</div>
                     <div class="info-box-content">
                         <strong>POC Overview</strong>
-                        <p>A POC deployment allows you to evaluate IOC capabilities in a controlled environment before full production deployment. This typically involves minimal hardware and can be completed in a few hours.</p>
+                        <p>A POC deployment allows you to evaluate HoL capabilities in a controlled environment before full production deployment. This typically involves minimal hardware and can be completed in a few hours.</p>
                     </div>
                 </div>
 
@@ -2559,10 +2559,10 @@ return [
                             <div class="step">
                                 <div class="step-number">3</div>
                                 <div class="step-content">
-                                    <h4>Deploy IOC Application</h4>
+                                    <h4>Deploy HoL Application</h4>
                                     <div class="code-block">
                                         <code>
-<span class="comment"># Extract IOC files to htdocs</span>
+<span class="comment"># Extract HoL files to htdocs</span>
 Windows: C:\xampp\htdocs\ioc\
 Mac/Linux: /opt/lampp/htdocs/ioc/
 
@@ -2696,7 +2696,7 @@ docker-compose down
                         <h3>POC Demo Data</h3>
                     </div>
                     <div class="card-body">
-                        <p>Load sample data to demonstrate IOC capabilities:</p>
+                        <p>Load sample data to demonstrate HoL capabilities:</p>
                         <div class="code-block">
                             <code>
 <span class="comment"># Import demo dataset</span>
@@ -3615,8 +3615,8 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                         </div>
 
                         <div class="info-box" style="background: rgba(39, 174, 96, 0.1); border-left: 4px solid #27ae60; padding: 15px; margin-top: 25px; border-radius: 5px;">
-                            <strong style="color: #27ae60;">💡 Integration with IOC:</strong>
-                            <p style="margin-top: 8px;">The IOC Intelligent Operating Centre integrates SCADA monitoring with network security scanning, providing unified visibility across IT and OT environments. Use the Dashboard to monitor both network vulnerabilities and SCADA system health.</p>
+                            <strong style="color: #27ae60;">💡 Integration with HoL:</strong>
+                            <p style="margin-top: 8px;">The HoL Intelligent Operating Centre integrates SCADA monitoring with network security scanning, providing unified visibility across IT and OT environments. Use the Dashboard to monitor both network vulnerabilities and SCADA system health.</p>
                         </div>
 
                         <div style="margin-top: 25px;">
@@ -3638,7 +3638,7 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                         <span>/</span>
                         <span>SIEM Brochure</span>
                     </div>
-                    <h2>📰 IOC SIEM Product Brochure</h2>
+                    <h2>📰 HoL SIEM Product Brochure</h2>
                     <p>Marketing and sales collateral showcasing all platform capabilities.</p>
                 </div>
 
@@ -3648,7 +3648,7 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                         <h3>Product Overview</h3>
                     </div>
                     <div class="card-body">
-                        <p>The IOC SIEM Product Brochure is a comprehensive marketing document designed for sales teams, partners, and prospective customers. It showcases all platform modules, dashboards, and key capabilities in a professional, print-ready format.</p>
+                        <p>The HoL SIEM Product Brochure is a comprehensive marketing document designed for sales teams, partners, and prospective customers. It showcases all platform modules, dashboards, and key capabilities in a professional, print-ready format.</p>
 
                         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0;">
                             <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); padding: 20px; border-radius: 10px; color: white; text-align: center;">
@@ -3768,7 +3768,7 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                                 <h4 style="color: var(--primary); margin-bottom: 15px;">Page Overview</h4>
                                 <ul style="padding-left: 20px;">
                                     <li style="margin-bottom: 10px;"><strong>Page 1:</strong> Cover - Product branding and key stats</li>
-                                    <li style="margin-bottom: 10px;"><strong>Page 2:</strong> Why IOC SIEM - Value proposition and benefits</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 2:</strong> Why HoL SIEM - Value proposition and benefits</li>
                                     <li style="margin-bottom: 10px;"><strong>Page 3:</strong> Core Modules - Security, SCADA, DLP, Service Desk</li>
                                     <li style="margin-bottom: 10px;"><strong>Page 4:</strong> Additional Modules - Dashboards, Reports, Training</li>
                                     <li style="margin-bottom: 10px;"><strong>Page 5:</strong> Industry Solutions - Use cases by vertical</li>
@@ -3801,7 +3801,7 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                         <h3>Access Brochures</h3>
                     </div>
                     <div class="card-body">
-                        <p>Two versions of the IOC SIEM Product Brochure are available as professional, print-ready PDF documents for sales and marketing use.</p>
+                        <p>Two versions of the HoL SIEM Product Brochure are available as professional, print-ready PDF documents for sales and marketing use.</p>
 
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 25px;">
                             <!-- Marketing Brochure -->
@@ -3884,7 +3884,7 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                         <span>Architecture Review</span>
                     </div>
                     <h2>🏗️ System Architecture Review</h2>
-                    <p>Comprehensive technical architecture documentation for the IOC platform.</p>
+                    <p>Comprehensive technical architecture documentation for the HoL platform.</p>
                 </div>
 
                 <div class="card">
@@ -3893,7 +3893,7 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                         <h3>Document Overview</h3>
                     </div>
                     <div class="card-body">
-                        <p>The Architecture Review Document provides a comprehensive technical overview of the IOC Intelligent Operating Centre system design, components, and integration patterns. This document is intended for solution architects, system administrators, and technical stakeholders.</p>
+                        <p>The Architecture Review Document provides a comprehensive technical overview of the HoL Intelligent Operating Centre system design, components, and integration patterns. This document is intended for solution architects, system administrators, and technical stakeholders.</p>
 
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 25px 0;">
                             <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; border-radius: 10px; color: white; text-align: center;">
@@ -4069,7 +4069,7 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
 
                         <div style="background: linear-gradient(135deg, #1a365d, #2c5282); padding: 30px; border-radius: 12px; margin-top: 20px; text-align: center;">
                             <div style="font-size: 64px; margin-bottom: 15px;">📄</div>
-                            <h4 style="color: white; margin-bottom: 10px;">IOC Architecture Review Document</h4>
+                            <h4 style="color: white; margin-bottom: 10px;">HoL Architecture Review Document</h4>
                             <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Version 2.0 | 14 Sections | PDF Export Ready</p>
                             <a href="architecture_review.php" class="btn btn-primary" style="background: #00b894; border: none; padding: 15px 40px; font-size: 16px; text-decoration: none; display: inline-block;" target="_blank">
                                 📖 Open Architecture Document
@@ -4105,7 +4105,7 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                         <h3>Installation Options</h3>
                     </div>
                     <div class="card-body">
-                        <p>The IOC platform supports multiple deployment models to fit your organization's infrastructure and requirements.</p>
+                        <p>The HoL platform supports multiple deployment models to fit your organization's infrastructure and requirements.</p>
 
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 25px 0;">
                             <div style="background: var(--bg-lighter); border: 2px solid #27ae60; border-radius: 12px; padding: 25px; text-align: center;">
@@ -4210,7 +4210,7 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
 
                         <div style="background: linear-gradient(135deg, #11998e, #38ef7d); padding: 30px; border-radius: 12px; margin-top: 20px; text-align: center;">
                             <div style="font-size: 64px; margin-bottom: 15px;">📘</div>
-                            <h4 style="color: white; margin-bottom: 10px;">IOC Installation Manual</h4>
+                            <h4 style="color: white; margin-bottom: 10px;">HoL Installation Manual</h4>
                             <p style="color: rgba(255,255,255,0.9); margin-bottom: 20px;">POC | Cloud Hybrid | Full Cloud Installation Guides</p>
                             <a href="installation_manual.php" class="btn btn-primary" style="background: #1a365d; border: none; padding: 15px 40px; font-size: 16px; text-decoration: none; display: inline-block;" target="_blank">
                                 📖 Open Installation Manual

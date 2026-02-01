@@ -1,6 +1,6 @@
 <?php
 /**
- * Update Application Name to IOC Intelligent Operating Centre
+ * Update Application Name to HoL Intelligent Operating Centre
  */
 
 error_reporting(E_ALL);
@@ -27,12 +27,12 @@ try {
     // Update the app name in settings
     $db->query("
         INSERT INTO settings (setting_key, setting_value, setting_type)
-        VALUES ('app_name', 'IOC Intelligent Operating Centre', 'string')
-        ON DUPLICATE KEY UPDATE setting_value = 'IOC Intelligent Operating Centre'
+        VALUES ('app_name', 'HoL Intelligent Operating Centre', 'string')
+        ON DUPLICATE KEY UPDATE setting_value = 'HoL Intelligent Operating Centre'
     ");
 
     echo "<p class='success'>✅ Application name updated successfully!</p>";
-    echo "<p>The dashboard will now display: <strong>IOC Intelligent Operating Centre</strong></p>";
+    echo "<p>The dashboard will now display: <strong>HoL Intelligent Operating Centre</strong></p>";
 
     echo "<p style='margin-top: 30px;'>";
     echo "<a href='index.php' class='btn'>🏠 Go to Dashboard →</a>";

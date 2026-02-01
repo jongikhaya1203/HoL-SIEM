@@ -1,6 +1,6 @@
 <?php
 /**
- * IOC Intelligent Operating Centre - Architecture Review Document
+ * HoL Intelligent Operating Centre - Architecture Review Document
  * Comprehensive system architecture documentation for stakeholders
  */
 
@@ -10,20 +10,20 @@ require_once __DIR__ . '/classes/Database.php';
 try {
     $db = Database::getInstance();
     $settings_result = $db->fetchAll("SELECT setting_key, setting_value FROM site_settings WHERE setting_key IN ('app_name', 'company_name')");
-    $app_name = 'IOC Intelligent Operating Centre';
+    $app_name = 'HoL Intelligent Operating Centre';
     $company_name = 'Organization';
     foreach ($settings_result as $row) {
         if ($row['setting_key'] === 'app_name') $app_name = $row['setting_value'];
         if ($row['setting_key'] === 'company_name') $company_name = $row['setting_value'];
     }
 } catch (Exception $e) {
-    $app_name = 'IOC Intelligent Operating Centre';
+    $app_name = 'HoL Intelligent Operating Centre';
     $company_name = 'Organization';
 }
 
 $version = '2.0';
 $date = date('F Y');
-$doc_id = 'IOC-ARCH-' . date('Ymd');
+$doc_id = 'HoL-ARCH-' . date('Ymd');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -619,7 +619,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
                 <p>The <strong><?= htmlspecialchars($app_name) ?></strong> is an enterprise-grade unified operations platform designed to provide comprehensive visibility and control across both Information Technology (IT) and Operational Technology (OT) environments. This architecture review document provides a detailed technical overview of the system's design, components, and integration patterns.</p>
 
                 <h3>Business Context</h3>
-                <p>Modern industrial organizations face the challenge of managing converged IT/OT environments while maintaining security, operational efficiency, and regulatory compliance. The IOC platform addresses these challenges by providing:</p>
+                <p>Modern industrial organizations face the challenge of managing converged IT/OT environments while maintaining security, operational efficiency, and regulatory compliance. The HoL platform addresses these challenges by providing:</p>
                 <ul>
                     <li><strong>Unified Visibility</strong> - Single pane of glass for IT infrastructure and SCADA/ICS systems</li>
                     <li><strong>Proactive Security</strong> - Continuous vulnerability scanning and threat detection</li>
@@ -676,7 +676,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
             </div>
             <div class="section-content">
                 <h3 id="section2-1">2.1 Purpose and Scope</h3>
-                <p>The IOC platform serves as the central nervous system for industrial operations, consolidating data from multiple sources to provide actionable intelligence. The system scope encompasses:</p>
+                <p>The HoL platform serves as the central nervous system for industrial operations, consolidating data from multiple sources to provide actionable intelligence. The system scope encompasses:</p>
 
                 <table>
                     <thead>
@@ -766,7 +766,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
                 <h2>Architecture Principles</h2>
             </div>
             <div class="section-content">
-                <p>The following principles guide all architectural decisions for the IOC platform:</p>
+                <p>The following principles guide all architectural decisions for the HoL platform:</p>
 
                 <table>
                     <thead>
@@ -835,7 +835,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
             </div>
             <div class="section-content">
                 <h3 id="section4-1">4.1 Layered Architecture</h3>
-                <p>The IOC platform implements a 5-tier layered architecture that provides clear separation of concerns and enables independent scaling of each layer.</p>
+                <p>The HoL platform implements a 5-tier layered architecture that provides clear separation of concerns and enables independent scaling of each layer.</p>
 
                 <div style="margin: 30px 0;">
                     <div class="arch-layer presentation">
@@ -955,7 +955,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
                         <rect x="50" y="150" width="700" height="80" rx="10" fill="#2d3748" stroke="#ed8936" stroke-width="2"/>
                         <text x="400" y="175" text-anchor="middle" fill="#a0aec0" font-size="12">DMZ / IT-OT BOUNDARY (Level 4)</text>
                         <rect x="150" y="185" width="140" height="35" rx="5" fill="#ed8936"/>
-                        <text x="220" y="207" text-anchor="middle" fill="white" font-size="11">IOC Web Server</text>
+                        <text x="220" y="207" text-anchor="middle" fill="white" font-size="11">HoL Web Server</text>
                         <rect x="330" y="185" width="140" height="35" rx="5" fill="#ed8936"/>
                         <text x="400" y="207" text-anchor="middle" fill="white" font-size="11">Historian Server</text>
                         <rect x="510" y="185" width="140" height="35" rx="5" fill="#ed8936"/>
@@ -1011,7 +1011,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
                             <td>Application Server</td>
                             <td>8 vCPU, 32GB RAM, 500GB SSD</td>
                             <td>2 (HA pair)</td>
-                            <td>IOC Web Application</td>
+                            <td>HoL Web Application</td>
                         </tr>
                         <tr>
                             <td>Database Server</td>
@@ -1050,7 +1050,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
             </div>
             <div class="section-content">
                 <h3 id="section6-1">6.1 ICS/OT Network Integration</h3>
-                <p>The IOC platform integrates with industrial control systems through a secure, unidirectional data flow architecture that maintains separation between IT and OT networks.</p>
+                <p>The HoL platform integrates with industrial control systems through a secure, unidirectional data flow architecture that maintains separation between IT and OT networks.</p>
 
                 <div class="diagram">
                     <svg width="100%" height="300" viewBox="0 0 800 300">
@@ -1087,9 +1087,9 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
                         <!-- Arrow up -->
                         <line x1="400" y1="60" x2="400" y2="40" stroke="#4299e1" stroke-width="3"/>
 
-                        <!-- IOC Platform -->
+                        <!-- HoL Platform -->
                         <rect x="200" y="10" width="400" height="30" rx="5" fill="#4299e1"/>
-                        <text x="400" y="30" text-anchor="middle" fill="white" font-size="13">IOC Platform (IT Zone)</text>
+                        <text x="400" y="30" text-anchor="middle" fill="white" font-size="13">HoL Platform (IT Zone)</text>
                     </svg>
                     <p class="diagram-title">Figure 6.1: SCADA Data Flow Architecture</p>
                 </div>
@@ -1280,7 +1280,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
                     <div class="flow-arrow">→</div>
                     <div class="flow-box" style="background: #4299e1;">Historian</div>
                     <div class="flow-arrow">→</div>
-                    <div class="flow-box" style="background: #667eea;">IOC DB</div>
+                    <div class="flow-box" style="background: #667eea;">HoL DB</div>
                 </div>
 
                 <div class="info-box note">
@@ -1319,7 +1319,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
                         <tr>
                             <td>4</td>
                             <td>Site Business</td>
-                            <td>IOC servers, historians</td>
+                            <td>HoL servers, historians</td>
                             <td>Enhanced monitoring, MFA required</td>
                         </tr>
                         <tr>
@@ -1584,7 +1584,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
                 </table>
 
                 <h3>10.3 Containerization</h3>
-                <p>The IOC platform supports containerized deployment using Docker and Kubernetes:</p>
+                <p>The HoL platform supports containerized deployment using Docker and Kubernetes:</p>
                 <ul>
                     <li><strong>Docker Compose</strong> - Single-node development and POC deployments</li>
                     <li><strong>Kubernetes</strong> - Production-grade orchestration with auto-scaling</li>
@@ -1945,7 +1945,7 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
                         <tr><td>DMZ</td><td>Demilitarized Zone - network segment between trusted and untrusted networks</td></tr>
                         <tr><td>HMI</td><td>Human-Machine Interface</td></tr>
                         <tr><td>ICS</td><td>Industrial Control System</td></tr>
-                        <tr><td>IOC</td><td>Intelligent Operating Centre</td></tr>
+                        <tr><td>HoL</td><td>Intelligent Operating Centre</td></tr>
                         <tr><td>OT</td><td>Operational Technology</td></tr>
                         <tr><td>PLC</td><td>Programmable Logic Controller</td></tr>
                         <tr><td>RPO</td><td>Recovery Point Objective - acceptable data loss</td></tr>
@@ -1957,12 +1957,12 @@ $doc_id = 'IOC-ARCH-' . date('Ymd');
 
                 <h3>Appendix B: Related Documents</h3>
                 <ul>
-                    <li>IOC Installation Manual (POC, Hybrid, Cloud)</li>
-                    <li>IOC Security Hardening Guide</li>
-                    <li>IOC API Reference Documentation</li>
-                    <li>IOC User Administration Guide</li>
-                    <li>IOC SCADA Integration Guide</li>
-                    <li>IOC Disaster Recovery Procedures</li>
+                    <li>HoL Installation Manual (POC, Hybrid, Cloud)</li>
+                    <li>HoL Security Hardening Guide</li>
+                    <li>HoL API Reference Documentation</li>
+                    <li>HoL User Administration Guide</li>
+                    <li>HoL SCADA Integration Guide</li>
+                    <li>HoL Disaster Recovery Procedures</li>
                 </ul>
 
                 <h3>Appendix C: Contact Information</h3>

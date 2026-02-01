@@ -3,7 +3,7 @@
  * SCADA System Installation Script
  * Automated installation of SCADA database schema and default data
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

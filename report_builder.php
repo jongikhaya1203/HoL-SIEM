@@ -12,7 +12,7 @@ try {
     $db = Database::getInstance();
     $settings_result = $db->fetchAll("SELECT setting_key, setting_value FROM site_settings WHERE setting_key IN ('logo_url', 'app_name', 'theme_color')");
     $settings = [
-        'app_name' => 'IOC Intelligent Operating Centre',
+        'app_name' => 'HoL Intelligent Operating Centre',
         'logo_url' => '',
         'theme_color' => '#667eea'
     ];
@@ -21,13 +21,13 @@ try {
     }
 } catch (Exception $e) {
     $settings = [
-        'app_name' => 'IOC Intelligent Operating Centre',
+        'app_name' => 'HoL Intelligent Operating Centre',
         'logo_url' => '',
         'theme_color' => '#667eea'
     ];
 }
 
-$app_name = $settings['app_name'] ?? 'IOC Intelligent Operating Centre';
+$app_name = $settings['app_name'] ?? 'HoL Intelligent Operating Centre';
 $logo_url = $settings['logo_url'] ?? '';
 $theme_color = $settings['theme_color'] ?? '#667eea';
 

@@ -4,7 +4,7 @@
  * Real-time tank level monitoring with alarming
  * Supports multiple tank types and measurement methods
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

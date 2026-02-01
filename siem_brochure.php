@@ -1,6 +1,6 @@
 <?php
 /**
- * IOC SIEM Marketing Brochure
+ * HoL SIEM Marketing Brochure
  * Professional sales and marketing collateral
  */
 
@@ -8,16 +8,19 @@ require_once __DIR__ . '/classes/Database.php';
 
 try {
     $db = Database::getInstance();
-    $settings_result = $db->fetchAll("SELECT setting_key, setting_value FROM site_settings WHERE setting_key IN ('app_name', 'company_name')");
-    $app_name = 'IOC Intelligent Operating Centre';
+    $settings_result = $db->fetchAll("SELECT setting_key, setting_value FROM site_settings WHERE setting_key IN ('app_name', 'company_name', 'logo_url')");
+    $app_name = 'HoL Intelligent Operating Centre';
     $company_name = 'Your Organization';
+    $logo_url = '';
     foreach ($settings_result as $row) {
         if ($row['setting_key'] === 'app_name') $app_name = $row['setting_value'];
         if ($row['setting_key'] === 'company_name') $company_name = $row['setting_value'];
+        if ($row['setting_key'] === 'logo_url') $logo_url = $row['setting_value'];
     }
 } catch (Exception $e) {
-    $app_name = 'IOC Intelligent Operating Centre';
+    $app_name = 'HoL Intelligent Operating Centre';
     $company_name = 'Your Organization';
+    $logo_url = '';
 }
 ?>
 <!DOCTYPE html>
@@ -25,7 +28,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOC SIEM - Product Brochure</title>
+    <title>HoL SIEM - Product Brochure</title>
     <style>
         * {
             margin: 0;
@@ -780,8 +783,12 @@ try {
         <div class="page cover-page">
             <div class="cover-content">
                 <div class="cover-badge">Enterprise Security Platform</div>
+                <?php if ($logo_url): ?>
+                <div class="cover-logo"><img src="<?= htmlspecialchars($logo_url) ?>" alt="HoL SIEM Logo" style="max-height: 120px; max-width: 200px;"></div>
+                <?php else: ?>
                 <div class="cover-logo">🛡️</div>
-                <h1 class="cover-title">IOC SIEM</h1>
+                <?php endif; ?>
+                <h1 class="cover-title">HoL SIEM</h1>
                 <p class="cover-subtitle">Intelligent Operating Centre</p>
                 <p class="cover-tagline">
                     Unified IT/OT Security Platform for Modern Industrial Operations.<br>
@@ -812,7 +819,7 @@ try {
         <div class="page section-page">
             <div class="section-header">
                 <div class="section-icon">🎯</div>
-                <h2 class="section-title">Why IOC SIEM?</h2>
+                <h2 class="section-title">Why HoL SIEM?</h2>
                 <p class="section-subtitle">The Complete Security Operations Platform</p>
             </div>
 
@@ -869,7 +876,7 @@ try {
             </div>
 
             <div class="testimonial">
-                <p class="testimonial-text">"IOC SIEM transformed our security operations. We now have complete visibility across our IT and OT environments, reducing our incident response time by 65%."</p>
+                <p class="testimonial-text">"HoL SIEM transformed our security operations. We now have complete visibility across our IT and OT environments, reducing our incident response time by 65%."</p>
                 <p class="testimonial-author">— <strong>Chief Security Officer</strong>, Major Energy Company</p>
             </div>
         </div>
@@ -1303,7 +1310,7 @@ try {
             <div class="contact-section" style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
                 <div class="section-icon" style="font-size: 80px; margin-bottom: 20px;">🚀</div>
                 <h2>Ready to Get Started?</h2>
-                <p>Contact us today for a personalized demo and see how IOC SIEM can transform your security operations.</p>
+                <p>Contact us today for a personalized demo and see how HoL SIEM can transform your security operations.</p>
 
                 <div class="contact-grid">
                     <div class="contact-item">
@@ -1314,7 +1321,7 @@ try {
                     <div class="contact-item">
                         <div class="contact-icon">📞</div>
                         <div class="contact-label">Phone</div>
-                        <div class="contact-value">+1 (800) IOC-SIEM</div>
+                        <div class="contact-value">+1 (800) HOL-SIEM</div>
                     </div>
                     <div class="contact-item">
                         <div class="contact-icon">🌐</div>
@@ -1328,8 +1335,8 @@ try {
                 </div>
 
                 <div style="margin-top: 80px; opacity: 0.7;">
-                    <p style="font-size: 14px;">© <?= date('Y') ?> IOC SIEM. All rights reserved.</p>
-                    <p style="font-size: 12px; margin-top: 10px;">IOC SIEM is a trademark of <?= htmlspecialchars($company_name) ?>.</p>
+                    <p style="font-size: 14px;">© <?= date('Y') ?> HoL SIEM. All rights reserved.</p>
+                    <p style="font-size: 12px; margin-top: 10px;">HoL SIEM is a trademark of <?= htmlspecialchars($company_name) ?>.</p>
                 </div>
             </div>
         </div>

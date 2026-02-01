@@ -215,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <div class="login-footer">
-            <p>IOC Intelligent Operating Centre v1.0</p>
+            <p>HoL Intelligent Operating Centre v1.0</p>
         </div>
     </div>
 </body>

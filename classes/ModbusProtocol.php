@@ -4,7 +4,7 @@
  * Implements Modbus TCP and Modbus RTU protocols
  * Industry standard for PLC and industrial device communication
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

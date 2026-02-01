@@ -4,7 +4,7 @@
  * Core monitoring system for industrial control systems
  * Handles real-time data acquisition, protocol management, and alarm processing
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

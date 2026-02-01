@@ -4,7 +4,7 @@
  * Controls industrial valves with comprehensive safety features
  * Implements IEC 61508/61511 functional safety standards
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

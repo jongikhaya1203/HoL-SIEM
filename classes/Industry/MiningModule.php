@@ -4,7 +4,7 @@
  * Mine ventilation, gas detection, hoist control
  * Environmental monitoring, personnel tracking
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

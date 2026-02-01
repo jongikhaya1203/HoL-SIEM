@@ -78,7 +78,7 @@
     <div class="container">
         <div class="header">
             <h1>🎉 Implementation Complete!</h1>
-            <p>IOC Intelligent Operating Centre - Full Feature Summary</p>
+            <p>HoL Intelligent Operating Centre - Full Feature Summary</p>
         </div>
 
         <!-- Core Features -->

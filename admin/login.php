@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - IOC Intelligent Operating Centre</title>
+    <title>Admin Login - HoL Intelligent Operating Centre</title>
     <style>
         * {
             margin: 0;
@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-container">
         <div class="logo">
             <h1>🛡️ Admin Portal</h1>
-            <p>IOC Intelligent Operating Centre CMS</p>
+            <p>HoL Intelligent Operating Centre CMS</p>
         </div>
 
         <?php if ($error): ?>

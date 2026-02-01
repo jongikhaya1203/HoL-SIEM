@@ -129,7 +129,7 @@ while ($row = $stmt->fetch()) {
 }
 
 $currentLogo = $settings['logo_url'] ?? '';
-$currentAppName = $settings['app_name'] ?? 'IOC Intelligent Operating Centre';
+$currentAppName = $settings['app_name'] ?? 'HoL Intelligent Operating Centre';
 $currentThemeColor = $settings['theme_color'] ?? '#667eea';
 ?>
 <!DOCTYPE html>

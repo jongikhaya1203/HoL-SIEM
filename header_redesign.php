@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Header Redesign - IOC</title>
+    <title>Header Redesign - HoL</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -227,7 +227,7 @@
     <div class="container">
         <div class="page-header">
             <h1>🎨 Header Redesign Complete!</h1>
-            <p>Logo Left | IOC Text Right | Optimized Font Sizes</p>
+            <p>Logo Left | HoL Text Right | Optimized Font Sizes</p>
         </div>
 
         <!-- Before & After Comparison -->
@@ -239,7 +239,7 @@
                     <div class="layout-preview">
                         <div class="preview-logo" style="margin: 0 auto 15px;">🛡️</div>
                         <div style="text-align: center;">
-                            <div class="preview-title" style="font-size: 28px;">IOC Intelligent Operating Centre</div>
+                            <div class="preview-title" style="font-size: 28px;">HoL Intelligent Operating Centre</div>
                             <div class="preview-subtitle">Intelligent Network Operations...</div>
                             <div class="preview-subtitle">AI-Powered Monitoring...</div>
                         </div>
@@ -260,7 +260,7 @@
                     <div class="layout-preview">
                         <div class="preview-logo">🛡️</div>
                         <div class="preview-text">
-                            <div class="preview-title">IOC Intelligent Operating Centre</div>
+                            <div class="preview-title">HoL Intelligent Operating Centre</div>
                             <div class="preview-subtitle">Intelligent Network Operations & Performance Management Platform</div>
                             <div class="preview-subtitle">AI-Powered Monitoring, Predictive Analytics & Automated Insights</div>
                             <div style="margin-top: 8px; font-size: 11px; color: #667eea;">⚙️ Admin Portal</div>

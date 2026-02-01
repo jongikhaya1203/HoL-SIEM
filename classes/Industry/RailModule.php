@@ -4,7 +4,7 @@
  * Railway signaling, track circuits, points/switches control
  * Train detection, interlocking systems, platform monitoring
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

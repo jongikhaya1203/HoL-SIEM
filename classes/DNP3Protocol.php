@@ -4,7 +4,7 @@
  * Distributed Network Protocol 3.0
  * Widely used in electric and water utilities, oil & gas SCADA systems
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * IOC Installation Manual - PDF Ready Document
+ * HoL Installation Manual - PDF Ready Document
  * Covers: POC, Cloud Hybrid, and Full Cloud Installation
  */
 ?>
@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOC Installation Manual - Complete Guide</title>
+    <title>HoL Installation Manual - Complete Guide</title>
     <style>
         @media print {
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -377,7 +377,7 @@
     <!-- Cover Page -->
     <div class="cover-page">
         <div class="cover-logo">🏢</div>
-        <div class="cover-title">IOC Intelligent Operating Centre</div>
+        <div class="cover-title">HoL Intelligent Operating Centre</div>
         <div class="cover-subtitle">Installation Manual</div>
         <div style="font-size: 14pt; margin-top: 20px;">
             Complete Guide for POC, Cloud Hybrid, and Full Cloud Deployment
@@ -386,7 +386,7 @@
             <div>Document Version: 1.0</div>
             <div>Last Updated: <?= date('F Y') ?></div>
         </div>
-        <div class="cover-version">For IOC Version 2.0+</div>
+        <div class="cover-version">For HoL Version 2.0+</div>
     </div>
 
     <div class="container">
@@ -411,7 +411,7 @@
         <h1 id="introduction">1. Introduction</h1>
 
         <h2>1.1 About This Document</h2>
-        <p>This installation manual provides step-by-step instructions for deploying the IOC Intelligent Operating Centre platform. It covers three deployment scenarios:</p>
+        <p>This installation manual provides step-by-step instructions for deploying the HoL Intelligent Operating Centre platform. It covers three deployment scenarios:</p>
 
         <table>
             <tr>
@@ -596,8 +596,8 @@
         <div class="step">
             <div class="step-number">3</div>
             <div class="step-content">
-                <h4>Deploy IOC Application</h4>
-                <p>Extract the IOC application files:</p>
+                <h4>Deploy HoL Application</h4>
+                <p>Extract the HoL application files:</p>
                 <div class="code-block"><span class="comment"># Windows</span>
 Extract ioc-application.zip to: C:\xampp\htdocs\ioc\
 
@@ -615,8 +615,8 @@ Extract ioc-application.zip to: /opt/lampp/htdocs/ioc/</div>
 CREATE DATABASE ioc_poc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 <span class="comment">-- Create user</span>
-CREATE USER <span class="string">'ioc_user'</span>@<span class="string">'localhost'</span> IDENTIFIED BY <span class="string">'your_secure_password'</span>;
-GRANT ALL PRIVILEGES ON ioc_poc.* TO <span class="string">'ioc_user'</span>@<span class="string">'localhost'</span>;
+CREATE USER <span class="string">'hol_user'</span>@<span class="string">'localhost'</span> IDENTIFIED BY <span class="string">'your_secure_password'</span>;
+GRANT ALL PRIVILEGES ON ioc_poc.* TO <span class="string">'hol_user'</span>@<span class="string">'localhost'</span>;
 FLUSH PRIVILEGES;</div>
             </div>
         </div>
@@ -630,7 +630,7 @@ FLUSH PRIVILEGES;</div>
 return [
     <span class="string">'host'</span>     => <span class="string">'localhost'</span>,
     <span class="string">'database'</span> => <span class="string">'ioc_poc'</span>,
-    <span class="string">'username'</span> => <span class="string">'ioc_user'</span>,
+    <span class="string">'username'</span> => <span class="string">'hol_user'</span>,
     <span class="string">'password'</span> => <span class="string">'your_secure_password'</span>,
     <span class="string">'charset'</span>  => <span class="string">'utf8mb4'</span>
 ];</div>
@@ -733,7 +733,7 @@ volumes:
 
                 <!-- Sync Agent -->
                 <rect x="40" y="130" width="220" height="50" fill="#fef3c7" stroke="#b45309" stroke-width="2" rx="5"/>
-                <text x="150" y="160" text-anchor="middle" font-size="11" fill="#1a1a2e">IOC Sync Agent</text>
+                <text x="150" y="160" text-anchor="middle" font-size="11" fill="#1a1a2e">HoL Sync Agent</text>
 
                 <!-- Firewall -->
                 <rect x="40" y="200" width="220" height="40" fill="#fee2e2" stroke="#ef4444" stroke-width="2" rx="5"/>
@@ -743,9 +743,9 @@ volumes:
                 <rect x="400" y="20" width="280" height="240" fill="none" stroke="#047857" stroke-width="2" stroke-dasharray="5,5" rx="10"/>
                 <text x="540" y="45" text-anchor="middle" font-weight="bold" fill="#047857">CLOUD (AWS/AZURE)</text>
 
-                <!-- IOC Server -->
+                <!-- HoL Server -->
                 <rect x="420" y="60" width="240" height="50" fill="#d1fae5" stroke="#047857" stroke-width="2" rx="5"/>
-                <text x="540" y="90" text-anchor="middle" font-size="11" fill="#1a1a2e">IOC Main Server</text>
+                <text x="540" y="90" text-anchor="middle" font-size="11" fill="#1a1a2e">HoL Main Server</text>
 
                 <!-- Cloud DB -->
                 <rect x="420" y="130" width="110" height="50" fill="#d1fae5" stroke="#047857" stroke-width="2" rx="5"/>
@@ -786,7 +786,7 @@ sudo systemctl restart apache2</div>
         <div class="step">
             <div class="step-number">2</div>
             <div class="step-content">
-                <h4>Deploy IOC Sync Agent</h4>
+                <h4>Deploy HoL Sync Agent</h4>
                 <p>Install the sync agent that will communicate with the cloud:</p>
                 <div class="code-block"><span class="comment"># Download sync agent</span>
 wget https://releases.ioc.example.com/sync-agent-latest.tar.gz
@@ -837,7 +837,7 @@ sudo nano /etc/systemd/system/ioc-agent.service
 
 <span class="comment"># Add service configuration:</span>
 [Unit]
-Description=IOC Sync Agent
+Description=HoL Sync Agent
 After=network.target
 
 [Service]
@@ -875,9 +875,9 @@ aws ec2 create-vpn-connection --type ipsec.1 \
         <h3>Azure VPN Gateway</h3>
         <div class="code-block"><span class="comment"># Create VPN Gateway</span>
 az network vnet-gateway create \
-    --name IOC-VPN-Gateway \
-    --resource-group IOC-RG \
-    --vnet IOC-VNet \
+    --name HoL-VPN-Gateway \
+    --resource-group HoL-RG \
+    --vnet HoL-VNet \
     --gateway-type Vpn \
     --vpn-type RouteBased \
     --sku VpnGw1
@@ -885,7 +885,7 @@ az network vnet-gateway create \
 <span class="comment"># Create Local Network Gateway</span>
 az network local-gateway create \
     --name OnPrem-Gateway \
-    --resource-group IOC-RG \
+    --resource-group HoL-RG \
     --gateway-ip-address YOUR_ONPREM_IP \
     --local-address-prefixes 10.0.0.0/24</div>
 
@@ -907,7 +907,7 @@ aws ec2 run-instances \
     --security-group-ids sg-xxxxxxxx \
     --subnet-id subnet-xxxxxxxx \
     --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":50,"VolumeType":"gp3"}}]' \
-    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=IOC-Server}]'</div>
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=HoL-Server}]'</div>
 
         <h3>Step 2: Configure Security Group</h3>
         <table>
@@ -955,7 +955,7 @@ aws rds create-db-instance \
     --multi-az</div>
 
         <h3>Step 5: Deploy Application</h3>
-        <div class="code-block"><span class="comment"># Download IOC application</span>
+        <div class="code-block"><span class="comment"># Download HoL application</span>
 cd /var/www/html
 sudo wget https://releases.ioc.example.com/ioc-latest.zip
 sudo unzip ioc-latest.zip
@@ -979,12 +979,12 @@ echo "0 12 * * * /usr/bin/certbot renew --quiet" | sudo crontab -</div>
 
         <h3>Step 1: Create Virtual Machine</h3>
         <div class="code-block"><span class="comment"># Create resource group</span>
-az group create --name IOC-RG --location eastus
+az group create --name HoL-RG --location eastus
 
 <span class="comment"># Create VM</span>
 az vm create \
-    --resource-group IOC-RG \
-    --name IOC-Server \
+    --resource-group HoL-RG \
+    --name HoL-Server \
     --image UbuntuLTS \
     --size Standard_B2s \
     --admin-username azureuser \
@@ -992,13 +992,13 @@ az vm create \
     --public-ip-sku Standard
 
 <span class="comment"># Open ports</span>
-az vm open-port --port 80 --resource-group IOC-RG --name IOC-Server
-az vm open-port --port 443 --resource-group IOC-RG --name IOC-Server --priority 1001</div>
+az vm open-port --port 80 --resource-group HoL-RG --name HoL-Server
+az vm open-port --port 443 --resource-group HoL-RG --name HoL-Server --priority 1001</div>
 
         <h3>Step 2: Create Azure Database for MySQL</h3>
         <div class="code-block"><span class="comment"># Create MySQL server</span>
 az mysql flexible-server create \
-    --resource-group IOC-RG \
+    --resource-group HoL-RG \
     --name ioc-mysql-server \
     --admin-user adminuser \
     --admin-password YOUR_SECURE_PASSWORD \
@@ -1008,9 +1008,9 @@ az mysql flexible-server create \
 
 <span class="comment"># Create database</span>
 az mysql flexible-server db create \
-    --resource-group IOC-RG \
+    --resource-group HoL-RG \
     --server-name ioc-mysql-server \
-    --database-name ioc_production</div>
+    --database-name hol_production</div>
 
         <h3>Step 3: Install Application</h3>
         <div class="code-block"><span class="comment"># Connect to VM</span>
@@ -1112,7 +1112,7 @@ DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR="/opt/backups"
 
 <span class="comment"># Database backup</span>
-mysqldump -u ioc_user -p'password' ioc_production > $BACKUP_DIR/db_$DATE.sql
+mysqldump -u hol_user -p'password' hol_production > $BACKUP_DIR/db_$DATE.sql
 
 <span class="comment"># Application files backup</span>
 tar -czf $BACKUP_DIR/files_$DATE.tar.gz /var/www/html
@@ -1126,7 +1126,7 @@ find $BACKUP_DIR -type f -mtime +7 -delete
         <h2>6.4 Monitoring Setup</h2>
         <p>Configure system monitoring to ensure optimal performance:</p>
         <ul>
-            <li>Enable IOC built-in health monitoring</li>
+            <li>Enable HoL built-in health monitoring</li>
             <li>Configure email alerts for critical events</li>
             <li>Set up log rotation</li>
             <li>Monitor disk space, CPU, and memory usage</li>
@@ -1151,7 +1151,7 @@ find $BACKUP_DIR -type f -mtime +7 -delete
             <li>Check database credentials in config/database.php</li>
             <li>Ensure database exists: <code>mysql -u root -p -e "SHOW DATABASES;"</code></li>
             <li>Check firewall allows port 3306 (for remote connections)</li>
-            <li>Verify user permissions: <code>SHOW GRANTS FOR 'ioc_user'@'localhost';</code></li>
+            <li>Verify user permissions: <code>SHOW GRANTS FOR 'hol_user'@'localhost';</code></li>
         </ol>
 
         <h3>Apache/Nginx Not Starting</h3>
@@ -1202,7 +1202,7 @@ sudo certbot certificates</div>
             <tr><td>Apache Access Log</td><td>/var/log/apache2/access.log</td></tr>
             <tr><td>PHP Errors</td><td>/var/log/php/error.log</td></tr>
             <tr><td>MySQL Log</td><td>/var/log/mysql/error.log</td></tr>
-            <tr><td>IOC Application Log</td><td>/var/www/html/logs/app.log</td></tr>
+            <tr><td>HoL Application Log</td><td>/var/www/html/logs/app.log</td></tr>
             <tr><td>Sync Agent Log</td><td>/opt/ioc-agent/logs/sync.log</td></tr>
         </table>
 
@@ -1240,15 +1240,15 @@ sudo certbot certificates</div>
 
         <h2>8.3 Environment Variables</h2>
         <div class="code-block"><span class="comment"># /etc/environment or .env file</span>
-IOC_ENV=production
-IOC_DEBUG=false
-IOC_DB_HOST=localhost
-IOC_DB_NAME=ioc_production
-IOC_DB_USER=ioc_user
-IOC_DB_PASS=secure_password
-IOC_CACHE_DRIVER=redis
-IOC_SESSION_DRIVER=database
-IOC_LOG_LEVEL=warning</div>
+HOL_ENV=production
+HOL_DEBUG=false
+HOL_DB_HOST=localhost
+HOL_DB_NAME=hol_production
+HOL_DB_USER=hol_user
+HOL_DB_PASS=secure_password
+HOL_CACHE_DRIVER=redis
+HOL_SESSION_DRIVER=database
+HOL_LOG_LEVEL=warning</div>
 
         <h2>8.4 Support Contacts</h2>
         <table>
@@ -1261,9 +1261,9 @@ IOC_LOG_LEVEL=warning</div>
 
         <!-- Footer -->
         <div class="doc-footer">
-            <p><strong>IOC Intelligent Operating Centre - Installation Manual</strong></p>
+            <p><strong>HoL Intelligent Operating Centre - Installation Manual</strong></p>
             <p>Version 1.0 | <?= date('F Y') ?></p>
-            <p>© <?= date('Y') ?> IOC. All rights reserved.</p>
+            <p>© <?= date('Y') ?> HoL. All rights reserved.</p>
         </div>
     </div>
 </body>

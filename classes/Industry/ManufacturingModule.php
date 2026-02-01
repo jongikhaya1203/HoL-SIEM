@@ -4,7 +4,7 @@
  * Production line monitoring, robotics control, quality control
  * Machine status, OEE calculation, predictive maintenance
  *
- * @author IOC Platform
+ * @author HoL Platform
  * @version 2.0
  */
 

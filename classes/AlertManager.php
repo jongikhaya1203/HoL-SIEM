@@ -110,7 +110,7 @@ class AlertManager
             }
         }
 
-        $body .= "\n---\nIOC Intelligent Operating Centre\n";
+        $body .= "\n---\nHoL Intelligent Operating Centre\n";
 
         $headers = "From: alerts@networkscan.local\r\n";
         $headers .= "X-Mailer: PHP/" . phpversion();
