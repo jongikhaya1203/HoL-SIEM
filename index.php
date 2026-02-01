@@ -613,7 +613,7 @@ $theme_color = $settings['theme_color'] ?? '#667eea';
                     </div>
                 </div>
             </div>
-            <a href="compliance.php" class="nav-btn">Compliance</a>
+            <a href="compliance_reports.php" class="nav-btn" style="background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); position: relative;">📋 Compliance Reports<span class="new-badge" style="position: absolute; top: -8px; right: -8px; background: #4CAF50; color: white; font-size: 9px; padding: 2px 6px; border-radius: 8px;">NEW</span></a>
             <a href="mail_dlp.php" class="nav-btn" style="background: #e91e63;">📧 Email DLP</a>
             <a href="api.php" class="nav-btn">API</a>
             <a href="cpanel/scada.php" class="nav-btn" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);">🏭 SCADA</a>
