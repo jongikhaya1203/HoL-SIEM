@@ -173,12 +173,38 @@ $alarmHistory = [
 
 // Oil Tank and Pipeline Data
 $oilTanks = [
-    ['id' => 'T-101', 'name' => 'Crude Oil Tank 1', 'capacity' => 50000, 'current_level' => 35420, 'unit' => 'BBL', 'temperature' => 72.5, 'pressure' => 14.7, 'status' => 'normal', 'product' => 'Crude Oil'],
-    ['id' => 'T-102', 'name' => 'Crude Oil Tank 2', 'capacity' => 50000, 'current_level' => 42150, 'unit' => 'BBL', 'temperature' => 71.8, 'pressure' => 14.5, 'status' => 'normal', 'product' => 'Crude Oil'],
-    ['id' => 'T-103', 'name' => 'Diesel Storage', 'capacity' => 30000, 'current_level' => 18750, 'unit' => 'BBL', 'temperature' => 68.2, 'pressure' => 15.1, 'status' => 'warning', 'product' => 'Diesel'],
-    ['id' => 'T-104', 'name' => 'Gasoline Tank', 'capacity' => 25000, 'current_level' => 22100, 'unit' => 'BBL', 'temperature' => 65.4, 'pressure' => 14.8, 'status' => 'normal', 'product' => 'Gasoline'],
-    ['id' => 'T-105', 'name' => 'Kerosene Tank', 'capacity' => 20000, 'current_level' => 8500, 'unit' => 'BBL', 'temperature' => 70.1, 'pressure' => 14.6, 'status' => 'low', 'product' => 'Kerosene'],
-    ['id' => 'T-106', 'name' => 'Heavy Fuel Tank', 'capacity' => 40000, 'current_level' => 31200, 'unit' => 'BBL', 'temperature' => 125.6, 'pressure' => 16.2, 'status' => 'normal', 'product' => 'Heavy Fuel'],
+    ['id' => 'T-101', 'name' => 'Crude Oil Tank 1', 'capacity' => 50000, 'current_level' => 35420, 'unit' => 'BBL', 'temperature' => 72.5, 'pressure' => 14.7, 'status' => 'normal', 'product' => 'Crude Oil', 'pump_in_rate' => 850, 'pump_out_rate' => 620, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+    ['id' => 'T-102', 'name' => 'Crude Oil Tank 2', 'capacity' => 50000, 'current_level' => 42150, 'unit' => 'BBL', 'temperature' => 71.8, 'pressure' => 14.5, 'status' => 'normal', 'product' => 'Crude Oil', 'pump_in_rate' => 450, 'pump_out_rate' => 890, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+    ['id' => 'T-103', 'name' => 'Diesel Storage', 'capacity' => 30000, 'current_level' => 18750, 'unit' => 'BBL', 'temperature' => 68.2, 'pressure' => 15.1, 'status' => 'warning', 'product' => 'Diesel', 'pump_in_rate' => 320, 'pump_out_rate' => 0, 'pump_in_status' => 'running', 'pump_out_status' => 'stopped'],
+    ['id' => 'T-104', 'name' => 'Gasoline Tank', 'capacity' => 25000, 'current_level' => 22100, 'unit' => 'BBL', 'temperature' => 65.4, 'pressure' => 14.8, 'status' => 'normal', 'product' => 'Gasoline', 'pump_in_rate' => 410, 'pump_out_rate' => 680, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+    ['id' => 'T-105', 'name' => 'Kerosene Tank', 'capacity' => 20000, 'current_level' => 8500, 'unit' => 'BBL', 'temperature' => 70.1, 'pressure' => 14.6, 'status' => 'low', 'product' => 'Kerosene', 'pump_in_rate' => 180, 'pump_out_rate' => 95, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+    ['id' => 'T-106', 'name' => 'Heavy Fuel Tank', 'capacity' => 40000, 'current_level' => 31200, 'unit' => 'BBL', 'temperature' => 125.6, 'pressure' => 16.2, 'status' => 'normal', 'product' => 'Heavy Fuel', 'pump_in_rate' => 520, 'pump_out_rate' => 380, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+];
+
+// Gas Tanks - Natural Gas and LPG Storage
+$gasTanks = [
+    ['id' => 'G-201', 'name' => 'Natural Gas Holder 1', 'capacity' => 500000, 'current_level' => 385000, 'unit' => 'MCF', 'temperature' => 45.2, 'pressure' => 1200, 'status' => 'normal', 'product' => 'Natural Gas', 'pump_in_rate' => 12500, 'pump_out_rate' => 9800, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+    ['id' => 'G-202', 'name' => 'Natural Gas Holder 2', 'capacity' => 500000, 'current_level' => 425000, 'unit' => 'MCF', 'temperature' => 44.8, 'pressure' => 1180, 'status' => 'normal', 'product' => 'Natural Gas', 'pump_in_rate' => 8500, 'pump_out_rate' => 11200, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+    ['id' => 'G-203', 'name' => 'LPG Sphere 1', 'capacity' => 30000, 'current_level' => 24500, 'unit' => 'BBL', 'temperature' => -42.5, 'pressure' => 185, 'status' => 'normal', 'product' => 'LPG', 'pump_in_rate' => 450, 'pump_out_rate' => 620, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+    ['id' => 'G-204', 'name' => 'LPG Sphere 2', 'capacity' => 30000, 'current_level' => 18200, 'unit' => 'BBL', 'temperature' => -41.8, 'pressure' => 182, 'status' => 'warning', 'product' => 'LPG', 'pump_in_rate' => 380, 'pump_out_rate' => 0, 'pump_in_status' => 'running', 'pump_out_status' => 'stopped'],
+    ['id' => 'G-205', 'name' => 'Propane Bullet 1', 'capacity' => 15000, 'current_level' => 12800, 'unit' => 'BBL', 'temperature' => -45.2, 'pressure' => 195, 'status' => 'normal', 'product' => 'Propane', 'pump_in_rate' => 280, 'pump_out_rate' => 320, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+    ['id' => 'G-206', 'name' => 'Butane Storage', 'capacity' => 10000, 'current_level' => 3200, 'unit' => 'BBL', 'temperature' => -38.6, 'pressure' => 165, 'status' => 'low', 'product' => 'Butane', 'pump_in_rate' => 150, 'pump_out_rate' => 85, 'pump_in_status' => 'running', 'pump_out_status' => 'running'],
+];
+
+// Pumps Data
+$pumps = [
+    ['id' => 'PMP-001', 'name' => 'Main Inlet Pump', 'tank' => 'T-101', 'type' => 'Centrifugal', 'flow_rate' => 850, 'max_rate' => 1200, 'power' => 250, 'status' => 'running', 'efficiency' => 94.5, 'runtime' => 1847],
+    ['id' => 'PMP-002', 'name' => 'Transfer Pump 1-2', 'tank' => 'T-101', 'type' => 'Centrifugal', 'flow_rate' => 620, 'max_rate' => 800, 'power' => 150, 'status' => 'running', 'efficiency' => 91.2, 'runtime' => 1523],
+    ['id' => 'PMP-003', 'name' => 'Distillation Feed', 'tank' => 'T-102', 'type' => 'Positive Displacement', 'flow_rate' => 890, 'max_rate' => 1000, 'power' => 200, 'status' => 'running', 'efficiency' => 96.8, 'runtime' => 2156],
+    ['id' => 'PMP-004', 'name' => 'Diesel Transfer', 'tank' => 'T-103', 'type' => 'Centrifugal', 'flow_rate' => 320, 'max_rate' => 500, 'power' => 75, 'status' => 'running', 'efficiency' => 89.4, 'runtime' => 984],
+    ['id' => 'PMP-005', 'name' => 'Diesel Export', 'tank' => 'T-103', 'type' => 'Centrifugal', 'flow_rate' => 0, 'max_rate' => 600, 'power' => 100, 'status' => 'stopped', 'efficiency' => 0, 'runtime' => 0],
+    ['id' => 'PMP-006', 'name' => 'Gasoline Transfer', 'tank' => 'T-104', 'type' => 'Centrifugal', 'flow_rate' => 410, 'max_rate' => 600, 'power' => 100, 'status' => 'running', 'efficiency' => 92.1, 'runtime' => 1678],
+    ['id' => 'PMP-007', 'name' => 'Export Pump', 'tank' => 'T-104', 'type' => 'Multistage', 'flow_rate' => 680, 'max_rate' => 900, 'power' => 180, 'status' => 'running', 'efficiency' => 95.3, 'runtime' => 2034],
+    ['id' => 'PMP-008', 'name' => 'NG Compressor 1', 'tank' => 'G-201', 'type' => 'Reciprocating', 'flow_rate' => 12500, 'max_rate' => 15000, 'power' => 500, 'status' => 'running', 'efficiency' => 88.7, 'runtime' => 3256],
+    ['id' => 'PMP-009', 'name' => 'NG Compressor 2', 'tank' => 'G-202', 'type' => 'Reciprocating', 'flow_rate' => 8500, 'max_rate' => 15000, 'power' => 500, 'status' => 'running', 'efficiency' => 85.2, 'runtime' => 2847],
+    ['id' => 'PMP-010', 'name' => 'LPG Transfer 1', 'tank' => 'G-203', 'type' => 'Cryogenic', 'flow_rate' => 450, 'max_rate' => 600, 'power' => 120, 'status' => 'running', 'efficiency' => 91.8, 'runtime' => 1456],
+    ['id' => 'PMP-011', 'name' => 'LPG Transfer 2', 'tank' => 'G-204', 'type' => 'Cryogenic', 'flow_rate' => 380, 'max_rate' => 600, 'power' => 120, 'status' => 'running', 'efficiency' => 90.4, 'runtime' => 1234],
+    ['id' => 'PMP-012', 'name' => 'Propane Pump', 'tank' => 'G-205', 'type' => 'Cryogenic', 'flow_rate' => 280, 'max_rate' => 400, 'power' => 80, 'status' => 'running', 'efficiency' => 93.2, 'runtime' => 1678],
 ];
 
 $pipelines = [
@@ -365,7 +391,9 @@ $currentPage = 'scada';
                 <!-- Tabs Navigation -->
                 <div class="scada-tabs">
                     <button class="scada-tab active" data-tab="devices" onclick="switchScadaTab('devices')">Devices & Tags</button>
-                    <button class="scada-tab" data-tab="tanks" onclick="switchScadaTab('tanks')">Tank & Pipeline</button>
+                    <button class="scada-tab" data-tab="tanks" onclick="switchScadaTab('tanks')">Oil Tank & Pipeline</button>
+                    <button class="scada-tab" data-tab="gas" onclick="switchScadaTab('gas')">Gas Storage</button>
+                    <button class="scada-tab" data-tab="pumps" onclick="switchScadaTab('pumps')">Pumps & Flow</button>
                     <button class="scada-tab" data-tab="topology" onclick="switchScadaTab('topology')">Network Topology</button>
                     <button class="scada-tab" data-tab="reports" onclick="switchScadaTab('reports')">Reports</button>
                     <button class="scada-tab" data-tab="alarms" onclick="switchScadaTab('alarms')">Alarm History</button>
@@ -851,6 +879,357 @@ $currentPage = 'scada';
                     </div>
 
                 </div><!-- End Tab: Tank & Pipeline -->
+
+                <!-- Tab Content: Gas Storage -->
+                <div id="tab-gas" class="scada-tab-content">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Gas Storage Facilities</h2>
+                            <div style="display: flex; gap: 10px;">
+                                <span class="status-badge status-normal">System Normal</span>
+                                <button class="btn btn-secondary btn-sm" onclick="refreshGasData()">Refresh</button>
+                            </div>
+                        </div>
+                        <div class="section-body">
+                            <!-- Gas Storage Summary -->
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px;">
+                                <div class="summary-card" style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 20px; border-radius: 10px;">
+                                    <div style="font-size: 14px; opacity: 0.9;">Total Gas Storage</div>
+                                    <div style="font-size: 28px; font-weight: bold;"><?= number_format(array_sum(array_column($gasTanks, 'current_level'))) ?></div>
+                                    <div style="font-size: 12px; opacity: 0.8;">MCF/BBL Combined</div>
+                                </div>
+                                <div class="summary-card" style="background: linear-gradient(135deg, #27ae60, #229954); color: white; padding: 20px; border-radius: 10px;">
+                                    <div style="font-size: 14px; opacity: 0.9;">Natural Gas Capacity</div>
+                                    <div style="font-size: 28px; font-weight: bold;"><?= round((($gasTanks[0]['current_level'] + $gasTanks[1]['current_level']) / ($gasTanks[0]['capacity'] + $gasTanks[1]['capacity'])) * 100, 1) ?>%</div>
+                                    <div style="font-size: 12px; opacity: 0.8;">810,000 / 1,000,000 MCF</div>
+                                </div>
+                                <div class="summary-card" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; padding: 20px; border-radius: 10px;">
+                                    <div style="font-size: 14px; opacity: 0.9;">LPG Capacity</div>
+                                    <div style="font-size: 28px; font-weight: bold;"><?= round((($gasTanks[2]['current_level'] + $gasTanks[3]['current_level']) / ($gasTanks[2]['capacity'] + $gasTanks[3]['capacity'])) * 100, 1) ?>%</div>
+                                    <div style="font-size: 12px; opacity: 0.8;">42,700 / 60,000 BBL</div>
+                                </div>
+                                <div class="summary-card" style="background: linear-gradient(135deg, #e67e22, #d35400); color: white; padding: 20px; border-radius: 10px;">
+                                    <div style="font-size: 14px; opacity: 0.9;">Active Compressors</div>
+                                    <div style="font-size: 28px; font-weight: bold;">5 / 6</div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Running Normally</div>
+                                </div>
+                            </div>
+
+                            <!-- Gas Tanks Grid -->
+                            <h3 style="margin-bottom: 15px; color: var(--text-primary);">Gas Storage Tanks</h3>
+                            <div class="tank-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
+                                <?php foreach ($gasTanks as $index => $tank):
+                                    $fillPercent = ($tank['current_level'] / $tank['capacity']) * 100;
+                                    $statusClass = $tank['status'];
+                                    $tankIcon = (strpos($tank['product'], 'Natural Gas') !== false) ? '🔵' :
+                                               ((strpos($tank['product'], 'LPG') !== false) ? '🟣' :
+                                               ((strpos($tank['product'], 'Propane') !== false) ? '🟠' : '🔴'));
+                                ?>
+                                <div class="tank-card gas-tank" onclick="showGasTankDetails(<?= $index ?>)" style="cursor: pointer; background: var(--bg-elevated); border-radius: 12px; padding: 20px; border: 1px solid var(--border-primary); transition: all 0.3s ease;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                        <div>
+                                            <span style="font-size: 24px; margin-right: 8px;"><?= $tankIcon ?></span>
+                                            <strong style="font-size: 16px;"><?= htmlspecialchars($tank['name']) ?></strong>
+                                        </div>
+                                        <span class="status-badge status-<?= $statusClass ?>"><?= ucfirst($tank['status']) ?></span>
+                                    </div>
+                                    <div style="display: flex; gap: 20px; align-items: flex-end;">
+                                        <!-- Tank Visual -->
+                                        <div style="flex: 0 0 80px;">
+                                            <div style="background: rgba(100, 100, 100, 0.2); border-radius: 8px; height: 120px; width: 80px; position: relative; overflow: hidden; border: 2px solid var(--border-secondary);">
+                                                <div style="position: absolute; bottom: 0; width: 100%; height: <?= $fillPercent ?>%; background: <?= $statusClass === 'normal' ? 'linear-gradient(to top, #3498db, #5dade2)' : ($statusClass === 'warning' ? 'linear-gradient(to top, #f39c12, #f1c40f)' : 'linear-gradient(to top, #e74c3c, #ec7063)') ?>; transition: height 0.5s ease;"></div>
+                                                <div style="position: absolute; width: 100%; text-align: center; top: 50%; transform: translateY(-50%); color: white; font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.5);"><?= round($fillPercent) ?>%</div>
+                                            </div>
+                                        </div>
+                                        <!-- Tank Info -->
+                                        <div style="flex: 1; font-size: 13px;">
+                                            <div style="margin-bottom: 8px;"><strong>ID:</strong> <?= htmlspecialchars($tank['id']) ?></div>
+                                            <div style="margin-bottom: 8px;"><strong>Product:</strong> <?= htmlspecialchars($tank['product']) ?></div>
+                                            <div style="margin-bottom: 8px;"><strong>Level:</strong> <?= number_format($tank['current_level']) ?> / <?= number_format($tank['capacity']) ?> <?= $tank['unit'] ?></div>
+                                            <div style="margin-bottom: 8px;"><strong>Temperature:</strong> <?= $tank['temperature'] ?>°F</div>
+                                            <div style="margin-bottom: 8px;"><strong>Pressure:</strong> <?= number_format($tank['pressure']) ?> PSI</div>
+                                        </div>
+                                    </div>
+                                    <!-- Pump Flow Indicators -->
+                                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-primary); display: flex; justify-content: space-between;">
+                                        <div style="text-align: center; flex: 1;">
+                                            <div style="font-size: 11px; color: var(--text-secondary);">Pump In</div>
+                                            <div style="font-size: 16px; font-weight: bold; color: #27ae60;">
+                                                <?php if ($tank['pump_in_status'] === 'running'): ?>
+                                                    ▲ <?= number_format($tank['pump_in_rate']) ?>
+                                                <?php else: ?>
+                                                    <span style="color: #7f8c8d;">— Stopped</span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div style="font-size: 10px; color: var(--text-secondary);"><?= $tank['unit'] ?>/hr</div>
+                                        </div>
+                                        <div style="text-align: center; flex: 1;">
+                                            <div style="font-size: 11px; color: var(--text-secondary);">Pump Out</div>
+                                            <div style="font-size: 16px; font-weight: bold; color: #e74c3c;">
+                                                <?php if ($tank['pump_out_status'] === 'running'): ?>
+                                                    ▼ <?= number_format($tank['pump_out_rate']) ?>
+                                                <?php else: ?>
+                                                    <span style="color: #7f8c8d;">— Stopped</span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div style="font-size: 10px; color: var(--text-secondary);"><?= $tank['unit'] ?>/hr</div>
+                                        </div>
+                                        <div style="text-align: center; flex: 1;">
+                                            <div style="font-size: 11px; color: var(--text-secondary);">Net Flow</div>
+                                            <?php $netFlow = $tank['pump_in_rate'] - $tank['pump_out_rate']; ?>
+                                            <div style="font-size: 16px; font-weight: bold; color: <?= $netFlow >= 0 ? '#27ae60' : '#e74c3c' ?>;">
+                                                <?= $netFlow >= 0 ? '+' : '' ?><?= number_format($netFlow) ?>
+                                            </div>
+                                            <div style="font-size: 10px; color: var(--text-secondary);"><?= $tank['unit'] ?>/hr</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <!-- Gas Flow Diagram -->
+                            <h3 style="margin-bottom: 15px; color: var(--text-primary);">Gas Flow Diagram</h3>
+                            <div style="background: var(--bg-elevated); border-radius: 12px; padding: 20px; border: 1px solid var(--border-primary);">
+                                <svg width="100%" height="300" viewBox="0 0 900 300" style="max-width: 100%;">
+                                    <!-- Background -->
+                                    <rect width="900" height="300" fill="transparent"/>
+
+                                    <!-- Gas Source -->
+                                    <rect x="20" y="120" width="80" height="60" rx="5" fill="#2c3e50" stroke="#3498db" stroke-width="2"/>
+                                    <text x="60" y="145" text-anchor="middle" fill="white" font-size="11">Gas</text>
+                                    <text x="60" y="160" text-anchor="middle" fill="white" font-size="11">Source</text>
+
+                                    <!-- Pipelines -->
+                                    <line x1="100" y1="150" x2="200" y2="150" stroke="#3498db" stroke-width="4"/>
+                                    <line x1="200" y1="150" x2="200" y2="80" stroke="#3498db" stroke-width="4"/>
+                                    <line x1="200" y1="150" x2="200" y2="220" stroke="#3498db" stroke-width="4"/>
+                                    <line x1="200" y1="80" x2="280" y2="80" stroke="#3498db" stroke-width="4"/>
+                                    <line x1="200" y1="220" x2="280" y2="220" stroke="#3498db" stroke-width="4"/>
+
+                                    <!-- Animated flow -->
+                                    <circle r="4" fill="#5dade2">
+                                        <animateMotion dur="2s" repeatCount="indefinite" path="M100,150 L200,150 L200,80 L280,80"/>
+                                    </circle>
+                                    <circle r="4" fill="#5dade2">
+                                        <animateMotion dur="2s" repeatCount="indefinite" begin="1s" path="M100,150 L200,150 L200,220 L280,220"/>
+                                    </circle>
+
+                                    <!-- Natural Gas Holders -->
+                                    <rect x="280" y="50" width="100" height="60" rx="10" fill="#2980b9" stroke="#3498db" stroke-width="2"/>
+                                    <text x="330" y="75" text-anchor="middle" fill="white" font-size="11">NG Holder 1</text>
+                                    <text x="330" y="90" text-anchor="middle" fill="white" font-size="10">77% Full</text>
+
+                                    <rect x="280" y="190" width="100" height="60" rx="10" fill="#2980b9" stroke="#3498db" stroke-width="2"/>
+                                    <text x="330" y="215" text-anchor="middle" fill="white" font-size="11">NG Holder 2</text>
+                                    <text x="330" y="230" text-anchor="middle" fill="white" font-size="10">85% Full</text>
+
+                                    <!-- Compressor Station -->
+                                    <line x1="380" y1="80" x2="450" y2="150" stroke="#9b59b6" stroke-width="4"/>
+                                    <line x1="380" y1="220" x2="450" y2="150" stroke="#9b59b6" stroke-width="4"/>
+
+                                    <rect x="450" y="120" width="80" height="60" rx="5" fill="#8e44ad" stroke="#9b59b6" stroke-width="2"/>
+                                    <text x="490" y="145" text-anchor="middle" fill="white" font-size="10">Compressor</text>
+                                    <text x="490" y="160" text-anchor="middle" fill="white" font-size="10">Station</text>
+
+                                    <!-- LPG Processing -->
+                                    <line x1="530" y1="150" x2="600" y2="150" stroke="#9b59b6" stroke-width="4"/>
+                                    <line x1="600" y1="150" x2="600" y2="60" stroke="#9b59b6" stroke-width="4"/>
+                                    <line x1="600" y1="150" x2="600" y2="240" stroke="#9b59b6" stroke-width="4"/>
+
+                                    <!-- LPG Spheres -->
+                                    <circle cx="680" cy="60" r="35" fill="#8e44ad" stroke="#9b59b6" stroke-width="2"/>
+                                    <text x="680" y="55" text-anchor="middle" fill="white" font-size="10">LPG</text>
+                                    <text x="680" y="70" text-anchor="middle" fill="white" font-size="9">Sphere 1</text>
+
+                                    <circle cx="680" cy="150" r="35" fill="#9b59b6" stroke="#8e44ad" stroke-width="2"/>
+                                    <text x="680" y="145" text-anchor="middle" fill="white" font-size="10">LPG</text>
+                                    <text x="680" y="160" text-anchor="middle" fill="white" font-size="9">Sphere 2</text>
+
+                                    <!-- Propane/Butane -->
+                                    <ellipse cx="780" cy="60" rx="50" ry="25" fill="#e67e22" stroke="#d35400" stroke-width="2"/>
+                                    <text x="780" y="55" text-anchor="middle" fill="white" font-size="10">Propane</text>
+                                    <text x="780" y="70" text-anchor="middle" fill="white" font-size="9">Bullet</text>
+
+                                    <ellipse cx="780" cy="150" rx="50" ry="25" fill="#d35400" stroke="#e67e22" stroke-width="2"/>
+                                    <text x="780" y="145" text-anchor="middle" fill="white" font-size="10">Butane</text>
+                                    <text x="780" y="160" text-anchor="middle" fill="white" font-size="9">Storage</text>
+
+                                    <!-- Export -->
+                                    <line x1="600" y1="240" x2="830" y2="240" stroke="#27ae60" stroke-width="4"/>
+                                    <rect x="830" y="215" width="60" height="50" rx="5" fill="#27ae60" stroke="#229954" stroke-width="2"/>
+                                    <text x="860" y="235" text-anchor="middle" fill="white" font-size="10">Export</text>
+                                    <text x="860" y="250" text-anchor="middle" fill="white" font-size="10">Terminal</text>
+
+                                    <!-- Legend -->
+                                    <rect x="20" y="260" width="15" height="15" fill="#3498db"/>
+                                    <text x="40" y="272" fill="var(--text-primary)" font-size="10">Natural Gas</text>
+                                    <rect x="120" y="260" width="15" height="15" fill="#9b59b6"/>
+                                    <text x="140" y="272" fill="var(--text-primary)" font-size="10">LPG</text>
+                                    <rect x="200" y="260" width="15" height="15" fill="#e67e22"/>
+                                    <text x="220" y="272" fill="var(--text-primary)" font-size="10">Propane/Butane</text>
+                                    <rect x="320" y="260" width="15" height="15" fill="#27ae60"/>
+                                    <text x="340" y="272" fill="var(--text-primary)" font-size="10">Export</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Tab: Gas Storage -->
+
+                <!-- Tab Content: Pumps & Flow -->
+                <div id="tab-pumps" class="scada-tab-content">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Pump Stations & Flow Control</h2>
+                            <div style="display: flex; gap: 10px;">
+                                <span class="status-badge status-normal"><?= count(array_filter($pumps, fn($p) => $p['status'] === 'running')) ?> Running</span>
+                                <button class="btn btn-secondary btn-sm" onclick="refreshPumpData()">Refresh</button>
+                            </div>
+                        </div>
+                        <div class="section-body">
+                            <!-- Pump Summary Cards -->
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px;">
+                                <div class="summary-card" style="background: linear-gradient(135deg, #27ae60, #229954); color: white; padding: 20px; border-radius: 10px;">
+                                    <div style="font-size: 14px; opacity: 0.9;">Running Pumps</div>
+                                    <div style="font-size: 28px; font-weight: bold;"><?= count(array_filter($pumps, fn($p) => $p['status'] === 'running')) ?></div>
+                                    <div style="font-size: 12px; opacity: 0.8;">of <?= count($pumps) ?> Total</div>
+                                </div>
+                                <div class="summary-card" style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 20px; border-radius: 10px;">
+                                    <div style="font-size: 14px; opacity: 0.9;">Total Flow Rate</div>
+                                    <div style="font-size: 28px; font-weight: bold;"><?= number_format(array_sum(array_column($pumps, 'flow_rate'))) ?></div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Units/hr</div>
+                                </div>
+                                <div class="summary-card" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; padding: 20px; border-radius: 10px;">
+                                    <div style="font-size: 14px; opacity: 0.9;">Avg Efficiency</div>
+                                    <?php
+                                    $runningPumps = array_filter($pumps, fn($p) => $p['status'] === 'running');
+                                    $avgEff = count($runningPumps) > 0 ? array_sum(array_column($runningPumps, 'efficiency')) / count($runningPumps) : 0;
+                                    ?>
+                                    <div style="font-size: 28px; font-weight: bold;"><?= round($avgEff, 1) ?>%</div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Running Pumps</div>
+                                </div>
+                                <div class="summary-card" style="background: linear-gradient(135deg, #e67e22, #d35400); color: white; padding: 20px; border-radius: 10px;">
+                                    <div style="font-size: 14px; opacity: 0.9;">Total Power</div>
+                                    <div style="font-size: 28px; font-weight: bold;"><?= number_format(array_sum(array_column(array_filter($pumps, fn($p) => $p['status'] === 'running'), 'power'))) ?></div>
+                                    <div style="font-size: 12px; opacity: 0.8;">kW Consumed</div>
+                                </div>
+                            </div>
+
+                            <!-- Pump Cards Grid -->
+                            <h3 style="margin-bottom: 15px; color: var(--text-primary);">Pump Status Overview</h3>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
+                                <?php foreach ($pumps as $pumpIndex => $pump):
+                                    $flowPercent = ($pump['flow_rate'] / $pump['max_rate']) * 100;
+                                ?>
+                                <div class="pump-card" onclick="showPumpDetails(<?= $pumpIndex ?>)" style="cursor: pointer; background: var(--bg-elevated); border-radius: 12px; padding: 20px; border: 1px solid var(--border-primary); transition: all 0.3s ease;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                        <div>
+                                            <strong style="font-size: 14px;"><?= htmlspecialchars($pump['name']) ?></strong>
+                                            <div style="font-size: 12px; color: var(--text-secondary);"><?= htmlspecialchars($pump['id']) ?> • <?= htmlspecialchars($pump['type']) ?></div>
+                                        </div>
+                                        <span class="status-badge status-<?= $pump['status'] === 'running' ? 'normal' : 'warning' ?>">
+                                            <?= $pump['status'] === 'running' ? '● Running' : '○ Stopped' ?>
+                                        </span>
+                                    </div>
+
+                                    <!-- Flow Rate Gauge -->
+                                    <div style="margin-bottom: 15px;">
+                                        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;">
+                                            <span>Flow Rate</span>
+                                            <span><?= number_format($pump['flow_rate']) ?> / <?= number_format($pump['max_rate']) ?></span>
+                                        </div>
+                                        <div style="background: var(--bg-secondary); border-radius: 5px; height: 20px; overflow: hidden;">
+                                            <div style="height: 100%; width: <?= $flowPercent ?>%; background: <?= $pump['status'] === 'running' ? 'linear-gradient(90deg, #27ae60, #2ecc71)' : '#7f8c8d' ?>; transition: width 0.5s ease; display: flex; align-items: center; justify-content: center;">
+                                                <span style="font-size: 11px; color: white; font-weight: bold;"><?= round($flowPercent) ?>%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Pump Stats -->
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 12px;">
+                                        <div style="text-align: center; padding: 8px; background: var(--bg-secondary); border-radius: 6px;">
+                                            <div style="color: var(--text-secondary);">Power</div>
+                                            <div style="font-weight: bold;"><?= $pump['power'] ?> kW</div>
+                                        </div>
+                                        <div style="text-align: center; padding: 8px; background: var(--bg-secondary); border-radius: 6px;">
+                                            <div style="color: var(--text-secondary);">Efficiency</div>
+                                            <div style="font-weight: bold; color: <?= $pump['efficiency'] >= 90 ? '#27ae60' : ($pump['efficiency'] >= 80 ? '#f39c12' : '#e74c3c') ?>;"><?= $pump['efficiency'] ?>%</div>
+                                        </div>
+                                        <div style="text-align: center; padding: 8px; background: var(--bg-secondary); border-radius: 6px;">
+                                            <div style="color: var(--text-secondary);">Runtime</div>
+                                            <div style="font-weight: bold;"><?= number_format($pump['runtime']) ?>h</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Associated Tank -->
+                                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-primary); font-size: 12px;">
+                                        <span style="color: var(--text-secondary);">Connected to:</span>
+                                        <span style="font-weight: bold; margin-left: 5px;"><?= htmlspecialchars($pump['tank']) ?></span>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <!-- Pump Status Table -->
+                            <h3 style="margin-bottom: 15px; color: var(--text-primary);">Detailed Pump Status</h3>
+                            <table class="config-table">
+                                <thead>
+                                    <tr>
+                                        <th>Pump ID</th>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Tank</th>
+                                        <th>Flow Rate</th>
+                                        <th>Power</th>
+                                        <th>Efficiency</th>
+                                        <th>Runtime</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($pumps as $pumpIndex => $pump): ?>
+                                    <tr>
+                                        <td><code><?= htmlspecialchars($pump['id']) ?></code></td>
+                                        <td><strong><?= htmlspecialchars($pump['name']) ?></strong></td>
+                                        <td><?= htmlspecialchars($pump['type']) ?></td>
+                                        <td><span class="protocol-badge"><?= htmlspecialchars($pump['tank']) ?></span></td>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="flex: 1; background: var(--bg-secondary); border-radius: 3px; height: 8px; overflow: hidden;">
+                                                    <div style="height: 100%; width: <?= ($pump['flow_rate'] / $pump['max_rate']) * 100 ?>%; background: <?= $pump['status'] === 'running' ? '#27ae60' : '#7f8c8d' ?>;"></div>
+                                                </div>
+                                                <span style="min-width: 80px;"><?= number_format($pump['flow_rate']) ?> / <?= number_format($pump['max_rate']) ?></span>
+                                            </div>
+                                        </td>
+                                        <td><?= $pump['power'] ?> kW</td>
+                                        <td>
+                                            <span style="color: <?= $pump['efficiency'] >= 90 ? '#27ae60' : ($pump['efficiency'] >= 80 ? '#f39c12' : '#e74c3c') ?>; font-weight: bold;">
+                                                <?= $pump['efficiency'] ?>%
+                                            </span>
+                                        </td>
+                                        <td><?= number_format($pump['runtime']) ?> hrs</td>
+                                        <td>
+                                            <span class="status-badge status-<?= $pump['status'] === 'running' ? 'normal' : 'warning' ?>">
+                                                <?= ucfirst($pump['status']) ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; gap: 5px;">
+                                                <?php if ($pump['status'] === 'running'): ?>
+                                                    <button class="btn btn-sm btn-danger" onclick="stopPump('<?= $pump['id'] ?>')">Stop</button>
+                                                <?php else: ?>
+                                                    <button class="btn btn-sm btn-success" onclick="startPump('<?= $pump['id'] ?>')">Start</button>
+                                                <?php endif; ?>
+                                                <button class="btn btn-sm btn-secondary" onclick="showPumpDetails(<?= $pumpIndex ?>)">Details</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div><!-- End Tab: Pumps & Flow -->
 
                 <!-- Tab Content: Network Topology -->
                 <div id="tab-topology" class="scada-tab-content">
@@ -2518,6 +2897,177 @@ $currentPage = 'scada';
                     document.body.style.background = '';
                 }, 3000);
             }
+        }
+
+        // Gas Storage functions
+        const gasTanksData = <?= json_encode($gasTanks) ?>;
+        let currentGasTank = null;
+
+        function showGasTankDetails(index) {
+            const tank = gasTanksData[index];
+            currentGasTank = tank;
+
+            const percentage = Math.round((tank.current_level / tank.capacity) * 100);
+            const statusClass = tank.status === 'normal' ? 'normal' : (tank.status === 'warning' ? 'warning' : 'low');
+            const gaugeColor = statusClass === 'normal' ? '#3498db' : (statusClass === 'warning' ? '#f39c12' : '#e74c3c');
+
+            document.getElementById('tankModalTitle').textContent = tank.id + ' - ' + tank.name;
+            document.getElementById('tankModalBody').innerHTML = `
+                <div class="tank-detail-gauge">
+                    <div class="tank-detail-visual">
+                        <div class="tank-3d">
+                            <div class="tank-3d-fill" style="height: ${percentage}%; background: ${gaugeColor};"></div>
+                            <div class="tank-3d-level">${percentage}%</div>
+                        </div>
+                    </div>
+                    <div class="tank-detail-info">
+                        <div class="tank-detail-item">
+                            <label>Product</label>
+                            <span>${tank.product}</span>
+                        </div>
+                        <div class="tank-detail-item">
+                            <label>Current Level</label>
+                            <span>${tank.current_level.toLocaleString()} ${tank.unit}</span>
+                        </div>
+                        <div class="tank-detail-item">
+                            <label>Capacity</label>
+                            <span>${tank.capacity.toLocaleString()} ${tank.unit}</span>
+                        </div>
+                        <div class="tank-detail-item">
+                            <label>Available</label>
+                            <span>${(tank.capacity - tank.current_level).toLocaleString()} ${tank.unit}</span>
+                        </div>
+                        <div class="tank-detail-item">
+                            <label>Temperature</label>
+                            <span>${tank.temperature}°F</span>
+                        </div>
+                        <div class="tank-detail-item">
+                            <label>Pressure</label>
+                            <span>${tank.pressure} PSI</span>
+                        </div>
+                        <div class="tank-detail-item">
+                            <label>Pump In Rate</label>
+                            <span style="color: #27ae60;">${tank.pump_in_status === 'running' ? '▲ ' + tank.pump_in_rate.toLocaleString() + ' ' + tank.unit + '/hr' : 'Stopped'}</span>
+                        </div>
+                        <div class="tank-detail-item">
+                            <label>Pump Out Rate</label>
+                            <span style="color: #e74c3c;">${tank.pump_out_status === 'running' ? '▼ ' + tank.pump_out_rate.toLocaleString() + ' ' + tank.unit + '/hr' : 'Stopped'}</span>
+                        </div>
+                        <div class="tank-detail-item">
+                            <label>Status</label>
+                            <span class="tank-status-badge ${statusClass}">${tank.status.charAt(0).toUpperCase() + tank.status.slice(1)}</span>
+                        </div>
+                    </div>
+                </div>
+                ${tank.status !== 'normal' ? `
+                <div class="tank-warning-box">
+                    <strong>⚠️ Alert:</strong> ${tank.status === 'warning' ? 'Pressure fluctuation detected. Monitoring closely.' : 'Tank level is low. Schedule refill.'}
+                </div>
+                ` : ''}
+            `;
+            document.getElementById('tankModal').classList.add('active');
+        }
+
+        function refreshGasData() {
+            showNotification('Refreshing gas storage data...', 'info');
+            setTimeout(() => {
+                showNotification('Gas storage data refreshed', 'success');
+            }, 1500);
+        }
+
+        // Pump functions
+        const pumpsData = <?= json_encode($pumps) ?>;
+        let currentPump = null;
+
+        function showPumpDetails(index) {
+            const pump = pumpsData[index];
+            currentPump = pump;
+
+            const flowPercent = Math.round((pump.flow_rate / pump.max_rate) * 100);
+
+            document.getElementById('tankModalTitle').textContent = pump.id + ' - ' + pump.name;
+            document.getElementById('tankModalBody').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--text-primary);">Pump Information</h4>
+                        <div class="tank-detail-info" style="display: grid; gap: 12px;">
+                            <div class="tank-detail-item">
+                                <label>Pump ID</label>
+                                <span>${pump.id}</span>
+                            </div>
+                            <div class="tank-detail-item">
+                                <label>Type</label>
+                                <span>${pump.type}</span>
+                            </div>
+                            <div class="tank-detail-item">
+                                <label>Connected Tank</label>
+                                <span>${pump.tank}</span>
+                            </div>
+                            <div class="tank-detail-item">
+                                <label>Power Rating</label>
+                                <span>${pump.power} kW</span>
+                            </div>
+                            <div class="tank-detail-item">
+                                <label>Total Runtime</label>
+                                <span>${pump.runtime.toLocaleString()} hours</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--text-primary);">Performance Metrics</h4>
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Flow Rate</span>
+                                <span>${pump.flow_rate.toLocaleString()} / ${pump.max_rate.toLocaleString()} units/hr</span>
+                            </div>
+                            <div style="background: var(--bg-secondary); border-radius: 8px; height: 25px; overflow: hidden;">
+                                <div style="height: 100%; width: ${flowPercent}%; background: ${pump.status === 'running' ? 'linear-gradient(90deg, #27ae60, #2ecc71)' : '#7f8c8d'}; display: flex; align-items: center; justify-content: center;">
+                                    <span style="color: white; font-weight: bold;">${flowPercent}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Efficiency</span>
+                                <span>${pump.efficiency}%</span>
+                            </div>
+                            <div style="background: var(--bg-secondary); border-radius: 8px; height: 25px; overflow: hidden;">
+                                <div style="height: 100%; width: ${pump.efficiency}%; background: ${pump.efficiency >= 90 ? '#27ae60' : (pump.efficiency >= 80 ? '#f39c12' : '#e74c3c')}; display: flex; align-items: center; justify-content: center;">
+                                    <span style="color: white; font-weight: bold;">${pump.efficiency}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tank-detail-item">
+                            <label>Status</label>
+                            <span class="status-badge status-${pump.status === 'running' ? 'normal' : 'warning'}">${pump.status === 'running' ? '● Running' : '○ Stopped'}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('tankModal').classList.add('active');
+        }
+
+        function startPump(pumpId) {
+            showNotification('Starting pump ' + pumpId + '...', 'info');
+            setTimeout(() => {
+                showNotification('Pump ' + pumpId + ' started successfully', 'success');
+            }, 2000);
+        }
+
+        function stopPump(pumpId) {
+            if (confirm('Are you sure you want to stop pump ' + pumpId + '?')) {
+                showNotification('Stopping pump ' + pumpId + '...', 'warning');
+                setTimeout(() => {
+                    showNotification('Pump ' + pumpId + ' stopped', 'success');
+                }, 2000);
+            }
+        }
+
+        function refreshPumpData() {
+            showNotification('Refreshing pump data...', 'info');
+            setTimeout(() => {
+                showNotification('Pump data refreshed', 'success');
+            }, 1500);
         }
 
         // Notification helper

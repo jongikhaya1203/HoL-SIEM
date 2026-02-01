@@ -874,6 +874,55 @@ try {
                     <span class="badge new">NEW</span>
                 </div>
 
+                <div class="nav-section">SCADA Training</div>
+                <div class="nav-item" onclick="showModule('scada-overview')">
+                    <span class="icon">🏭</span>
+                    <span class="label">SCADA Overview</span>
+                    <span class="badge new">NEW</span>
+                </div>
+                <div class="nav-item" onclick="showModule('scada-devices')">
+                    <span class="icon">📟</span>
+                    <span class="label">Devices & Protocols</span>
+                    <span class="badge new">NEW</span>
+                </div>
+                <div class="nav-item" onclick="showModule('scada-tanks')">
+                    <span class="icon">🛢️</span>
+                    <span class="label">Tank Monitoring</span>
+                    <span class="badge new">NEW</span>
+                </div>
+                <div class="nav-item" onclick="showModule('scada-pumps')">
+                    <span class="icon">⚙️</span>
+                    <span class="label">Pump Operations</span>
+                    <span class="badge new">NEW</span>
+                </div>
+                <div class="nav-item" onclick="showModule('scada-alarms')">
+                    <span class="icon">🚨</span>
+                    <span class="label">Alarm Management</span>
+                    <span class="badge new">NEW</span>
+                </div>
+                <div class="nav-item" onclick="showModule('scada-security')">
+                    <span class="icon">🔒</span>
+                    <span class="label">ICS Security</span>
+                    <span class="badge new">NEW</span>
+                </div>
+
+                <div class="nav-section">Documentation</div>
+                <div class="nav-item" onclick="showModule('siem-brochure')">
+                    <span class="icon">📰</span>
+                    <span class="label">SIEM Brochure</span>
+                    <span class="badge new">NEW</span>
+                </div>
+                <div class="nav-item" onclick="showModule('architecture-review')">
+                    <span class="icon">🏗️</span>
+                    <span class="label">Architecture Review</span>
+                    <span class="badge new">NEW</span>
+                </div>
+                <div class="nav-item" onclick="showModule('installation-guide')">
+                    <span class="icon">📖</span>
+                    <span class="label">Installation Guide</span>
+                    <span class="badge new">NEW</span>
+                </div>
+
                 <div class="nav-section">Resources</div>
                 <div class="nav-item" onclick="showModule('faq')">
                     <span class="icon">❓</span>
@@ -2747,6 +2796,1431 @@ mysql -u ioc_user -p ioc_poc &lt; demo/sample_data.sql
                         <div style="margin-top: 20px;">
                             <button class="btn btn-primary" onclick="showModule('cloud-setup')">☁️ View Cloud Setup Guide</button>
                             <button class="btn btn-secondary" onclick="showModule('cloud-hybrid')" style="margin-left: 10px;">🔄 View Hybrid Architecture</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCADA Overview Module -->
+            <div id="scada-overview" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>SCADA Training</span>
+                        <span>/</span>
+                        <span>Overview</span>
+                    </div>
+                    <h2>🏭 SCADA System Overview</h2>
+                    <p>Introduction to Supervisory Control and Data Acquisition systems in industrial environments.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>📌</span>
+                        <h3>What is SCADA?</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>SCADA (Supervisory Control and Data Acquisition) is a control system architecture that uses computers, networked data communications, and graphical user interfaces for high-level process supervisory management.</p>
+
+                        <div class="info-box" style="background: linear-gradient(135deg, #1e3a5f, #2d4a6f); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                            <h4 style="color: #00b894; margin-bottom: 15px;">Key SCADA Components</h4>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                                    <strong style="color: #00cec9;">🖥️ HMI (Human-Machine Interface)</strong>
+                                    <p style="font-size: 13px; margin-top: 8px; color: #94a3b8;">Presents process data to operators through visual displays and enables control inputs.</p>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                                    <strong style="color: #00cec9;">📟 PLC (Programmable Logic Controller)</strong>
+                                    <p style="font-size: 13px; margin-top: 8px; color: #94a3b8;">Industrial digital computer for automation of manufacturing processes and machinery.</p>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                                    <strong style="color: #00cec9;">📡 RTU (Remote Terminal Unit)</strong>
+                                    <p style="font-size: 13px; margin-top: 8px; color: #94a3b8;">Microprocessor-controlled device that interfaces sensors and actuators to SCADA.</p>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                                    <strong style="color: #00cec9;">🌐 Communication Infrastructure</strong>
+                                    <p style="font-size: 13px; margin-top: 8px; color: #94a3b8;">Network connecting all SCADA components including Ethernet, serial, radio, and satellite links.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 style="margin: 20px 0 15px 0;">SCADA in Oil & Gas Operations</h4>
+                        <p>In oil and gas facilities, SCADA systems monitor and control:</p>
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            <li><strong>Tank Levels</strong> - Real-time monitoring of crude oil, refined products, and gas storage</li>
+                            <li><strong>Pipeline Flow</strong> - Flow rates, pressures, and leak detection across pipeline networks</li>
+                            <li><strong>Pump Stations</strong> - Control and monitoring of transfer and export pumps</li>
+                            <li><strong>Compressor Stations</strong> - Gas compression and pressure regulation</li>
+                            <li><strong>Safety Systems</strong> - Emergency shutdown systems (ESD), fire & gas detection</li>
+                            <li><strong>Environmental Monitoring</strong> - Emissions, flare systems, and environmental compliance</li>
+                        </ul>
+
+                        <div class="step-list">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Data Acquisition</h4>
+                                    <p>Field devices (sensors, meters, analyzers) collect real-time data from the process.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Data Communication</h4>
+                                    <p>RTUs and PLCs transmit data to the SCADA master station via secure networks.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Data Processing</h4>
+                                    <p>SCADA software processes, stores, and analyzes incoming data streams.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Visualization & Control</h4>
+                                    <p>Operators view data on HMI screens and issue control commands as needed.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-primary" onclick="showModule('scada-devices')">📟 Next: Devices & Protocols →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCADA Devices & Protocols Module -->
+            <div id="scada-devices" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>SCADA Training</span>
+                        <span>/</span>
+                        <span>Devices & Protocols</span>
+                    </div>
+                    <h2>📟 SCADA Devices & Communication Protocols</h2>
+                    <p>Understanding industrial devices and the protocols used for communication.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>🔧</span>
+                        <h3>Industrial Device Types</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; border-left: 4px solid #3498db;">
+                                <h4 style="color: #3498db; margin-bottom: 10px;">PLC</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Programmable Logic Controllers execute control logic and process automation. Used for local control of pumps, valves, and machinery.</p>
+                                <div style="margin-top: 10px; font-size: 12px;">
+                                    <strong>Common Brands:</strong> Allen-Bradley, Siemens, Schneider
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; border-left: 4px solid #27ae60;">
+                                <h4 style="color: #27ae60; margin-bottom: 10px;">RTU</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Remote Terminal Units interface field equipment to SCADA. Ideal for geographically dispersed monitoring points.</p>
+                                <div style="margin-top: 10px; font-size: 12px;">
+                                    <strong>Common Brands:</strong> ABB, Emerson, Honeywell
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; border-left: 4px solid #9b59b6;">
+                                <h4 style="color: #9b59b6; margin-bottom: 10px;">DCS</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Distributed Control Systems provide integrated control for complex processes like refineries and chemical plants.</p>
+                                <div style="margin-top: 10px; font-size: 12px;">
+                                    <strong>Common Brands:</strong> Yokogawa, Honeywell, ABB
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; border-left: 4px solid #e67e22;">
+                                <h4 style="color: #e67e22; margin-bottom: 10px;">HMI</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Human-Machine Interface panels provide visual process displays and operator control inputs.</p>
+                                <div style="margin-top: 10px; font-size: 12px;">
+                                    <strong>Common Brands:</strong> Wonderware, Ignition, AVEVA
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; border-left: 4px solid #e74c3c;">
+                                <h4 style="color: #e74c3c; margin-bottom: 10px;">Sensors</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Field instruments measuring temperature, pressure, flow, level, and other process variables.</p>
+                                <div style="margin-top: 10px; font-size: 12px;">
+                                    <strong>Types:</strong> 4-20mA, HART, Foundation Fieldbus
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; border-left: 4px solid #1abc9c;">
+                                <h4 style="color: #1abc9c; margin-bottom: 10px;">Actuators</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Control valves, motor starters, and other final control elements that execute commands.</p>
+                                <div style="margin-top: 10px; font-size: 12px;">
+                                    <strong>Types:</strong> Electric, Pneumatic, Hydraulic
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>📡</span>
+                        <h3>Communication Protocols</h3>
+                    </div>
+                    <div class="card-body">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: var(--bg-lighter);">
+                                    <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--border);">Protocol</th>
+                                    <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--border);">Type</th>
+                                    <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--border);">Use Case</th>
+                                    <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--border);">Security</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>Modbus TCP/RTU</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Serial/Ethernet</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">PLC communication, sensor data</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><span style="color: #f39c12;">⚠️ No built-in security</span></td>
+                                </tr>
+                                <tr style="background: rgba(0,0,0,0.1);">
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>DNP3</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Serial/Ethernet</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Electric utilities, oil & gas</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><span style="color: #27ae60;">✓ Secure Authentication</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>OPC UA</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Ethernet</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Modern SCADA, Industry 4.0</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><span style="color: #27ae60;">✓ Built-in encryption</span></td>
+                                </tr>
+                                <tr style="background: rgba(0,0,0,0.1);">
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>IEC 61850</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Ethernet</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Substation automation</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><span style="color: #27ae60;">✓ Secure by design</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>EtherNet/IP</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Ethernet</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Allen-Bradley PLCs</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><span style="color: #f39c12;">⚠️ CIP Security optional</span></td>
+                                </tr>
+                                <tr style="background: rgba(0,0,0,0.1);">
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>PROFINET</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Ethernet</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Siemens automation</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><span style="color: #27ae60;">✓ Security profiles</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="warning-box" style="background: rgba(231, 76, 60, 0.1); border-left: 4px solid #e74c3c; padding: 15px; margin-top: 20px; border-radius: 5px;">
+                            <strong style="color: #e74c3c;">⚠️ Security Note:</strong>
+                            <p style="margin-top: 8px;">Legacy protocols like Modbus were designed before cybersecurity was a concern. Always implement network segmentation, firewalls, and IDS/IPS when using these protocols in production environments.</p>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-secondary" onclick="showModule('scada-overview')">← Back: Overview</button>
+                            <button class="btn btn-primary" onclick="showModule('scada-tanks')" style="margin-left: 10px;">🛢️ Next: Tank Monitoring →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCADA Tank Monitoring Module -->
+            <div id="scada-tanks" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>SCADA Training</span>
+                        <span>/</span>
+                        <span>Tank Monitoring</span>
+                    </div>
+                    <h2>🛢️ Tank Level Monitoring & Management</h2>
+                    <p>Comprehensive guide to monitoring oil, gas, and product storage tanks.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>📊</span>
+                        <h3>Tank Monitoring Fundamentals</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 style="margin-bottom: 15px;">Tank Types in Oil & Gas Operations</h4>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 25px;">
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #f39c12; margin-bottom: 10px;">🛢️ Crude Oil Storage</h5>
+                                <ul style="font-size: 13px; color: var(--text-muted); padding-left: 15px;">
+                                    <li>Floating roof tanks (external/internal)</li>
+                                    <li>Fixed roof tanks</li>
+                                    <li>Capacity: 10,000 - 500,000+ BBL</li>
+                                    <li>Key measurements: Level, temperature, pressure</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #3498db; margin-bottom: 10px;">⛽ Refined Product Tanks</h5>
+                                <ul style="font-size: 13px; color: var(--text-muted); padding-left: 15px;">
+                                    <li>Gasoline, Diesel, Kerosene, Jet Fuel</li>
+                                    <li>Fixed cone roof design</li>
+                                    <li>Capacity: 5,000 - 100,000 BBL</li>
+                                    <li>Key measurements: Level, gravity, water interface</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #9b59b6; margin-bottom: 10px;">🔵 LPG Spheres</h5>
+                                <ul style="font-size: 13px; color: var(--text-muted); padding-left: 15px;">
+                                    <li>Pressurized spherical vessels</li>
+                                    <li>Propane, Butane, LPG mixtures</li>
+                                    <li>Capacity: 10,000 - 60,000 BBL</li>
+                                    <li>Key measurements: Level, pressure, temperature</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #27ae60; margin-bottom: 10px;">💨 Natural Gas Holders</h5>
+                                <ul style="font-size: 13px; color: var(--text-muted); padding-left: 15px;">
+                                    <li>Low-pressure gas holders</li>
+                                    <li>High-pressure bullet tanks</li>
+                                    <li>Capacity: 100,000 - 1,000,000 MCF</li>
+                                    <li>Key measurements: Pressure, volume, temperature</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h4 style="margin: 25px 0 15px 0;">Level Measurement Technologies</h4>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: var(--bg-lighter);">
+                                    <th style="padding: 12px; text-align: left;">Technology</th>
+                                    <th style="padding: 12px; text-align: left;">Accuracy</th>
+                                    <th style="padding: 12px; text-align: left;">Best For</th>
+                                    <th style="padding: 12px; text-align: left;">Limitations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>Radar (Non-contact)</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">±1mm</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Large tanks, custody transfer</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Cost, requires calibration</td>
+                                </tr>
+                                <tr style="background: rgba(0,0,0,0.1);">
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>Servo/Float</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">±0.5mm</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Custody transfer, inventory</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Moving parts, maintenance</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>Ultrasonic</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">±3mm</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Process tanks, water</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Foam, vapors affect reading</td>
+                                </tr>
+                                <tr style="background: rgba(0,0,0,0.1);">
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>Hydrostatic</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">±5mm</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Open tanks, basic monitoring</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Density changes affect accuracy</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>⚠️</span>
+                        <h3>Tank Alarm Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                            <div style="background: #e74c3c; padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                                <div style="font-size: 24px; margin-bottom: 10px;">🔴</div>
+                                <strong>HH - High High</strong>
+                                <div style="font-size: 13px; margin-top: 8px;">95% capacity<br>Emergency shutdown</div>
+                            </div>
+                            <div style="background: #f39c12; padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                                <div style="font-size: 24px; margin-bottom: 10px;">🟠</div>
+                                <strong>H - High</strong>
+                                <div style="font-size: 13px; margin-top: 8px;">90% capacity<br>Stop inlet pump</div>
+                            </div>
+                            <div style="background: #f1c40f; padding: 20px; border-radius: 10px; text-align: center; color: #333;">
+                                <div style="font-size: 24px; margin-bottom: 10px;">🟡</div>
+                                <strong>L - Low</strong>
+                                <div style="font-size: 13px; margin-top: 8px;">20% capacity<br>Alert operators</div>
+                            </div>
+                            <div style="background: #e74c3c; padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                                <div style="font-size: 24px; margin-bottom: 10px;">🔴</div>
+                                <strong>LL - Low Low</strong>
+                                <div style="font-size: 13px; margin-top: 8px;">10% capacity<br>Stop outlet pump</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-secondary" onclick="showModule('scada-devices')">← Back: Devices</button>
+                            <button class="btn btn-primary" onclick="showModule('scada-pumps')" style="margin-left: 10px;">⚙️ Next: Pump Operations →</button>
+                            <a href="cpanel/scada.php" class="btn btn-success" style="margin-left: 10px; text-decoration: none;">🛢️ View Live Tank Monitoring</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCADA Pump Operations Module -->
+            <div id="scada-pumps" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>SCADA Training</span>
+                        <span>/</span>
+                        <span>Pump Operations</span>
+                    </div>
+                    <h2>⚙️ Pump Station Operations</h2>
+                    <p>Managing pump stations, flow control, and transfer operations.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>🔧</span>
+                        <h3>Pump Types & Applications</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #3498db; margin-bottom: 10px;">💧 Centrifugal Pumps</h5>
+                                <p style="font-size: 13px; color: var(--text-muted);">Most common type for oil transfer. Uses rotating impeller to move fluid.</p>
+                                <ul style="font-size: 12px; margin-top: 10px; padding-left: 15px;">
+                                    <li>High flow rates</li>
+                                    <li>Low to medium pressure</li>
+                                    <li>Best for: Crude oil, refined products</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #27ae60; margin-bottom: 10px;">🔄 Positive Displacement</h5>
+                                <p style="font-size: 13px; color: var(--text-muted);">Traps fixed amount of fluid and forces it through discharge.</p>
+                                <ul style="font-size: 12px; margin-top: 10px; padding-left: 15px;">
+                                    <li>Precise metering</li>
+                                    <li>High pressure capable</li>
+                                    <li>Best for: Viscous fluids, chemicals</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #9b59b6; margin-bottom: 10px;">🌀 Reciprocating Compressors</h5>
+                                <p style="font-size: 13px; color: var(--text-muted);">Piston-driven compressors for gas handling.</p>
+                                <ul style="font-size: 12px; margin-top: 10px; padding-left: 15px;">
+                                    <li>High compression ratios</li>
+                                    <li>Variable capacity</li>
+                                    <li>Best for: Natural gas, LPG</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #e67e22; margin-bottom: 10px;">🔥 Multistage Pumps</h5>
+                                <p style="font-size: 13px; color: var(--text-muted);">Multiple impellers in series for high pressure applications.</p>
+                                <ul style="font-size: 12px; margin-top: 10px; padding-left: 15px;">
+                                    <li>Very high pressure</li>
+                                    <li>Pipeline injection</li>
+                                    <li>Best for: Export pipelines</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #00cec9; margin-bottom: 10px;">❄️ Cryogenic Pumps</h5>
+                                <p style="font-size: 13px; color: var(--text-muted);">Specialized for extremely cold liquefied gases.</p>
+                                <ul style="font-size: 12px; margin-top: 10px; padding-left: 15px;">
+                                    <li>-196°C to -45°C range</li>
+                                    <li>Special seals/materials</li>
+                                    <li>Best for: LNG, LPG, Propane</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #e74c3c; margin-bottom: 10px;">⚡ Submersible Pumps</h5>
+                                <p style="font-size: 13px; color: var(--text-muted);">Motor and pump submerged in fluid.</p>
+                                <ul style="font-size: 12px; margin-top: 10px; padding-left: 15px;">
+                                    <li>No priming required</li>
+                                    <li>Quiet operation</li>
+                                    <li>Best for: Sumps, water handling</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h4 style="margin: 25px 0 15px 0;">Key Pump Performance Metrics</h4>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                            <div style="background: linear-gradient(135deg, #3498db, #2980b9); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                                <div style="font-size: 28px; font-weight: bold;">Flow Rate</div>
+                                <div style="font-size: 14px; margin-top: 5px;">BBL/hr or GPM</div>
+                                <div style="font-size: 12px; margin-top: 10px;">Actual vs. design capacity</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #27ae60, #229954); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                                <div style="font-size: 28px; font-weight: bold;">Efficiency</div>
+                                <div style="font-size: 14px; margin-top: 5px;">Percentage</div>
+                                <div style="font-size: 12px; margin-top: 10px;">Target: >85% for healthy pump</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #9b59b6, #8e44ad); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                                <div style="font-size: 28px; font-weight: bold;">Power</div>
+                                <div style="font-size: 14px; margin-top: 5px;">kW consumption</div>
+                                <div style="font-size: 12px; margin-top: 10px;">Monitor for efficiency loss</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #e67e22, #d35400); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                                <div style="font-size: 28px; font-weight: bold;">Runtime</div>
+                                <div style="font-size: 14px; margin-top: 5px;">Hours of operation</div>
+                                <div style="font-size: 12px; margin-top: 10px;">Schedule maintenance based on this</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>🔄</span>
+                        <h3>Pump Control Operations</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="step-list">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Pre-Start Checks</h4>
+                                    <p>Verify suction valve open, discharge valve closed, seals checked, motor ready.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Start Sequence</h4>
+                                    <p>Start motor, monitor current draw, slowly open discharge valve, verify flow.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Normal Operation</h4>
+                                    <p>Monitor flow rate, pressure, temperature, vibration, and power consumption.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Stop Sequence</h4>
+                                    <p>Close discharge valve gradually, stop motor, verify no backflow, close suction valve.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="warning-box" style="background: rgba(231, 76, 60, 0.1); border-left: 4px solid #e74c3c; padding: 15px; margin-top: 20px; border-radius: 5px;">
+                            <strong style="color: #e74c3c;">⚠️ Critical Warnings:</strong>
+                            <ul style="margin-top: 8px; padding-left: 20px;">
+                                <li>Never run pump with closed discharge valve (causes overheating)</li>
+                                <li>Avoid running pump dry (damages seals and bearings)</li>
+                                <li>Stop immediately if unusual vibration or noise detected</li>
+                                <li>Monitor seal temperature - excessive heat indicates failure</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-secondary" onclick="showModule('scada-tanks')">← Back: Tank Monitoring</button>
+                            <button class="btn btn-primary" onclick="showModule('scada-alarms')" style="margin-left: 10px;">🚨 Next: Alarm Management →</button>
+                            <a href="cpanel/scada.php" class="btn btn-success" style="margin-left: 10px; text-decoration: none;">⚙️ View Live Pump Status</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCADA Alarm Management Module -->
+            <div id="scada-alarms" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>SCADA Training</span>
+                        <span>/</span>
+                        <span>Alarm Management</span>
+                    </div>
+                    <h2>🚨 Alarm Management & Response</h2>
+                    <p>Understanding alarm priorities, responding to events, and maintaining system safety.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>📊</span>
+                        <h3>Alarm Priority Levels</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px;">
+                            <div style="background: linear-gradient(135deg, #c0392b, #e74c3c); padding: 25px; border-radius: 10px; color: white;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🔴</div>
+                                <h4>CRITICAL</h4>
+                                <p style="font-size: 13px; margin-top: 10px;">Immediate danger to personnel, environment, or equipment.</p>
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.3);">
+                                    <strong>Response:</strong> Immediate action required. May trigger automatic shutdown.
+                                </div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #d35400, #e67e22); padding: 25px; border-radius: 10px; color: white;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🟠</div>
+                                <h4>HIGH</h4>
+                                <p style="font-size: 13px; margin-top: 10px;">Significant deviation requiring prompt attention.</p>
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.3);">
+                                    <strong>Response:</strong> Respond within 5 minutes. May escalate to critical.
+                                </div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #f39c12, #f1c40f); padding: 25px; border-radius: 10px; color: #333;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🟡</div>
+                                <h4>MEDIUM</h4>
+                                <p style="font-size: 13px; margin-top: 10px;">Abnormal condition requiring operator awareness.</p>
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.2);">
+                                    <strong>Response:</strong> Acknowledge and investigate within 15 minutes.
+                                </div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #3498db, #2980b9); padding: 25px; border-radius: 10px; color: white;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🔵</div>
+                                <h4>LOW</h4>
+                                <p style="font-size: 13px; margin-top: 10px;">Informational or minor deviation.</p>
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.3);">
+                                    <strong>Response:</strong> Review during normal rounds. Log for trending.
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 style="margin: 25px 0 15px 0;">Common Alarm Types</h4>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: var(--bg-lighter);">
+                                    <th style="padding: 12px; text-align: left;">Alarm Type</th>
+                                    <th style="padding: 12px; text-align: left;">Typical Causes</th>
+                                    <th style="padding: 12px; text-align: left;">Initial Response</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>High Level</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Inlet flow exceeds outlet, meter failure</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Reduce inlet or increase outlet flow</td>
+                                </tr>
+                                <tr style="background: rgba(0,0,0,0.1);">
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>Low Level</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">High outlet demand, supply interruption</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Reduce outlet or check supply source</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>High Pressure</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Blocked line, valve closed, pump surge</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Verify valves open, check for blockage</td>
+                                </tr>
+                                <tr style="background: rgba(0,0,0,0.1);">
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>Low Pressure</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Leak, pump failure, supply issue</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Check for leaks, verify pump operation</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>High Temperature</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Cooling failure, bearing issue, process upset</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Check cooling system, reduce load</td>
+                                </tr>
+                                <tr style="background: rgba(0,0,0,0.1);">
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);"><strong>Communication Loss</strong></td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Network issue, device failure, power loss</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid var(--border);">Check network, dispatch field operator</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>📋</span>
+                        <h3>Alarm Response Procedure</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="step-list">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Acknowledge the Alarm</h4>
+                                    <p>Click acknowledge to stop audible alert and show you are aware of the condition.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Assess the Situation</h4>
+                                    <p>Review related process values, trends, and associated equipment status.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Take Corrective Action</h4>
+                                    <p>Follow standard operating procedures to address the root cause.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Verify Return to Normal</h4>
+                                    <p>Monitor until the alarm clears and process returns to normal range.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">
+                                    <h4>Document the Event</h4>
+                                    <p>Log the alarm, root cause, actions taken, and any follow-up required.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-secondary" onclick="showModule('scada-pumps')">← Back: Pump Operations</button>
+                            <button class="btn btn-primary" onclick="showModule('scada-security')" style="margin-left: 10px;">🔒 Next: ICS Security →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCADA ICS Security Module -->
+            <div id="scada-security" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>SCADA Training</span>
+                        <span>/</span>
+                        <span>ICS Security</span>
+                    </div>
+                    <h2>🔒 Industrial Control System Security</h2>
+                    <p>Protecting SCADA systems from cyber threats and ensuring operational resilience.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>⚠️</span>
+                        <h3>Why ICS Security Matters</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="warning-box" style="background: rgba(231, 76, 60, 0.1); border-left: 4px solid #e74c3c; padding: 20px; margin-bottom: 25px; border-radius: 5px;">
+                            <strong style="color: #e74c3c; font-size: 16px;">Real-World SCADA Attack Examples:</strong>
+                            <ul style="margin-top: 15px; padding-left: 20px;">
+                                <li><strong>Stuxnet (2010)</strong> - Targeted Iranian nuclear centrifuges, caused physical damage</li>
+                                <li><strong>Ukraine Power Grid (2015)</strong> - Hackers caused blackouts affecting 225,000 customers</li>
+                                <li><strong>Colonial Pipeline (2021)</strong> - Ransomware attack disrupted fuel supply to US East Coast</li>
+                                <li><strong>Oldsmar Water (2021)</strong> - Attacker attempted to poison water supply via SCADA</li>
+                            </ul>
+                        </div>
+
+                        <h4 style="margin-bottom: 15px;">ICS Security Frameworks</h4>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #3498db; margin-bottom: 10px;">NIST Cybersecurity Framework</h5>
+                                <p style="font-size: 13px; color: var(--text-muted);">Identify, Protect, Detect, Respond, Recover</p>
+                                <div style="margin-top: 10px; font-size: 12px;">
+                                    <a href="#" style="color: #00b894;">Learn More →</a>
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #27ae60; margin-bottom: 10px;">IEC 62443</h5>
+                                <p style="font-size: 13px; color: var(--text-muted);">Industrial Automation and Control Systems Security</p>
+                                <div style="margin-top: 10px; font-size: 12px;">
+                                    <a href="#" style="color: #00b894;">Learn More →</a>
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #9b59b6; margin-bottom: 10px;">NERC CIP</h5>
+                                <p style="font-size: 13px; color: var(--text-muted);">Critical Infrastructure Protection for utilities</p>
+                                <div style="margin-top: 10px; font-size: 12px;">
+                                    <a href="#" style="color: #00b894;">Learn More →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>🛡️</span>
+                        <h3>Defense in Depth Strategy</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="background: linear-gradient(135deg, #1e3a5f, #2d4a6f); padding: 25px; border-radius: 15px; margin-bottom: 25px;">
+                            <div style="display: flex; flex-direction: column; gap: 10px; text-align: center;">
+                                <div style="background: #e74c3c; padding: 15px; border-radius: 8px; color: white;">
+                                    <strong>Layer 5: Enterprise Zone</strong>
+                                    <div style="font-size: 12px;">Business systems, ERP, Corporate IT</div>
+                                </div>
+                                <div style="font-size: 20px;">⬇️ Firewall / DMZ ⬇️</div>
+                                <div style="background: #e67e22; padding: 15px; border-radius: 8px; color: white;">
+                                    <strong>Layer 4: Site Business Zone</strong>
+                                    <div style="font-size: 12px;">Site operations, historians, reporting</div>
+                                </div>
+                                <div style="font-size: 20px;">⬇️ Firewall ⬇️</div>
+                                <div style="background: #f1c40f; padding: 15px; border-radius: 8px; color: #333;">
+                                    <strong>Layer 3: Operations Zone</strong>
+                                    <div style="font-size: 12px;">SCADA servers, HMI workstations</div>
+                                </div>
+                                <div style="font-size: 20px;">⬇️ Firewall ⬇️</div>
+                                <div style="background: #27ae60; padding: 15px; border-radius: 8px; color: white;">
+                                    <strong>Layer 2: Control Zone</strong>
+                                    <div style="font-size: 12px;">PLCs, RTUs, DCS controllers</div>
+                                </div>
+                                <div style="font-size: 20px;">⬇️ Physical Isolation ⬇️</div>
+                                <div style="background: #3498db; padding: 15px; border-radius: 8px; color: white;">
+                                    <strong>Layer 1: Field Zone</strong>
+                                    <div style="font-size: 12px;">Sensors, actuators, field devices</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 style="margin: 25px 0 15px 0;">Security Best Practices</h4>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #27ae60; margin-bottom: 15px;">✓ Network Security</h5>
+                                <ul style="font-size: 13px; padding-left: 15px;">
+                                    <li>Segment OT from IT networks</li>
+                                    <li>Implement industrial firewalls</li>
+                                    <li>Use VPNs for remote access</li>
+                                    <li>Disable unnecessary ports/services</li>
+                                    <li>Monitor network traffic with IDS/IPS</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #27ae60; margin-bottom: 15px;">✓ Access Control</h5>
+                                <ul style="font-size: 13px; padding-left: 15px;">
+                                    <li>Enforce strong password policies</li>
+                                    <li>Implement multi-factor authentication</li>
+                                    <li>Use role-based access control</li>
+                                    <li>Remove default/shared accounts</li>
+                                    <li>Audit access logs regularly</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #27ae60; margin-bottom: 15px;">✓ Endpoint Security</h5>
+                                <ul style="font-size: 13px; padding-left: 15px;">
+                                    <li>Apply security patches (with testing)</li>
+                                    <li>Use application whitelisting</li>
+                                    <li>Deploy industrial-grade antivirus</li>
+                                    <li>Disable USB ports where possible</li>
+                                    <li>Maintain secure configuration baselines</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px;">
+                                <h5 style="color: #27ae60; margin-bottom: 15px;">✓ Monitoring & Response</h5>
+                                <ul style="font-size: 13px; padding-left: 15px;">
+                                    <li>Centralize log collection (SIEM)</li>
+                                    <li>Monitor for anomalous behavior</li>
+                                    <li>Develop incident response plans</li>
+                                    <li>Conduct regular security assessments</li>
+                                    <li>Train operators on security awareness</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="info-box" style="background: rgba(39, 174, 96, 0.1); border-left: 4px solid #27ae60; padding: 15px; margin-top: 25px; border-radius: 5px;">
+                            <strong style="color: #27ae60;">💡 Integration with IOC:</strong>
+                            <p style="margin-top: 8px;">The IOC Intelligent Operating Centre integrates SCADA monitoring with network security scanning, providing unified visibility across IT and OT environments. Use the Dashboard to monitor both network vulnerabilities and SCADA system health.</p>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-secondary" onclick="showModule('scada-alarms')">← Back: Alarm Management</button>
+                            <a href="cpanel/scada.php" class="btn btn-primary" style="margin-left: 10px; text-decoration: none;">🏭 Launch SCADA Module</a>
+                            <button class="btn btn-success" onclick="showModule('welcome')" style="margin-left: 10px;">✓ Complete SCADA Training</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIEM Brochure Module -->
+            <div id="siem-brochure" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>Documentation</span>
+                        <span>/</span>
+                        <span>SIEM Brochure</span>
+                    </div>
+                    <h2>📰 IOC SIEM Product Brochure</h2>
+                    <p>Marketing and sales collateral showcasing all platform capabilities.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>🎯</span>
+                        <h3>Product Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The IOC SIEM Product Brochure is a comprehensive marketing document designed for sales teams, partners, and prospective customers. It showcases all platform modules, dashboards, and key capabilities in a professional, print-ready format.</p>
+
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0;">
+                            <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 28px; font-weight: bold;">7</div>
+                                <div style="font-size: 12px; margin-top: 5px;">Pages</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 28px; font-weight: bold;">15+</div>
+                                <div style="font-size: 12px; margin-top: 5px;">Modules</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 28px; font-weight: bold;">6</div>
+                                <div style="font-size: 12px; margin-top: 5px;">Industries</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 28px; font-weight: bold;">PDF</div>
+                                <div style="font-size: 12px; margin-top: 5px;">Export</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>📦</span>
+                        <h3>Featured Modules</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🔍</div>
+                                <strong style="font-size: 13px;">Network Scanner</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Vulnerability assessment & discovery</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🏭</div>
+                                <strong style="font-size: 13px;">SCADA/ICS</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Industrial control monitoring</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🔐</div>
+                                <strong style="font-size: 13px;">DLP</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Data loss prevention</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🎫</div>
+                                <strong style="font-size: 13px;">Service Desk</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Incident & change management</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">📊</div>
+                                <strong style="font-size: 13px;">Dashboards</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Custom visualizations</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🛢️</div>
+                                <strong style="font-size: 13px;">Tank Monitoring</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Oil & gas storage levels</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">⚙️</div>
+                                <strong style="font-size: 13px;">Pump Control</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Flow rates & efficiency</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🎓</div>
+                                <strong style="font-size: 13px;">Training</strong>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">User certification</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>🏢</span>
+                        <h3>Industry Solutions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px;">
+                            <div style="text-align: center; padding: 15px;">
+                                <div style="font-size: 36px; margin-bottom: 8px;">🛢️</div>
+                                <div style="font-size: 12px; font-weight: 600;">Oil & Gas</div>
+                            </div>
+                            <div style="text-align: center; padding: 15px;">
+                                <div style="font-size: 36px; margin-bottom: 8px;">⚡</div>
+                                <div style="font-size: 12px; font-weight: 600;">Power & Utilities</div>
+                            </div>
+                            <div style="text-align: center; padding: 15px;">
+                                <div style="font-size: 36px; margin-bottom: 8px;">🏭</div>
+                                <div style="font-size: 12px; font-weight: 600;">Manufacturing</div>
+                            </div>
+                            <div style="text-align: center; padding: 15px;">
+                                <div style="font-size: 36px; margin-bottom: 8px;">💧</div>
+                                <div style="font-size: 12px; font-weight: 600;">Water</div>
+                            </div>
+                            <div style="text-align: center; padding: 15px;">
+                                <div style="font-size: 36px; margin-bottom: 8px;">🚂</div>
+                                <div style="font-size: 12px; font-weight: 600;">Transportation</div>
+                            </div>
+                            <div style="text-align: center; padding: 15px;">
+                                <div style="font-size: 36px; margin-bottom: 8px;">🏥</div>
+                                <div style="font-size: 12px; font-weight: 600;">Healthcare</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>📋</span>
+                        <h3>Brochure Contents</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                            <div>
+                                <h4 style="color: var(--primary); margin-bottom: 15px;">Page Overview</h4>
+                                <ul style="padding-left: 20px;">
+                                    <li style="margin-bottom: 10px;"><strong>Page 1:</strong> Cover - Product branding and key stats</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 2:</strong> Why IOC SIEM - Value proposition and benefits</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 3:</strong> Core Modules - Security, SCADA, DLP, Service Desk</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 4:</strong> Additional Modules - Dashboards, Reports, Training</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 5:</strong> Industry Solutions - Use cases by vertical</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 6:</strong> Deployment Options - On-prem, Hybrid, Cloud</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 7:</strong> Contact - Call to action and contact info</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--primary); margin-bottom: 15px;">Full Visual Brochure (10 Pages)</h4>
+                                <ul style="padding-left: 20px;">
+                                    <li style="margin-bottom: 10px;"><strong>Page 1:</strong> Cover - Product branding</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 2:</strong> Executive Dashboard screenshots</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 3:</strong> Network Configuration & Scanning</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 4:</strong> SCADA/ICS Tank Monitoring</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 5:</strong> Pipeline & Gas Storage</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 6:</strong> Service Desk interface</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 7:</strong> Data Loss Prevention</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 8:</strong> Alarm Management</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 9:</strong> Reports & Training</li>
+                                    <li style="margin-bottom: 10px;"><strong>Page 10:</strong> Contact & CTA</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>📥</span>
+                        <h3>Access Brochures</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Two versions of the IOC SIEM Product Brochure are available as professional, print-ready PDF documents for sales and marketing use.</p>
+
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 25px;">
+                            <!-- Marketing Brochure -->
+                            <div style="background: linear-gradient(135deg, #0f172a, #1e3a5f); padding: 35px; border-radius: 16px; text-align: center;">
+                                <div style="font-size: 60px; margin-bottom: 15px;">📰</div>
+                                <h3 style="color: white; font-size: 22px; margin-bottom: 8px;">Marketing Brochure</h3>
+                                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 14px;">Executive Overview | 7 Pages</p>
+                                <ul style="text-align: left; color: rgba(255,255,255,0.8); font-size: 13px; padding-left: 20px; margin-bottom: 20px;">
+                                    <li style="margin-bottom: 5px;">Value proposition</li>
+                                    <li style="margin-bottom: 5px;">Core modules overview</li>
+                                    <li style="margin-bottom: 5px;">Industry solutions</li>
+                                    <li style="margin-bottom: 5px;">Deployment options</li>
+                                </ul>
+                                <a href="siem_brochure.php" class="btn btn-primary" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; padding: 15px 35px; font-size: 16px; text-decoration: none; display: inline-block; border-radius: 10px;" target="_blank">
+                                    Open Brochure
+                                </a>
+                            </div>
+
+                            <!-- Comprehensive Brochure with Screenshots -->
+                            <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 35px; border-radius: 16px; text-align: center; border: 2px solid #3b82f6;">
+                                <div style="position: relative; display: inline-block;">
+                                    <div style="font-size: 60px; margin-bottom: 15px;">📸</div>
+                                    <span style="position: absolute; top: -5px; right: -35px; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: bold;">NEW</span>
+                                </div>
+                                <h3 style="color: white; font-size: 22px; margin-bottom: 8px;">Full Visual Brochure</h3>
+                                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 14px;">Screenshots & Dashboards | 10 Pages</p>
+                                <ul style="text-align: left; color: rgba(255,255,255,0.8); font-size: 13px; padding-left: 20px; margin-bottom: 20px;">
+                                    <li style="margin-bottom: 5px;">Executive Dashboard visuals</li>
+                                    <li style="margin-bottom: 5px;">Network & SCADA screenshots</li>
+                                    <li style="margin-bottom: 5px;">Service Desk interface</li>
+                                    <li style="margin-bottom: 5px;">DLP & Alarm modules</li>
+                                </ul>
+                                <a href="siem_brochure_full.php" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #3b82f6); border: none; padding: 15px 35px; font-size: 16px; text-decoration: none; display: inline-block; border-radius: 10px;" target="_blank">
+                                    Open Full Brochure
+                                </a>
+                            </div>
+                        </div>
+
+                        <p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 15px;">Click "Print / Save as PDF" in the brochures to export as PDF</p>
+
+                        <div style="margin-top: 30px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 8px;">🖨️</div>
+                                <strong>Print Ready</strong>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">A4 format with margins</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 8px;">🎨</div>
+                                <strong>Professional</strong>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Modern design</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
+                                <strong>Visual Elements</strong>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Charts & diagrams</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 8px;">📸</div>
+                                <strong>Screenshots</strong>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Module visuals</p>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-secondary" onclick="showModule('scada-security')">← Back: ICS Security</button>
+                            <button class="btn btn-primary" onclick="showModule('architecture-review')" style="margin-left: 10px;">🏗️ Next: Architecture Review →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Review Module -->
+            <div id="architecture-review" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>Documentation</span>
+                        <span>/</span>
+                        <span>Architecture Review</span>
+                    </div>
+                    <h2>🏗️ System Architecture Review</h2>
+                    <p>Comprehensive technical architecture documentation for the IOC platform.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>📋</span>
+                        <h3>Document Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The Architecture Review Document provides a comprehensive technical overview of the IOC Intelligent Operating Centre system design, components, and integration patterns. This document is intended for solution architects, system administrators, and technical stakeholders.</p>
+
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 25px 0;">
+                            <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">14</div>
+                                <div style="font-size: 14px;">Sections</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #11998e, #38ef7d); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">50+</div>
+                                <div style="font-size: 14px;">Pages</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #fc4a1a, #f7b733); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">PDF</div>
+                                <div style="font-size: 14px;">Export Ready</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>📑</span>
+                        <h3>Document Contents</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #3498db;">
+                                <strong style="color: #3498db;">Section 1: Executive Summary</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">Business context, architecture highlights, key decisions</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #27ae60;">
+                                <strong style="color: #27ae60;">Section 2: System Overview</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">Purpose, scope, key capabilities across IT and OT domains</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #9b59b6;">
+                                <strong style="color: #9b59b6;">Section 3: Architecture Principles</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">8 guiding principles with rationale for design decisions</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #e67e22;">
+                                <strong style="color: #e67e22;">Section 4: Logical Architecture</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">5-tier layered architecture, component diagrams</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #e74c3c;">
+                                <strong style="color: #e74c3c;">Section 5: Physical Architecture</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">Network topology (Purdue Model), infrastructure specs</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #1abc9c;">
+                                <strong style="color: #1abc9c;">Section 6: SCADA Integration</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">ICS/OT integration, protocols (Modbus, DNP3, OPC UA)</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #34495e;">
+                                <strong style="color: #34495e;">Section 7: Data Architecture</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">Data stores, data model, time-series and relational</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #c0392b;">
+                                <strong style="color: #c0392b;">Section 8: Security Architecture</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">Security zones, authentication, encryption standards</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #2980b9;">
+                                <strong style="color: #2980b9;">Section 9: Integration Architecture</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">REST APIs, webhooks, SIEM, ITSM integrations</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #8e44ad;">
+                                <strong style="color: #8e44ad;">Section 10: Deployment Models</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">On-premises, cloud, hybrid deployment options</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #16a085;">
+                                <strong style="color: #16a085;">Section 11: Scalability & Performance</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">Performance targets, scaling dimensions (S/M/L/Enterprise)</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #d35400;">
+                                <strong style="color: #d35400;">Section 12: Disaster Recovery</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">RTO/RPO objectives, backup strategy, failover</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #7f8c8d;">
+                                <strong style="color: #7f8c8d;">Section 13: Technology Stack</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">PHP, MariaDB, Redis, Docker, Kubernetes, libraries</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; border-left: 4px solid #95a5a6;">
+                                <strong style="color: #95a5a6;">Section 14: Appendices</strong>
+                                <p style="font-size: 13px; margin-top: 8px; color: var(--text-muted);">Glossary, related documents, contact information</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>🎯</span>
+                        <h3>Key Architecture Highlights</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="font-size: 48px; margin-bottom: 15px;">🏛️</div>
+                                <h4 style="color: var(--primary); margin-bottom: 10px;">5-Tier Architecture</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Presentation, Application, Service, Data, and Infrastructure layers with clear separation of concerns</p>
+                            </div>
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="font-size: 48px; margin-bottom: 15px;">🔒</div>
+                                <h4 style="color: var(--primary); margin-bottom: 10px;">Defense in Depth</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Purdue Model implementation with 7 security zones from Enterprise to Process level</p>
+                            </div>
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="font-size: 48px; margin-bottom: 15px;">🏭</div>
+                                <h4 style="color: var(--primary); margin-bottom: 10px;">IT/OT Convergence</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Unified platform bridging IT security and SCADA/ICS operations through secure DMZ</p>
+                            </div>
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="font-size: 48px; margin-bottom: 15px;">📊</div>
+                                <h4 style="color: var(--primary); margin-bottom: 10px;">Real-time Processing</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Sub-second SCADA tag updates with time-series database for 1M+ tags</p>
+                            </div>
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="font-size: 48px; margin-bottom: 15px;">☁️</div>
+                                <h4 style="color: var(--primary); margin-bottom: 10px;">Hybrid Ready</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">Flexible deployment: on-premises, cloud (AWS/Azure/GCP), or hybrid architecture</p>
+                            </div>
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="font-size: 48px; margin-bottom: 15px;">🔄</div>
+                                <h4 style="color: var(--primary); margin-bottom: 10px;">High Availability</h4>
+                                <p style="font-size: 13px; color: var(--text-muted);">99.9% uptime target with active-active HA and disaster recovery support</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>📡</span>
+                        <h3>Supported Protocols & Equipment</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 style="margin-bottom: 15px;">Industrial Protocols</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                            <span style="background: #3498db; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px;">Modbus TCP/RTU</span>
+                            <span style="background: #27ae60; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px;">DNP3</span>
+                            <span style="background: #9b59b6; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px;">OPC UA</span>
+                            <span style="background: #e67e22; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px;">IEC 61850</span>
+                            <span style="background: #e74c3c; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px;">EtherNet/IP</span>
+                            <span style="background: #1abc9c; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px;">PROFINET</span>
+                            <span style="background: #34495e; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px;">MQTT</span>
+                        </div>
+
+                        <h4 style="margin-bottom: 15px;">Supported Equipment Vendors</h4>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong>PLCs</strong>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Siemens, Allen-Bradley, Schneider</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong>RTUs</strong>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">ABB, Emerson, Honeywell</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong>Tank Gauges</strong>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Emerson, Endress+Hauser</p>
+                            </div>
+                            <div style="background: var(--bg-lighter); padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong>Pumps/VFDs</strong>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">ABB, Siemens, Danfoss</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>📥</span>
+                        <h3>Access Document</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The full Architecture Review Document is available as a printable PDF-ready document with detailed diagrams, specifications, and technical information.</p>
+
+                        <div style="background: linear-gradient(135deg, #1a365d, #2c5282); padding: 30px; border-radius: 12px; margin-top: 20px; text-align: center;">
+                            <div style="font-size: 64px; margin-bottom: 15px;">📄</div>
+                            <h4 style="color: white; margin-bottom: 10px;">IOC Architecture Review Document</h4>
+                            <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Version 2.0 | 14 Sections | PDF Export Ready</p>
+                            <a href="architecture_review.php" class="btn btn-primary" style="background: #00b894; border: none; padding: 15px 40px; font-size: 16px; text-decoration: none; display: inline-block;" target="_blank">
+                                📖 Open Architecture Document
+                            </a>
+                            <p style="color: rgba(255,255,255,0.6); font-size: 12px; margin-top: 15px;">Click "Print / Save as PDF" in the document to export</p>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-secondary" onclick="showModule('siem-brochure')">← Back: SIEM Brochure</button>
+                            <button class="btn btn-primary" onclick="showModule('installation-guide')" style="margin-left: 10px;">📖 Next: Installation Guide →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Installation Guide Module -->
+            <div id="installation-guide" class="module">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <a href="#">Training Center</a>
+                        <span>/</span>
+                        <span>Documentation</span>
+                        <span>/</span>
+                        <span>Installation Guide</span>
+                    </div>
+                    <h2>📖 Installation Manual</h2>
+                    <p>Complete installation guide for POC, Cloud Hybrid, and Full Cloud deployments.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>📋</span>
+                        <h3>Installation Options</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The IOC platform supports multiple deployment models to fit your organization's infrastructure and requirements.</p>
+
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 25px 0;">
+                            <div style="background: var(--bg-lighter); border: 2px solid #27ae60; border-radius: 12px; padding: 25px; text-align: center;">
+                                <div style="font-size: 48px; margin-bottom: 15px;">🧪</div>
+                                <h4 style="color: #27ae60; margin-bottom: 10px;">POC Installation</h4>
+                                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Quick setup for evaluation and testing using XAMPP or Docker</p>
+                                <ul style="text-align: left; font-size: 12px; padding-left: 20px;">
+                                    <li>Single server deployment</li>
+                                    <li>XAMPP or Docker options</li>
+                                    <li>Sample data included</li>
+                                    <li>30-minute setup</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); border: 2px solid #3498db; border-radius: 12px; padding: 25px; text-align: center;">
+                                <div style="font-size: 48px; margin-bottom: 15px;">🔄</div>
+                                <h4 style="color: #3498db; margin-bottom: 10px;">Cloud Hybrid</h4>
+                                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">SCADA on-premises with cloud analytics and reporting</p>
+                                <ul style="text-align: left; font-size: 12px; padding-left: 20px;">
+                                    <li>On-premises SCADA gateway</li>
+                                    <li>VPN/secure tunnel to cloud</li>
+                                    <li>Cloud-based analytics</li>
+                                    <li>Best of both worlds</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--bg-lighter); border: 2px solid #9b59b6; border-radius: 12px; padding: 25px; text-align: center;">
+                                <div style="font-size: 48px; margin-bottom: 15px;">☁️</div>
+                                <h4 style="color: #9b59b6; margin-bottom: 10px;">Full Cloud</h4>
+                                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Complete cloud deployment on AWS, Azure, or GCP</p>
+                                <ul style="text-align: left; font-size: 12px; padding-left: 20px;">
+                                    <li>AWS, Azure, or GCP</li>
+                                    <li>Kubernetes orchestration</li>
+                                    <li>Auto-scaling enabled</li>
+                                    <li>Managed database options</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>✅</span>
+                        <h3>System Requirements</h3>
+                    </div>
+                    <div class="card-body">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Minimum (POC)</th>
+                                    <th>Recommended (Production)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>CPU</strong></td>
+                                    <td>2 cores</td>
+                                    <td>8+ cores</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>RAM</strong></td>
+                                    <td>4 GB</td>
+                                    <td>32+ GB</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Storage</strong></td>
+                                    <td>20 GB SSD</td>
+                                    <td>500+ GB SSD</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>OS</strong></td>
+                                    <td>Windows 10/11, Ubuntu 20.04+</td>
+                                    <td>Ubuntu 22.04 LTS, RHEL 8+</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>PHP</strong></td>
+                                    <td>8.1+</td>
+                                    <td>8.2+</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Database</strong></td>
+                                    <td>MariaDB 10.6+</td>
+                                    <td>MariaDB 10.11+ (clustered)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Web Server</strong></td>
+                                    <td>Apache 2.4+</td>
+                                    <td>Nginx 1.20+ with PHP-FPM</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <span>📥</span>
+                        <h3>Access Installation Manual</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The complete Installation Manual provides step-by-step instructions for all deployment scenarios with screenshots and configuration examples.</p>
+
+                        <div style="background: linear-gradient(135deg, #11998e, #38ef7d); padding: 30px; border-radius: 12px; margin-top: 20px; text-align: center;">
+                            <div style="font-size: 64px; margin-bottom: 15px;">📘</div>
+                            <h4 style="color: white; margin-bottom: 10px;">IOC Installation Manual</h4>
+                            <p style="color: rgba(255,255,255,0.9); margin-bottom: 20px;">POC | Cloud Hybrid | Full Cloud Installation Guides</p>
+                            <a href="installation_manual.php" class="btn btn-primary" style="background: #1a365d; border: none; padding: 15px 40px; font-size: 16px; text-decoration: none; display: inline-block;" target="_blank">
+                                📖 Open Installation Manual
+                            </a>
+                            <p style="color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 15px;">Click "Print / Save as PDF" in the document to export</p>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-secondary" onclick="showModule('architecture-review')">← Back: Architecture Review</button>
+                            <button class="btn btn-primary" onclick="showModule('faq')" style="margin-left: 10px;">❓ Next: FAQ →</button>
                         </div>
                     </div>
                 </div>
